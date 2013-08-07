@@ -18,7 +18,8 @@ public class Terrain {
   private Sector sector;
   private int horizontalSectorCount;
   private int veriticalSectorCount;
-  
+  private int totalSectorCount;
+  private int visibleSectorCount;
   public Terrain(WorldScreen screen, int columns, int rows) {
     this.columns = columns;
     this.rows    = rows;
@@ -33,6 +34,7 @@ public class Terrain {
     
     this.horizontalSectorCount = columns/Sector.COLUMN_COUNT;
     this.veriticalSectorCount  = rows/Sector.ROW_COUNT;
+    this.totalSectorCount      = horizontalSectorCount * veriticalSectorCount;
     
     this.sectors = new Sector[horizontalSectorCount][veriticalSectorCount];
     
@@ -81,6 +83,8 @@ public class Terrain {
     gl.glEnable(GL10.GL_CULL_FACE);
     gl.glActiveTexture(GL20.GL_TEXTURE0);
     
+    visibleSectorCount = 0;
+    
     terrainShader.begin();
     terrainShader.setUniformMatrix("u_projectionViewMatrix", camera.combined);
     terrainShader.setUniformi("u_texture", 0);
@@ -88,9 +92,20 @@ public class Terrain {
     for (int x = 0; x < horizontalSectorCount; x++) {
       for (int z = 0; z < veriticalSectorCount; z++) {
         this.sectors[x][z].render(terrainShader);
+        visibleSectorCount++;
       }
     }
     terrainShader.end();
+    
+    gl.glDisable(GL10.GL_CULL_FACE); // TODO: this must to be disabled to show sprite batch duh
+  }
+  
+  public int getTotalSectorCount() {
+    return totalSectorCount;
+  }
+
+  public int getVisibleSectorCount() {
+    return this.visibleSectorCount;
   }
 }
 

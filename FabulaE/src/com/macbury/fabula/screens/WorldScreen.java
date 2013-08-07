@@ -2,7 +2,13 @@ package com.macbury.fabula.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.FPSLogger;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeBitmapFontData;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.math.Matrix4;
 import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.terrain.Terrain;
 import com.macbury.fabula.utils.TopDownCamera;
@@ -11,13 +17,20 @@ public class WorldScreen extends BaseScreen {
   private static final String TAG = "WorldScreen";
   private TopDownCamera camera;
   private Terrain terrain;
-  private FPSLogger fpsLogger;
+  private BitmapFont font;
+  private SpriteBatch guiBatch;
+  
   public WorldScreen(GameManager manager) {
     super(manager);
-    this.fpsLogger = new FPSLogger();
+    
+    //guiCamera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
+    guiBatch = new SpriteBatch();
+    
+    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("data/font/Courier New.ttf"));
+    font = generator.generateFont(16);
     this.camera = new TopDownCamera();
     Gdx.app.log(TAG, "Initialized screen");
-    this.terrain = new Terrain(this, 50, 50);
+    this.terrain = new Terrain(this, 100, 100);
     
     camera.position.set(0, 17, 0);
     camera.lookAt(0, 0, 0);
@@ -46,7 +59,14 @@ public class WorldScreen extends BaseScreen {
   public void render(float delta) {
     camera.update();
     this.terrain.render(this.camera);
-    fpsLogger.log();
+    //guiBatch.setProjectionMatrix(camera.combined);
+    
+    guiBatch.begin();
+    font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+    font.draw(guiBatch, "Visible sector count: "+ this.terrain.getVisibleSectorCount(), 20f, 90f);
+    font.draw(guiBatch, "Sector count: "+ this.terrain.getTotalSectorCount(), 20f, 60f);
+    font.draw(guiBatch, "FPS: "+ Gdx.graphics.getFramesPerSecond(), 20f, 30f);
+    guiBatch.end();
   }
   
   @Override

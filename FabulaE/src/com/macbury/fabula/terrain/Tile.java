@@ -17,7 +17,7 @@ public class Tile {
     textureRegion = new TextureRegion(texture, 416, 0, 32, 32);
     //this.setPosition(x,y,z);
     gid = GID_COUNTER++;
-    this.y = (int) Math.round(Math.random() * 1);
+    this.y = 0;
   }
   
   public TextureRegion getTextureRegion() {
