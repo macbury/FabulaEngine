@@ -30,7 +30,7 @@ public class WorldScreen extends BaseScreen {
     font = generator.generateFont(16);
     this.camera = new TopDownCamera();
     Gdx.app.log(TAG, "Initialized screen");
-    this.terrain = new Terrain(this, 100, 100);
+    this.terrain = new Terrain(this, 300, 300);
     
     camera.position.set(0, 17, 0);
     camera.lookAt(0, 0, 0);
@@ -65,7 +65,7 @@ public class WorldScreen extends BaseScreen {
     font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
     font.draw(guiBatch, "Visible sector count: "+ this.terrain.getVisibleSectorCount(), 20f, 90f);
     font.draw(guiBatch, "Sector count: "+ this.terrain.getTotalSectorCount(), 20f, 60f);
-    font.draw(guiBatch, "FPS: "+ Gdx.graphics.getFramesPerSecond(), 20f, 30f);
+    font.draw(guiBatch, "FPS: "+ Gdx.graphics.getFramesPerSecond() + " Java Heap: " + (Gdx.app.getJavaHeap() / 1024) + " KB" + " Native Heap: " + (Gdx.app.getNativeHeap() / 1024) + " KB", 20f, 30f);
     guiBatch.end();
   }
   

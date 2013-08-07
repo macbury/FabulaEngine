@@ -3,6 +3,7 @@ package com.macbury.fabula.terrain;
 import org.lwjgl.opengl.GL11;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Array;
 
 public class Sector {
@@ -21,16 +23,20 @@ public class Sector {
   public final static int TOTAL_ATTRIBUTES_COUNT  = VERTEX_PER_BOX_COUNT * VERTEX_ATTRIBUTE_COUNT;
   public final static int VERTEX_PER_ROW          = VERTEX_PER_BOX_COUNT * COLUMN_COUNT;
   
-  private Vector3 position;
+  private Vector3 topLeftCorner;
   private Array<Mesh> meshes;
   private int currentRow = 0;
   private Terrain terrain;
+  private Vector3 bottomRightCorner;
+  private BoundingBox boundingBox;
   
   public Sector(Vector3 pos, Terrain terrain) {
-    this.terrain  = terrain;
-    this.position = pos;
-    this.meshes   = new Array<Mesh>(Sector.ROW_COUNT);
-    this.currentRow  = 0;
+    this.terrain           = terrain;
+    this.topLeftCorner     = pos;
+    this.bottomRightCorner = pos.cpy().add(COLUMN_COUNT, 0, ROW_COUNT);
+    this.meshes            = new Array<Mesh>(Sector.ROW_COUNT);
+    this.currentRow        = 0;
+    this.boundingBox       = new BoundingBox(this.topLeftCorner, this.bottomRightCorner);
   }
   
   public void clearSector() {
@@ -43,13 +49,13 @@ public class Sector {
     float[] verticies = new float[verticiesElementsCount];
     
     int i = 0;
-    int x = (int) position.x;
-    int z = (int) position.z + currentRow++;
+    int x = (int) topLeftCorner.x;
+    int z = (int) topLeftCorner.z + currentRow++;
     
     while(i < verticiesElementsCount) {
       Tile tile                   = terrain.getTile(x, z);
       TextureRegion textureRegion = tile.getTextureRegion();
-      Gdx.app.log("S", "ID: " + tile.getId() +" X: "+x + "Z: " + z +"  Y: " + tile.getY());
+      //Gdx.app.log("S", "ID: " + tile.getId() +" X: "+x + "Z: " + z +"  Y: " + tile.getY());
       /* Vertex 1 */
       verticies[i++] = x; // X
       verticies[i++] = tile.getY(); // Y
@@ -121,5 +127,10 @@ public class Sector {
       Mesh mesh = meshes.get(i);
       mesh.render(terrainShader, GL20.GL_TRIANGLE_STRIP);
     }
+  }
+
+  public boolean visibleInCamera(Camera camera) {
+    
+    return camera.frustum.boundsInFrustum(boundingBox);
   }
 }

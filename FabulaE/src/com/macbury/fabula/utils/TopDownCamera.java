@@ -10,7 +10,7 @@ public class TopDownCamera extends PerspectiveCamera {
     super(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
     near = 0.1f;
-    far  = 300f;
+    far  = 200f;
     
     setRotation(70);
   }

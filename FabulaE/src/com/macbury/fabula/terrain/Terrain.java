@@ -56,13 +56,15 @@ public class Terrain {
   }
 
   private void fillEmptyTilesWithDebugTile() {
-    for (int x = 0; x < columns; x++) {
-      for (int z = 0; z < rows; z++) {
+    for (int z = 0; z < rows; z++) {
+      for (int x = 0; x < columns; x++) {
         if (!haveTile(x,z)) {
           setTile(x, z, new Tile(x, 0, z));
         }
       }
     }
+    
+    this.tiles[0][0].setY(1);
   }
 
   private boolean haveTile(int x, int z) {
@@ -91,8 +93,11 @@ public class Terrain {
     
     for (int x = 0; x < horizontalSectorCount; x++) {
       for (int z = 0; z < veriticalSectorCount; z++) {
-        this.sectors[x][z].render(terrainShader);
-        visibleSectorCount++;
+        Sector sector = this.sectors[x][z]; 
+        if (sector.visibleInCamera(camera)) {
+          sector.render(terrainShader);
+          visibleSectorCount++;
+        }
       }
     }
     terrainShader.end();
