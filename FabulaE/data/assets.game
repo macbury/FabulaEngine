@@ -2,4 +2,6 @@
 <resources>
   <resource type="texture" id="TEXTURE_GRASS">grass.png</resource>
   <resource type="texture" id="TEXTURE_DEBUG">debug.jpg</resource>
+  
+  <resource type="shader" id="SHADER_TERRAIN">mesh</resource>
 </resources>

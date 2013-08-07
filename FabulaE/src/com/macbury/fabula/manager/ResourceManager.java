@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeBitmapFontData;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
@@ -37,6 +38,7 @@ public class ResourceManager {
   private Map<String, BitmapFont> fonts;
   private Map<String, String> textures;
   private Map<String, String> music;
+  private Map<String, ShaderProgram> shaders;
   private boolean loadedXML = false;
   public static ResourceManager shared() {
     if (_shared == null) {
@@ -47,8 +49,9 @@ public class ResourceManager {
   
   public ResourceManager() {
     this.assetManager = new AssetManager();
-    this.textures = new HashMap<String, String>();
-    this.music    = new HashMap<String, String>();
+    this.textures     = new HashMap<String, String>();
+    this.music        = new HashMap<String, String>();
+    this.shaders      = new HashMap<String, ShaderProgram>();
   }
   
   public void load() throws Exception {
@@ -92,11 +95,28 @@ public class ResourceManager {
           addElementAsTexture(resourceElement);
         } else if (type.equals("music")) {
           addElementAsMusic(resourceElement);
+        } else if (type.equals("shader")) {
+          addElementAsShader(resourceElement);
         }
       }
     }
     
     loadedXML = true;
+  }
+
+  private void addElementAsShader(Element resourceElement) {
+    String id   = resourceElement.getAttribute("id");
+    String path = resourceElement.getTextContent();
+    path        = "data/shaders/"+path;
+    Gdx.app.log(TAG, "Found shader: " + id + " from " + path);
+    
+    String vertexShader   = Gdx.files.internal(path + ".vert").readString();
+    String fragmentShader = Gdx.files.internal(path + ".frag").readString();
+    ShaderProgram shader  = new ShaderProgram(vertexShader, fragmentShader);
+    if (!shader.isCompiled())
+      throw new IllegalStateException(shader.getLog());
+    
+    shaders.put(id, shader);
   }
 
   private void addElementAsMusic(Element resourceElement) {
@@ -170,6 +190,10 @@ public class ResourceManager {
 
   public Texture getTexture(String key) {
     return assetManager.get(this.textures.get(key), Texture.class);
+  }
+  
+  public ShaderProgram getShaderProgram(String key) {
+    return shaders.get(key);
   }
   
   public boolean isLoading() {

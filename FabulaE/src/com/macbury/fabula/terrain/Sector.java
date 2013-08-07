@@ -1,8 +1,5 @@
 package com.macbury.fabula.terrain;
 
-import org.lwjgl.opengl.GL11;
-
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -11,8 +8,10 @@ import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 
 public class Sector {
@@ -25,6 +24,7 @@ public class Sector {
   
   private Vector3 topLeftCorner;
   private Array<Mesh> meshes;
+  private Array<BoundingBox> boundingBoxes;
   private int currentRow = 0;
   private Terrain terrain;
   private Vector3 bottomRightCorner;
@@ -37,6 +37,7 @@ public class Sector {
     this.meshes            = new Array<Mesh>(Sector.ROW_COUNT);
     this.currentRow        = 0;
     this.boundingBox       = new BoundingBox(this.topLeftCorner, this.bottomRightCorner);
+    this.boundingBoxes     = new Array<BoundingBox>(Sector.ROW_COUNT);
   }
   
   public void clearSector() {
@@ -109,6 +110,7 @@ public class Sector {
       new VertexAttribute(Usage.TextureCoordinates, 2, "a_textCords")
     );
     mesh.setVertices(verticies);
+    this.boundingBoxes.add(mesh.calculateBoundingBox());
     this.meshes.add(mesh);
   }
 
@@ -130,7 +132,19 @@ public class Sector {
   }
 
   public boolean visibleInCamera(Camera camera) {
-    
     return camera.frustum.boundsInFrustum(boundingBox);
+  }
+
+  public Vector3 getPositionForRay(Ray ray) {
+    if (Intersector.intersectRayBoundsFast(ray, this.boundingBox)) {
+      Vector3 intersectedVector = new Vector3();
+      for (BoundingBox boundingBox : boundingBoxes) {
+        if (Intersector.intersectRayBounds(ray, boundingBox, intersectedVector)) { //TODO check which mesh is to intersect wit thirangles
+          return intersectedVector;
+        }
+      }
+    }
+    
+    return null;
   }
 }

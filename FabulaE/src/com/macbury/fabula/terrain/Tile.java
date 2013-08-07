@@ -1,18 +1,21 @@
 package com.macbury.fabula.terrain;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g3d.decals.Decal;
-import com.badlogic.gdx.math.Vector3;
 import com.macbury.fabula.manager.ResourceManager;
 
 public class Tile {
+  public enum Type {
+    Normal, Top, Left, Right, Bottom
+  }
+
   private TextureRegion textureRegion;
-  private static int GID_COUNTER = 0;
+  private static int GID_COUNTER  = 0;
+  private Type type               = Type.Normal;
   int y = 0;
   int gid = 0;
+  
+  
   public Tile(float x, float y, float z) {
     gid = GID_COUNTER++;
     

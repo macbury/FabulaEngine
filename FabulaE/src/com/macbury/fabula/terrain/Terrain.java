@@ -1,32 +1,39 @@
 package com.macbury.fabula.terrain;
 
+import java.util.Stack;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
+import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.screens.WorldScreen;
 
 public class Terrain {
   private Sector[][] sectors;
   private Tile[][] tiles;
-  private WorldScreen screen;
   private int columns;
   private int rows;
   private ShaderProgram terrainShader;
-  private Sector sector;
   private int horizontalSectorCount;
   private int veriticalSectorCount;
   private int totalSectorCount;
   private int visibleSectorCount;
+  
+  private Stack<Sector> visibleSectors;
+  
+  private Vector3 intersection = new Vector3();
+  
   public Terrain(WorldScreen screen, int columns, int rows) {
     this.columns = columns;
     this.rows    = rows;
     
     this.tiles   = new Tile[columns][rows];
     fillEmptyTilesWithDebugTile();
-    loadShaders();
+    terrainShader = ResourceManager.shared().getShaderProgram("SHADER_TERRAIN");
     
     if (columns % Sector.COLUMN_COUNT != 0 || rows%Sector.ROW_COUNT != 0) {
       throw new RuntimeException("Map size must be proper!");
@@ -36,7 +43,8 @@ public class Terrain {
     this.veriticalSectorCount  = rows/Sector.ROW_COUNT;
     this.totalSectorCount      = horizontalSectorCount * veriticalSectorCount;
     
-    this.sectors = new Sector[horizontalSectorCount][veriticalSectorCount];
+    this.sectors        = new Sector[horizontalSectorCount][veriticalSectorCount];
+    this.visibleSectors = new Stack<Sector>();
     
     for (int x = 0; x < horizontalSectorCount; x++) {
       for (int z = 0; z < veriticalSectorCount; z++) {
@@ -45,14 +53,6 @@ public class Terrain {
         this.sectors[x][z] = sector;
       }
     }
-  }
-
-  private void loadShaders() {
-    String vertexShader = Gdx.files.internal("data/shaders/mesh.vert").readString();
-    String fragmentShader = Gdx.files.internal("data/shaders/mesh.frag").readString();
-    terrainShader = new ShaderProgram(vertexShader, fragmentShader);
-    if (!terrainShader.isCompiled())
-      throw new IllegalStateException(terrainShader.getLog());
   }
 
   private void fillEmptyTilesWithDebugTile() {
@@ -90,12 +90,14 @@ public class Terrain {
     terrainShader.begin();
     terrainShader.setUniformMatrix("u_projectionViewMatrix", camera.combined);
     terrainShader.setUniformi("u_texture", 0);
+    visibleSectors.clear();
     
     for (int x = 0; x < horizontalSectorCount; x++) {
       for (int z = 0; z < veriticalSectorCount; z++) {
         Sector sector = this.sectors[x][z]; 
         if (sector.visibleInCamera(camera)) {
           sector.render(terrainShader);
+          visibleSectors.add(sector);
           visibleSectorCount++;
         }
       }
@@ -112,6 +114,16 @@ public class Terrain {
   public int getVisibleSectorCount() {
     return this.visibleSectorCount;
   }
-}
 
-// Terrain -hm-> Sectors -hm-> Rows -hm-> Columns
+  public Vector3 getPositionForRay(Ray ray) {
+    Vector3 intersectedVector = null;
+    for (Sector sector : visibleSectors) {
+      intersectedVector = sector.getPositionForRay(ray);
+      
+      if (intersectedVector != null) {
+        break;
+      }
+    }
+    return intersectedVector;
+  }
+}
