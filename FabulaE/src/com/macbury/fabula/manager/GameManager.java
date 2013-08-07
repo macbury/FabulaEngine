@@ -14,12 +14,12 @@ public class GameManager extends Game {
   public void create() {
     Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
     Gdx.gl.glDepthFunc(GL10.GL_LESS);
-
     setScreen(new LoadingScreen(this));
   }
 
   @Override
   public void render() {
+    
     Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 

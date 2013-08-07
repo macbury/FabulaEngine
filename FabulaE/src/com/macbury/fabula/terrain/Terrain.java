@@ -65,6 +65,9 @@ public class Terrain {
     }
     
     this.tiles[0][0].setY(1);
+    this.tiles[0][1].setY(1);
+    this.tiles[1][0].setY(1);
+    this.tiles[1][1].setY(1);
   }
 
   private boolean haveTile(int x, int z) {
@@ -81,6 +84,7 @@ public class Terrain {
 
   public void render(Camera camera) {
     GL20 gl = Gdx.graphics.getGL20();
+    gl.glEnable(GL10.GL_DEPTH_TEST);
     gl.glEnable(GL20.GL_TEXTURE_2D);
     gl.glEnable(GL10.GL_CULL_FACE);
     gl.glActiveTexture(GL20.GL_TEXTURE0);
@@ -105,6 +109,8 @@ public class Terrain {
     terrainShader.end();
     
     gl.glDisable(GL10.GL_CULL_FACE); // TODO: this must to be disabled to show sprite batch duh
+    gl.glDisable(GL10.GL_DEPTH_TEST);
+    gl.glDisable(GL20.GL_TEXTURE_2D);
   }
   
   public int getTotalSectorCount() {

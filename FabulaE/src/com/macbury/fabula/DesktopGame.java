@@ -1,6 +1,7 @@
 package com.macbury.fabula;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.macbury.fabula.manager.GameManager;
 
 public class DesktopGame {

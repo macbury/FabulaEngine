@@ -13,6 +13,8 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeBitm
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.lights.Lights;
 import com.badlogic.gdx.graphics.g3d.materials.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.materials.Material;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
@@ -33,9 +35,14 @@ public class WorldScreen extends BaseScreen {
   private SpriteBatch guiBatch;
   private ModelInstance cursorInstance;
   private ModelBatch modelBatch;
+  //public  Lights lights;
   
   public WorldScreen(GameManager manager) {
     super(manager);
+    
+    //lights = new Lights();
+    //lights.ambientLight.set(0.1f, 0.1f, 0.1f, 1f);
+    //lights.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
     
     ModelBuilder modelBuilder = new ModelBuilder();
     Model model               = modelBuilder.createBox(1f, 1f, 1f,  new Material(ColorAttribute.createDiffuse(Color.GREEN)), Usage.Position | Usage.Normal);
@@ -78,7 +85,12 @@ public class WorldScreen extends BaseScreen {
   @Override
   public void render(float delta) {
     camera.update();
+    
     this.terrain.render(this.camera);
+    modelBatch.begin(camera);
+    modelBatch.render(cursorInstance);
+    modelBatch.end();
+    
     //guiBatch.setProjectionMatrix(camera.combined);
     
     guiBatch.begin();
@@ -88,9 +100,7 @@ public class WorldScreen extends BaseScreen {
     font.draw(guiBatch, "FPS: "+ Gdx.graphics.getFramesPerSecond() + " Java Heap: " + (Gdx.app.getJavaHeap() / 1024) + " KB" + " Native Heap: " + (Gdx.app.getNativeHeap() / 1024) + " KB", 20f, 30f);
     guiBatch.end();
     
-    modelBatch.begin(camera);
-    modelBatch.render(cursorInstance);
-    modelBatch.end();
+    
     
     handlePick();
   }
