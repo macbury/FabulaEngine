@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
   <resource type="texture" id="TEXTURE_GRASS">grass.png</resource>
-  <resource type="texture" id="TEXTURE_DEBUG">debug.jpg</resource>
+  <resource type="texture" id="TEXTURE_DEBUG">DebugTerrain.png</resource>
   
   <resource type="shader" id="SHADER_TERRAIN">mesh</resource>
+  <resource type="shader" id="SHADER_SIMPLE">simple</resource>
 </resources>

@@ -25,6 +25,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.terrain.Terrain;
+import com.macbury.fabula.terrain.Tile;
 import com.macbury.fabula.utils.TopDownCamera;
 
 public class WorldScreen extends BaseScreen {
@@ -45,7 +46,7 @@ public class WorldScreen extends BaseScreen {
     //lights.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
     
     ModelBuilder modelBuilder = new ModelBuilder();
-    Model model               = modelBuilder.createBox(1f, 1f, 1f,  new Material(ColorAttribute.createDiffuse(Color.GREEN)), Usage.Position | Usage.Normal);
+    Model model               = modelBuilder.createBox(1f, 0.1f, 1f,  new Material(ColorAttribute.createDiffuse(Color.GREEN)), Usage.Position | Usage.Normal);
     cursorInstance            = new ModelInstance(model);
     
     modelBatch                = new ModelBatch();
@@ -57,8 +58,10 @@ public class WorldScreen extends BaseScreen {
     font = generator.generateFont(16);
     this.camera = new TopDownCamera();
     Gdx.app.log(TAG, "Initialized screen");
-    this.terrain = new Terrain(this, 300, 300);
-    
+    this.terrain = new Terrain(this, 20, 20);
+    //terrain.buildTerrainUsingImageHeightMap("data/textures/heightmap.png");
+    terrain.fillEmptyTilesWithDebugTile();
+    terrain.buildSectors();
     camera.position.set(0, 17, 0);
     camera.lookAt(0, 0, 0);
     Gdx.input.setInputProcessor(new CameraInputController(camera));
@@ -100,20 +103,32 @@ public class WorldScreen extends BaseScreen {
     font.draw(guiBatch, "FPS: "+ Gdx.graphics.getFramesPerSecond() + " Java Heap: " + (Gdx.app.getJavaHeap() / 1024) + " KB" + " Native Heap: " + (Gdx.app.getNativeHeap() / 1024) + " KB", 20f, 30f);
     guiBatch.end();
     
-    
-    
     handlePick();
   }
   
   private void handlePick() {
     if (Gdx.input.isKeyPressed(Keys.W)) {
       Ray ray     = camera.getPickRay(Gdx.input.getX(), Gdx.input.getY());
-      Vector3 pos = terrain.getPositionForRay(ray);
+      Vector3 pos = terrain.getSnappedPositionForRay(ray);
       
       if (pos != null) {
-        cursorInstance.transform.setToTranslation(pos.add(0, 0.5f, 0));
+        cursorInstance.transform.setToTranslation(pos.add(-0.5f, 0.05f, -0.5f));
         Gdx.app.log(TAG, "Picked: "+ pos.toString());
       }
+    } else if (Gdx.input.isKeyPressed(Keys.F)) {
+      Vector3 pos = new Vector3();
+      cursorInstance.transform.getTranslation(pos);
+      camera.lookAt(pos);
+    } 
+    
+    if (Gdx.input.isKeyPressed(Keys.Q)) {
+      Vector3 pos = new Vector3();
+      cursorInstance.transform.getTranslation(pos);
+      terrain.applyHill(pos, 0.1f);
+    } else if (Gdx.input.isKeyPressed(Keys.A))  {
+      Vector3 pos = new Vector3();
+      cursorInstance.transform.getTranslation(pos);
+      terrain.applyHill(pos, -0.1f);
     }
   }
 

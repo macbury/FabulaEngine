@@ -3,9 +3,12 @@ package com.macbury.fabula.terrain;
 import java.util.Stack;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
@@ -31,8 +34,7 @@ public class Terrain {
     this.columns = columns;
     this.rows    = rows;
     
-    this.tiles   = new Tile[columns][rows];
-    fillEmptyTilesWithDebugTile();
+    this.tiles    = new Tile[columns][rows];
     terrainShader = ResourceManager.shared().getShaderProgram("SHADER_TERRAIN");
     
     if (columns % Sector.COLUMN_COUNT != 0 || rows%Sector.ROW_COUNT != 0) {
@@ -46,6 +48,33 @@ public class Terrain {
     this.sectors        = new Sector[horizontalSectorCount][veriticalSectorCount];
     this.visibleSectors = new Stack<Sector>();
     
+  }
+
+  public void applySlopes() {
+    for (int z = 0; z < rows; z++) {
+      for (int x = 0; x < columns; x++) {
+        Tile topTile    = getTile(x, z-1);
+        Tile topRightTile    = getTile(x, z-1);
+        Tile bottomTile = getTile(x, z+1);
+        Tile leftTile   = getTile(x-1, z);
+        Tile rightTile  = getTile(x+1, z);
+        
+        Tile currentTile = getTile(x, z);
+        
+        if (topTile != null) {
+          currentTile.setY1(topTile.getY1());
+          currentTile.setY3(topTile.getY3());
+        }
+        
+        if (bottomTile != null) {
+          currentTile.setY2(bottomTile.getY2());
+          currentTile.setY4(bottomTile.getY4());
+        }
+      }
+    }
+  }
+  
+  public void buildSectors() {
     for (int x = 0; x < horizontalSectorCount; x++) {
       for (int z = 0; z < veriticalSectorCount; z++) {
         Sector sector = new Sector(new Vector3(x * Sector.COLUMN_COUNT, 0, z * Sector.ROW_COUNT), this);
@@ -54,8 +83,8 @@ public class Terrain {
       }
     }
   }
-
-  private void fillEmptyTilesWithDebugTile() {
+  
+  public void fillEmptyTilesWithDebugTile() {
     for (int z = 0; z < rows; z++) {
       for (int x = 0; x < columns; x++) {
         if (!haveTile(x,z)) {
@@ -64,10 +93,11 @@ public class Terrain {
       }
     }
     
-    this.tiles[0][0].setY(1);
+    /*this.tiles[0][0].setY(1);
     this.tiles[0][1].setY(1);
     this.tiles[1][0].setY(1);
     this.tiles[1][1].setY(1);
+    */
   }
 
   private boolean haveTile(int x, int z) {
@@ -75,7 +105,11 @@ public class Terrain {
   }
 
   public Tile getTile(int x, int z) {
-    return this.tiles[x][z];
+    try {
+      return this.tiles[x][z];
+    } catch (ArrayIndexOutOfBoundsException e) {
+      return null;
+    }
   }
   
   public void setTile(int x, int z, Tile tile) {
@@ -131,5 +165,98 @@ public class Terrain {
       }
     }
     return intersectedVector;
+  }
+  
+  public void buildTerrainUsingImageHeightMap(String pathToHeightMap) {
+    FileHandle file       = Gdx.files.local(pathToHeightMap);
+    Pixmap heightmapImage = new Pixmap(file);
+    Color color           = new Color();
+    
+    for (int z = 0; z < rows; z++) {
+      for (int x = 0; x < columns; x++) {
+        Color.rgba8888ToColor(color, heightmapImage.getPixel(x, z));
+        setTile(x, z, new Tile(x, color.r*30, z));
+      }
+    }
+  }
+
+  public Vector3 getSnappedPositionForRay(Ray ray) {
+    Vector3 pos = getPositionForRay(ray);
+    if (pos != null) {
+      Tile tile = getTile(pos);
+      
+      float y = Math.max(0, pos.y);
+      if (tile != null) {
+        y = tile.getY();
+      }
+      pos.set((float)Math.floor(pos.x)+1, y, (float)Math.floor(pos.z)+1);
+      return pos;
+    } else {
+      return null;
+    }
+  }
+
+  public Tile getTile(Vector3 pos) {
+    return getTile((int)pos.x, (int)pos.z);
+  }
+
+  public void applyHill(Vector3 pos, float power) {
+    int x = (int)pos.x;
+    int z = (int)pos.z;
+    
+    Tile currentTile = getTile(x, z);
+    
+    if (currentTile != null) {
+      Tile topTile      = getTile(x, z-1);
+      Tile bottomTile   = getTile(x, z+1);
+      
+      Tile leftTile     = getTile(x-1, z);
+      Tile rightTile    = getTile(x+1, z);
+      
+      Tile topLeftTile     = getTile(x-1, z-1);
+      Tile topRightTile     = getTile(x+1, z-1);
+      
+      Tile bottomLeftTile   = getTile(x-1, z+1);
+      Tile bottomRightTile   = getTile(x+1, z+1);
+      currentTile.setY(currentTile.getY()+power);
+      if (topTile != null) {
+        topTile.setY2(currentTile.getY1());
+        topTile.setY4(currentTile.getY3());
+      }
+      
+      if (bottomTile != null) {
+        bottomTile.setY1(currentTile.getY2());
+        bottomTile.setY3(currentTile.getY4());
+      }
+      
+      if (leftTile != null) {
+        leftTile.setY3(currentTile.getY1());
+        leftTile.setY4(currentTile.getY2());
+      }
+      
+      if (rightTile != null) {
+        rightTile.setY1(currentTile.getY3());
+        rightTile.setY2(currentTile.getY4());
+      }
+      
+      if (topLeftTile != null) {
+        topLeftTile.setY4(currentTile.getY1());
+        //topLeftTile.setY2(currentTile.getY1());
+      }
+      
+      if (topRightTile != null) {
+        topRightTile.setY2(currentTile.getY3());
+      }
+      
+      if (bottomLeftTile != null) {
+        bottomLeftTile.setY3(currentTile.getY2());
+      }
+      
+      if (bottomRightTile != null) {
+        bottomRightTile.setY1(currentTile.getY4());
+      }
+      
+      this.buildSectors();
+    }
   }
 }

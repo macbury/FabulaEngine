@@ -30,14 +30,14 @@ public class Sector {
   private Terrain terrain;
   private Vector3 bottomRightCorner;
   private BoundingBox boundingBox;
+  private float height = 0.0f;
   
   public Sector(Vector3 pos, Terrain terrain) {
     this.terrain           = terrain;
     this.topLeftCorner     = pos;
-    this.bottomRightCorner = pos.cpy().add(COLUMN_COUNT, 0, ROW_COUNT);
     this.meshes            = new Array<MeshRow>(Sector.ROW_COUNT);
     this.currentRow        = 0;
-    this.boundingBox       = new BoundingBox(this.topLeftCorner, this.bottomRightCorner);
+    this.bottomRightCorner = pos.cpy().add(COLUMN_COUNT, 0, ROW_COUNT);
     this.boundingBoxes     = new Array<BoundingBox>(Sector.ROW_COUNT);
   }
   
@@ -46,9 +46,10 @@ public class Sector {
     this.meshes.clear();
   }
   
-  public void buildRow() {
+  public float buildRow() {
     int verticiesElementsCount = COLUMN_COUNT * TOTAL_ATTRIBUTES_COUNT;
     
+    float y = 0;
     int i = 0;
     int x = (int) topLeftCorner.x;
     int z = (int) topLeftCorner.z + currentRow++;
@@ -58,24 +59,27 @@ public class Sector {
     while(meshRow.isBuilding(verticiesElementsCount)) {
       Tile tile                   = terrain.getTile(x, z);
       TextureRegion textureRegion = tile.getTextureRegion();
+      if (tile.getY() > y) {
+        y = tile.getY();
+      }
       //Gdx.app.log("S", "ID: " + tile.getId() +" X: "+x + "Z: " + z +"  Y: " + tile.getY());
       /* Vertex 1 */
-      meshRow.addVertex(x, tile.getY(), z); // Vertext position
+      meshRow.addVertex(x, tile.getY1(), z); // Vertext position
       meshRow.addColor(255, 255, 255, 0); // Color
       meshRow.addUVMap(textureRegion.getU(), textureRegion.getV()); // Texture Cords
       
       /* Vertex 2 */
-      meshRow.addVertex(x, tile.getY(), z+1f); // Vertext position
+      meshRow.addVertex(x, tile.getY2(), z+1f); // Vertext position
       meshRow.addColor(255, 255, 255, 0); // Color
       meshRow.addUVMap(textureRegion.getU(), textureRegion.getV2()); // Texture Cords
       
       /* Vertex 3 */
-      meshRow.addVertex(x+1f, tile.getY(), z); // Vertext position
+      meshRow.addVertex(x+1f, tile.getY3(), z); // Vertext position
       meshRow.addColor(255, 255, 255, 0); // Color
       meshRow.addUVMap(textureRegion.getU2(), textureRegion.getV()); // Texture Cords
       
       /* Vertex 4 */
-      meshRow.addVertex(x+1f, tile.getY(), z+1f); // Vertext position
+      meshRow.addVertex(x+1f, tile.getY4(), z+1f); // Vertext position
       meshRow.addColor(255, 255, 255, 0); // Color
       meshRow.addUVMap(textureRegion.getU2(), textureRegion.getV2()); // Texture Cords
       x++;
@@ -84,13 +88,18 @@ public class Sector {
     meshRow.finish();
     this.boundingBoxes.add(meshRow.getMesh().calculateBoundingBox());
     this.meshes.add(meshRow);
+    
+    return y;
   }
 
   public void build() {
     this.clearSector();
+    height = 0;
     for (int i = 0; i < Sector.ROW_COUNT; i++) {
-      this.buildRow();
+      height = Math.max(height, this.buildRow());
     }
+    
+    this.boundingBox = new BoundingBox(this.topLeftCorner, this.bottomRightCorner.cpy().add(0, height, 0));
   }
 
   public void render(ShaderProgram terrainShader) { //TODO multi texture terrain shit should go here
@@ -100,6 +109,7 @@ public class Sector {
     for (int i = 0; i < meshes.size; i++) {
       Mesh mesh = meshes.get(i).getMesh();
       mesh.render(terrainShader, GL20.GL_TRIANGLE_STRIP);
+      //mesh.render(terrainShader, GL20.GL_LINE_STRIP);
     }
   }
 
@@ -110,17 +120,17 @@ public class Sector {
   public Vector3 getPositionForRay(Ray ray) {
     if (Intersector.intersectRayBoundsFast(ray, this.boundingBox)) {
       Vector3 intersectedVector = new Vector3();
-      /*for (BoundingBox boundingBox : boundingBoxes) {
+      for (BoundingBox boundingBox : boundingBoxes) {
         if (Intersector.intersectRayBounds(ray, boundingBox, intersectedVector)) { //TODO check which mesh is to intersect wit thirangles
           return intersectedVector;
         }
-      }*/
+      }
       
-      for (MeshRow row : meshes) {
+      /*for (MeshRow row : meshes) {
         if (Intersector.intersectRayTriangles(ray, row.getTriangles(), intersectedVector)) {
           return intersectedVector;
         }
-      }
+      }*/
     }
     
     return null;

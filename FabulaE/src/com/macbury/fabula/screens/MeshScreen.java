@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.terrain.Terrain;
+import com.macbury.fabula.terrain.TriangleGridBuilder;
 import com.macbury.fabula.utils.TopDownCamera;
 
 public class MeshScreen extends BaseScreen {
@@ -38,14 +39,14 @@ public class MeshScreen extends BaseScreen {
     
     fps = new FPSLogger();
     
-    String vertexShader = Gdx.files.internal("data/shaders/mesh.vert").readString();
-    String fragmentShader = Gdx.files.internal("data/shaders/mesh.frag").readString();
+    String vertexShader = Gdx.files.internal("data/shaders/simple.vert").readString();
+    String fragmentShader = Gdx.files.internal("data/shaders/simple.frag").readString();
     meshShader = new ShaderProgram(vertexShader, fragmentShader);
     if (!meshShader.isCompiled())
       throw new IllegalStateException(meshShader.getLog());
     
     this.camera = new TopDownCamera();
-    camera.position.set(0, 15, 0);
+    camera.position.set(0, 3, 0);
     camera.lookAt(0, 0, 0);
     
     CameraInputController cont = new CameraInputController(camera);
@@ -53,94 +54,51 @@ public class MeshScreen extends BaseScreen {
     
     texture = ResourceManager.shared().getTexture("TEXTURE_DEBUG");
     //texture.setFilter(Filter.NearestNeighbour, Filter.NearestNeighbour);
-    textureRegion = new TextureRegion(texture, 416, 0, 32, 32);
+    textureRegion = new TextureRegion(texture, 0, 0, 32, 32);
     // U == X
     // V == Y
     
-    int columns               = 10;
-    int rows                  = 1;
-    int vertexPerBoxCount     = 4;
-    int vertexAttributesCount = 6;
     
-    int totalAttributesPerRow  = vertexPerBoxCount * vertexAttributesCount;
-    int verticiesElementsCount = columns * rows * totalAttributesPerRow;
+    TriangleGridBuilder builder = new TriangleGridBuilder(1, 1);
     
-    float[] verticies = new float[verticiesElementsCount]; /*{ 
-      0f, 0f, 0, Color.toFloatBits(255, 0, 0, 0), textureRegion.getU(), textureRegion.getV(), // top left 1
-      0f, -1f, 0, Color.toFloatBits(0, 255, 0, 0), textureRegion.getU(), textureRegion.getV2(), // bottom left 2
-      1f, 0f, 0, Color.toFloatBits(0, 0, 255, 0), textureRegion.getU2(), textureRegion.getV(), // top right 3 
-      1, -1f, 0, Color.toFloatBits(255, 0, 0, 0), textureRegion.getU2(), textureRegion.getV2(), // bottom right 4
-    };*/
-    int i = 0;
-    int x = 0;
-    int y = 0;
-    while(i < verticiesElementsCount) {
-      /* Vertex 1 */
-      verticies[i++] = x; // X
-      verticies[i++] = 0; // Y
-      verticies[i++] = y; // Z
+    short n1 = 0;
+    short n2 = 0;
+    short n3 = 0;
+    
+    builder.begin();
+      n1 = builder.addVertex(0f, 0f, 0f);
+      builder.addColorToVertex(255, 255, 255, 255);
+      builder.addUVMap(0, 0);
       
-      verticies[i++] = Color.toFloatBits(255, 255, 255, 255); // Color
+      n2 = builder.addVertex(0f, 0f, 1f);
+      builder.addColorToVertex(255, 255, 255, 255);
+      builder.addUVMap(0, 0);
       
-      // Texture Cords
-      verticies[i++] = textureRegion.getU(); // U
-      verticies[i++] = textureRegion.getV(); // V
+      n3 = builder.addVertex(1f, 0f, 0f);
+      builder.addColorToVertex(255, 255, 255, 255);
+      builder.addUVMap(0, 0);
       
-      /* Vertex 2 */
-      verticies[i++] = x; // X
-      verticies[i++] = 0; // Y
-      verticies[i++] = y+1f; // Z
+      builder.addIndices(n1,n2,n3);
       
-      verticies[i++] = Color.toFloatBits(255, 255, 255, 255); // Color
+      n1 = builder.addVertex(1f, 0, 1f);
+      builder.addColorToVertex(255, 255, 255, 255);
+      builder.addUVMap(0, 0);
       
-      // Texture Cords
-      verticies[i++] = textureRegion.getU(); // U
-      verticies[i++] = textureRegion.getV2(); // V
-      
-      /* Vertex 3 */
-      verticies[i++] = x + 1f; // X
-      verticies[i++] = 0; // Y
-      verticies[i++] = y; // Z
-      
-      verticies[i++] = Color.toFloatBits(255, 255, 255, 255); // Color
-      
-      // Texture Cords
-      verticies[i++] = textureRegion.getU2(); // U
-      verticies[i++] = textureRegion.getV(); // V
-      
-      /* Vertex 4 */
-      verticies[i++] = x + 1f; // X
-      verticies[i++] = 0; // Y
-      verticies[i++] = y+1f; // Z
-      
-      verticies[i++] = Color.toFloatBits(255, 255, 255, 255); // Color
-      
-      // Texture Cords
-      verticies[i++] = textureRegion.getU2(); // U
-      verticies[i++] = textureRegion.getV2(); // V
-      
-      if (x < columns) {
-        x++;
-      } else {
-        x = 0;
-        y++;
-      }
-      
-    }
+      builder.addIndices(n3,n2,n1);
+    builder.end();
+    mesh = builder.getMesh();
     
     
     //Gdx.app.log(TAG, "U: "+ textureRegion.getU() + " V: "+textureRegion.getV());
     //Gdx.app.log(TAG, "U: "+ textureRegion.getU2() + " V: "+textureRegion.getV2());
     
-    mesh = new Mesh(true, rows * columns * vertexPerBoxCount, 0, 
-      new VertexAttribute(Usage.Position, 3, "a_position"),
-      new VertexAttribute(Usage.ColorPacked, 4, "a_color"),
-      new VertexAttribute(Usage.TextureCoordinates, 2, "a_textCords")
+    /*mesh = new Mesh(true, rows * columns * vertexPerBoxCount, indices.length, 
+      new VertexAttribute(Usage.Position, 3, "a_position")
     );
-    mesh.setVertices(verticies);
-    
-    //mesh.setIndices(new short[] { 0, 1, 2 });     
+    mesh.setVertices(vertices);
+    mesh.setIndices(indices);*/    
   }
+
 
   @Override
   public void render(float arg0) {
@@ -154,10 +112,10 @@ public class MeshScreen extends BaseScreen {
     
     meshShader.begin();
     meshShader.setUniformMatrix("u_projectionViewMatrix", camera.combined);
-    meshShader.setUniformi("u_texture", 0);
+    //meshShader.setUniformi("u_texture", 0);
     texture.bind(0);
     
-    mesh.render(meshShader, GL20.GL_TRIANGLE_STRIP);
+    mesh.render(meshShader, GL20.GL_TRIANGLES);
     meshShader.end();
     fps.log();
   }
