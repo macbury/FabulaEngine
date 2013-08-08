@@ -40,7 +40,7 @@ public class LoadingScreen extends BaseScreen {
     if (ResourceManager.shared().isLoading()) {
       Gdx.app.log(TAG, "Loading assets progress: " + ResourceManager.shared().getLoadingProgress());
     } else {
-      this.gameManager.setScreen(new MeshScreen(this.gameManager));
+      this.gameManager.setScreen(new WorldScreen(this.gameManager));
     }
   }
   

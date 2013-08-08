@@ -23,81 +23,83 @@ public class Sector {
   public final static int TOTAL_ATTRIBUTES_COUNT  = VERTEX_PER_BOX_COUNT * VERTEX_ATTRIBUTE_COUNT;
   public final static int VERTEX_PER_ROW          = VERTEX_PER_BOX_COUNT * COLUMN_COUNT;
   
-  private Vector3 topLeftCorner;
-  private Array<MeshRow> meshes;
-  private Array<BoundingBox> boundingBoxes;
-  private int currentRow = 0;
-  private Terrain terrain;
   private Vector3 bottomRightCorner;
+  private Vector3 topLeftCorner;
+  private Terrain terrain;
   private BoundingBox boundingBox;
   private float height = 0.0f;
+  private TriangleGrid triangleGrid;
   
   public Sector(Vector3 pos, Terrain terrain) {
     this.terrain           = terrain;
     this.topLeftCorner     = pos;
-    this.meshes            = new Array<MeshRow>(Sector.ROW_COUNT);
-    this.currentRow        = 0;
     this.bottomRightCorner = pos.cpy().add(COLUMN_COUNT, 0, ROW_COUNT);
-    this.boundingBoxes     = new Array<BoundingBox>(Sector.ROW_COUNT);
-  }
-  
-  public void clearSector() {
-    this.currentRow = 0;
-    this.meshes.clear();
-  }
-  
-  public float buildRow() {
-    int verticiesElementsCount = COLUMN_COUNT * TOTAL_ATTRIBUTES_COUNT;
-    
-    float y = 0;
-    int i = 0;
-    int x = (int) topLeftCorner.x;
-    int z = (int) topLeftCorner.z + currentRow++;
-    
-    MeshRow meshRow = new MeshRow(verticiesElementsCount);
-    
-    while(meshRow.isBuilding(verticiesElementsCount)) {
-      Tile tile                   = terrain.getTile(x, z);
-      TextureRegion textureRegion = tile.getTextureRegion();
-      if (tile.getY() > y) {
-        y = tile.getY();
-      }
-      //Gdx.app.log("S", "ID: " + tile.getId() +" X: "+x + "Z: " + z +"  Y: " + tile.getY());
-      /* Vertex 1 */
-      meshRow.addVertex(x, tile.getY1(), z); // Vertext position
-      meshRow.addColor(255, 255, 255, 0); // Color
-      meshRow.addUVMap(textureRegion.getU(), textureRegion.getV()); // Texture Cords
-      
-      /* Vertex 2 */
-      meshRow.addVertex(x, tile.getY2(), z+1f); // Vertext position
-      meshRow.addColor(255, 255, 255, 0); // Color
-      meshRow.addUVMap(textureRegion.getU(), textureRegion.getV2()); // Texture Cords
-      
-      /* Vertex 3 */
-      meshRow.addVertex(x+1f, tile.getY3(), z); // Vertext position
-      meshRow.addColor(255, 255, 255, 0); // Color
-      meshRow.addUVMap(textureRegion.getU2(), textureRegion.getV()); // Texture Cords
-      
-      /* Vertex 4 */
-      meshRow.addVertex(x+1f, tile.getY4(), z+1f); // Vertext position
-      meshRow.addColor(255, 255, 255, 0); // Color
-      meshRow.addUVMap(textureRegion.getU2(), textureRegion.getV2()); // Texture Cords
-      x++;
-    }
-    
-    meshRow.finish();
-    this.boundingBoxes.add(meshRow.getMesh().calculateBoundingBox());
-    this.meshes.add(meshRow);
-    
-    return y;
+    this.triangleGrid      = new TriangleGrid(COLUMN_COUNT, ROW_COUNT);
   }
 
   public void build() {
-    this.clearSector();
     height = 0;
-    for (int i = 0; i < Sector.ROW_COUNT; i++) {
-      height = Math.max(height, this.buildRow());
-    }
+    
+    short n1 = 0;
+    short n2 = 0;
+    short n3 = 0;
+    
+    triangleGrid.begin();
+      for (int z = (int) topLeftCorner.z; z < ROW_COUNT + topLeftCorner.z; z++) {
+        for (int x = (int) topLeftCorner.x; x < COLUMN_COUNT+topLeftCorner.x; x++) {
+          Tile tile                   = terrain.getTile(x, z);
+          TextureRegion textureRegion = tile.getTextureRegion();
+          if (tile.getType() == Tile.Type.CornerTopRight || tile.getType() == Tile.Type.CornerBottomLeft) {
+            /* Top left Vertex */
+            n1 = triangleGrid.addVertex(x, tile.getY1(), z);
+            triangleGrid.addColorToVertex(255, 255, 255, 255);
+            triangleGrid.addUVMap(textureRegion.getU(), textureRegion.getV());
+            
+            /* Bottom left Vertex */
+            n2 = triangleGrid.addVertex(x, tile.getY2(), z+1f);
+            triangleGrid.addColorToVertex(255, 255, 255, 255);
+            triangleGrid.addUVMap(textureRegion.getU(), textureRegion.getV2());
+            
+            /* Top Right Vertex */
+            n3 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
+            triangleGrid.addColorToVertex(255, 255, 255, 255);
+            triangleGrid.addUVMap(textureRegion.getU2(), textureRegion.getV());
+            
+            triangleGrid.addIndices(n1,n2,n3);
+            
+            /* Bottom right Vertex */
+            n1 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
+            triangleGrid.addColorToVertex(255, 255, 255, 255);
+            triangleGrid.addUVMap(textureRegion.getU2(), textureRegion.getV2());
+            
+            triangleGrid.addIndices(n3,n2,n1);
+          } else {
+            /* Top Right Vertex */
+            n1 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
+            triangleGrid.addColorToVertex(255, 255, 255, 255);
+            triangleGrid.addUVMap(textureRegion.getU2(), textureRegion.getV());
+            
+            /* Top left Vertex */
+            n2 = triangleGrid.addVertex(x, tile.getY1(), z);
+            triangleGrid.addColorToVertex(255, 255, 255, 255);
+            triangleGrid.addUVMap(textureRegion.getU(), textureRegion.getV());
+            
+            /* Bottom right Vertex */
+            n3 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
+            triangleGrid.addColorToVertex(255, 255, 255, 255);
+            triangleGrid.addUVMap(textureRegion.getU2(), textureRegion.getV2());
+            
+            triangleGrid.addIndices(n1,n2,n3);
+            
+            /* Bottom left Vertex */
+            n1 = triangleGrid.addVertex(x, tile.getY2(), z+1f);
+            triangleGrid.addColorToVertex(255, 255, 255, 255);
+            triangleGrid.addUVMap(textureRegion.getU(), textureRegion.getV2());
+            triangleGrid.addIndices(n3,n2,n1);
+          }
+        }
+      }
+    triangleGrid.end();
     
     this.boundingBox = new BoundingBox(this.topLeftCorner, this.bottomRightCorner.cpy().add(0, height, 0));
   }
@@ -106,11 +108,7 @@ public class Sector {
     Tile tile = terrain.getTile(0, 0);
     //tile.getTextureRegion().getTexture().i
     tile.getTextureRegion().getTexture().bind(0);
-    for (int i = 0; i < meshes.size; i++) {
-      Mesh mesh = meshes.get(i).getMesh();
-      mesh.render(terrainShader, GL20.GL_TRIANGLE_STRIP);
-      //mesh.render(terrainShader, GL20.GL_LINE_STRIP);
-    }
+    triangleGrid.getMesh().render(terrainShader, GL20.GL_TRIANGLES);
   }
 
   public boolean visibleInCamera(Camera camera) {
@@ -118,21 +116,26 @@ public class Sector {
   }
 
   public Vector3 getPositionForRay(Ray ray) {
-    if (Intersector.intersectRayBoundsFast(ray, this.boundingBox)) {
+    Vector3 intersectedVector = new Vector3();
+    /*if (Intersector.intersectRayBoundsFast(ray, this.boundingBox)) {
       Vector3 intersectedVector = new Vector3();
-      for (BoundingBox boundingBox : boundingBoxes) {
+      /*for (BoundingBox boundingBox : boundingBoxes) {
         if (Intersector.intersectRayBounds(ray, boundingBox, intersectedVector)) { //TODO check which mesh is to intersect wit thirangles
           return intersectedVector;
         }
-      }
+      }*/
       
       /*for (MeshRow row : meshes) {
         if (Intersector.intersectRayTriangles(ray, row.getTriangles(), intersectedVector)) {
           return intersectedVector;
         }
-      }*/
-    }
+      }
+    }*/
     
-    return null;
+    if (Intersector.intersectRayTriangles(ray, triangleGrid.getVerties(), triangleGrid.getIndices(), triangleGrid.getVertexSize(), intersectedVector)) {
+      return intersectedVector;
+    } else {
+      return null;
+    }
   }
 }

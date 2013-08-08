@@ -20,7 +20,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.terrain.Terrain;
-import com.macbury.fabula.terrain.TriangleGridBuilder;
+import com.macbury.fabula.terrain.TriangleGrid;
 import com.macbury.fabula.utils.TopDownCamera;
 
 public class MeshScreen extends BaseScreen {
@@ -59,7 +59,7 @@ public class MeshScreen extends BaseScreen {
     // V == Y
     
     
-    TriangleGridBuilder builder = new TriangleGridBuilder(10, 10);
+    TriangleGrid builder = new TriangleGrid(10, 10);
     
     short n1 = 0;
     short n2 = 0;

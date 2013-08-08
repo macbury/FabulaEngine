@@ -241,19 +241,23 @@ public class Terrain {
       
       if (topLeftTile != null) {
         topLeftTile.setY4(currentTile.getY1());
+        topLeftTile.setType(Tile.Type.CornerTopLeft);
         //topLeftTile.setY2(currentTile.getY1());
       }
       
       if (topRightTile != null) {
         topRightTile.setY2(currentTile.getY3());
+        topRightTile.setType(Tile.Type.CornerTopRight);
       }
       
       if (bottomLeftTile != null) {
         bottomLeftTile.setY3(currentTile.getY2());
+        bottomLeftTile.setType(Tile.Type.CornerBottomLeft);
       }
       
       if (bottomRightTile != null) {
         bottomRightTile.setY1(currentTile.getY4());
+        bottomRightTile.setType(Tile.Type.CornerBottomRight);
       }
       
       this.buildSectors();

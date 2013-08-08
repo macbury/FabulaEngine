@@ -9,7 +9,7 @@ import com.macbury.fabula.manager.ResourceManager;
 
 public class Tile {
   public enum Type {
-    Normal, Top, Left, Right, Bottom
+    Normal, CornerBottomLeft, CornerBottomRight, CornerTopLeft, CornerTopRight
   }
 
   private TextureRegion textureRegion;
@@ -118,6 +118,14 @@ public class Tile {
   public void setY4(float y4) {
     this.y4 = y4;
     calculateHeight();
+  }
+
+  public Type getType() {
+    return type;
+  }
+
+  public void setType(Type type) {
+    this.type = type;
   }
 
 }

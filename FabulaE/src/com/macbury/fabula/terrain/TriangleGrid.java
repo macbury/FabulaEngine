@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
-public class TriangleGridBuilder {
+public class TriangleGrid {
   private static final int ATTRIBUTES_PER_VERTEXT = 7; // Only Position
   private static final int VERTEXT_PER_COL        = 4;
   private int rows;
@@ -16,10 +16,15 @@ public class TriangleGridBuilder {
   private short indicesCursor;
   private float[] verties;
   private short[] indices;
+  private Mesh mesh;
   
-  public TriangleGridBuilder(int width, int height) {
+  public TriangleGrid(int width, int height) {
     this.rows    = height;
     this.columns = width;
+  }
+  
+  public int getVertexSize() {
+    return ATTRIBUTES_PER_VERTEXT;
   }
   
   public void begin() {
@@ -28,6 +33,7 @@ public class TriangleGridBuilder {
     this.indices       = new short[vertextCount * 3];
     this.vertexCursor  = 0;
     this.indicesCursor = 0;
+    this.mesh          = null;
   }
   
   public short addVertex(float x, float y, float z) {
@@ -63,17 +69,27 @@ public class TriangleGridBuilder {
   }
 
   public void end() {
-    
-  }
-
-  public Mesh getMesh() {
-    Mesh mesh = new Mesh(true, verties.length, indices.length, 
+    this.mesh = new Mesh(true, verties.length, indices.length, 
       new VertexAttribute(Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
       new VertexAttribute(Usage.ColorPacked, 4, ShaderProgram.COLOR_ATTRIBUTE),
       new VertexAttribute(Usage.TextureCoordinates, 2, "a_textCords")
     );
     mesh.setVertices(verties);
     mesh.setIndices(indices);
+  }
+
+  public float[] getVerties() {
+    return verties;
+  }
+
+  public short[] getIndices() {
+    return indices;
+  }
+
+  
+  public Mesh getMesh() {
     return mesh;
   }
+
+  
 }
