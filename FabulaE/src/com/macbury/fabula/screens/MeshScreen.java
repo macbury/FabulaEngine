@@ -39,8 +39,8 @@ public class MeshScreen extends BaseScreen {
     
     fps = new FPSLogger();
     
-    String vertexShader = Gdx.files.internal("data/shaders/simple.vert").readString();
-    String fragmentShader = Gdx.files.internal("data/shaders/simple.frag").readString();
+    String vertexShader = Gdx.files.internal("data/shaders/mesh.vert").readString();
+    String fragmentShader = Gdx.files.internal("data/shaders/mesh.frag").readString();
     meshShader = new ShaderProgram(vertexShader, fragmentShader);
     if (!meshShader.isCompiled())
       throw new IllegalStateException(meshShader.getLog());
@@ -54,49 +54,73 @@ public class MeshScreen extends BaseScreen {
     
     texture = ResourceManager.shared().getTexture("TEXTURE_DEBUG");
     //texture.setFilter(Filter.NearestNeighbour, Filter.NearestNeighbour);
-    textureRegion = new TextureRegion(texture, 0, 0, 32, 32);
+    textureRegion = new TextureRegion(texture, 64, 64, 64, 64);
     // U == X
     // V == Y
     
     
-    TriangleGridBuilder builder = new TriangleGridBuilder(1, 1);
+    TriangleGridBuilder builder = new TriangleGridBuilder(10, 10);
     
     short n1 = 0;
     short n2 = 0;
     short n3 = 0;
     
     builder.begin();
-      n1 = builder.addVertex(0f, 0f, 0f);
-      builder.addColorToVertex(255, 255, 255, 255);
-      builder.addUVMap(0, 0);
-      
-      n2 = builder.addVertex(0f, 0f, 1f);
-      builder.addColorToVertex(255, 255, 255, 255);
-      builder.addUVMap(0, 0);
-      
-      n3 = builder.addVertex(1f, 0f, 0f);
-      builder.addColorToVertex(255, 255, 255, 255);
-      builder.addUVMap(0, 0);
-      
-      builder.addIndices(n1,n2,n3);
-      
-      n1 = builder.addVertex(1f, 0, 1f);
-      builder.addColorToVertex(255, 255, 255, 255);
-      builder.addUVMap(0, 0);
-      
-      builder.addIndices(n3,n2,n1);
+      for (int z = 0; z < 10; z++) {
+        for (int x = 0; x < 10; x++) {
+          if (x % 2 == 0) {
+            /* Top left Vertex */
+            n1 = builder.addVertex(x, 0f, z);
+            builder.addColorToVertex(255, 255, 255, 255);
+            builder.addUVMap(textureRegion.getU(), textureRegion.getV());
+            
+            /* Bottom left Vertex */
+            n2 = builder.addVertex(x, 0f, z+1f);
+            builder.addColorToVertex(255, 255, 255, 255);
+            builder.addUVMap(textureRegion.getU(), textureRegion.getV2());
+            
+            /* Top Right Vertex */
+            n3 = builder.addVertex(x+1f, 0f, z);
+            builder.addColorToVertex(255, 255, 255, 255);
+            builder.addUVMap(textureRegion.getU2(), textureRegion.getV());
+            
+            builder.addIndices(n1,n2,n3);
+            
+            /* Bottom right Vertex */
+            n1 = builder.addVertex(x+1f, 0, z+1f);
+            builder.addColorToVertex(255, 255, 255, 255);
+            builder.addUVMap(textureRegion.getU2(), textureRegion.getV2());
+            
+            builder.addIndices(n3,n2,n1);
+          } else {
+            /* Top Right Vertex */
+            n1 = builder.addVertex(x+1f, 0f, z);
+            builder.addColorToVertex(255, 255, 255, 255);
+            builder.addUVMap(textureRegion.getU2(), textureRegion.getV());
+            
+            /* Top left Vertex */
+            n2 = builder.addVertex(x, 0f, z);
+            builder.addColorToVertex(255, 255, 255, 255);
+            builder.addUVMap(textureRegion.getU(), textureRegion.getV());
+            
+            /* Bottom right Vertex */
+            n3 = builder.addVertex(x+1f, 0, z+1f);
+            builder.addColorToVertex(255, 255, 255, 255);
+            builder.addUVMap(textureRegion.getU2(), textureRegion.getV2());
+            
+            builder.addIndices(n1,n2,n3);
+            
+            /* Bottom left Vertex */
+            n1 = builder.addVertex(x, 0f, z+1f);
+            builder.addColorToVertex(255, 255, 255, 255);
+            builder.addUVMap(textureRegion.getU(), textureRegion.getV2());
+            builder.addIndices(n3,n2,n1);
+          }
+        }
+      }
     builder.end();
-    mesh = builder.getMesh();
     
-    
-    //Gdx.app.log(TAG, "U: "+ textureRegion.getU() + " V: "+textureRegion.getV());
-    //Gdx.app.log(TAG, "U: "+ textureRegion.getU2() + " V: "+textureRegion.getV2());
-    
-    /*mesh = new Mesh(true, rows * columns * vertexPerBoxCount, indices.length, 
-      new VertexAttribute(Usage.Position, 3, "a_position")
-    );
-    mesh.setVertices(vertices);
-    mesh.setIndices(indices);*/    
+    mesh = builder.getMesh();  
   }
 
 

@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class TriangleGridBuilder {
-  private static final int ATTRIBUTES_PER_VERTEXT = 5; // Only Position
+  private static final int ATTRIBUTES_PER_VERTEXT = 7; // Only Position
   private static final int VERTEXT_PER_COL        = 4;
   private int rows;
   private int columns;
@@ -42,8 +42,8 @@ public class TriangleGridBuilder {
   }
   
   public void addUVMap(float u, float v) {
-    //this.verties[vertexCursor++] = u;
-    //this.verties[vertexCursor++] = v;
+    this.verties[vertexCursor++] = u;
+    this.verties[vertexCursor++] = v;
   }
   
   public void addRectangle(float x, float y, float z, float width, float height) {
@@ -69,8 +69,8 @@ public class TriangleGridBuilder {
   public Mesh getMesh() {
     Mesh mesh = new Mesh(true, verties.length, indices.length, 
       new VertexAttribute(Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
-      new VertexAttribute(Usage.ColorPacked, 4, ShaderProgram.COLOR_ATTRIBUTE)//,
-      //new VertexAttribute(Usage.TextureCoordinates, 2, "a_textCords")
+      new VertexAttribute(Usage.ColorPacked, 4, ShaderProgram.COLOR_ATTRIBUTE),
+      new VertexAttribute(Usage.TextureCoordinates, 2, "a_textCords")
     );
     mesh.setVertices(verties);
     mesh.setIndices(indices);
