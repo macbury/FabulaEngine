@@ -53,8 +53,8 @@ public class EditorCamController extends InputAdapter {
       return false;
     float deltaX = (screenX - startX) / Gdx.graphics.getWidth();
     float deltaY = (startY - screenY) / Gdx.graphics.getHeight();
-    Gdx.app.log(TAG, "Delta " + deltaX + "x" + deltaY);
-    Gdx.app.log(TAG, "Screen " + screenX + "x" + screenY);
+    //Gdx.app.log(TAG, "Delta " + deltaX + "x" + deltaY);
+    //Gdx.app.log(TAG, "Screen " + screenX + "x" + screenY);
     startX = screenX;
     startY = screenY;
     return process(deltaX, deltaY, button);

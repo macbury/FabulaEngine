@@ -58,16 +58,19 @@ public class Sector {
             n1 = triangleGrid.addVertex(x, tile.getY1(), z);
             triangleGrid.addColorToVertex(255, 255, 255, 255);
             triangleGrid.addUVMap(textureRegion.getU(), textureRegion.getV());
+            triangleGrid.addTextureIndex(255);
             
             /* Bottom left Vertex */
             n2 = triangleGrid.addVertex(x, tile.getY2(), z+1f);
             triangleGrid.addColorToVertex(255, 255, 255, 255);
             triangleGrid.addUVMap(textureRegion.getU(), textureRegion.getV2());
+            triangleGrid.addTextureIndex(0);
             
             /* Top Right Vertex */
             n3 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
             triangleGrid.addColorToVertex(255, 255, 255, 255);
             triangleGrid.addUVMap(textureRegion.getU2(), textureRegion.getV());
+            triangleGrid.addTextureIndex(0);
             
             triangleGrid.addIndices(n1,n2,n3);
             
@@ -75,6 +78,7 @@ public class Sector {
             n1 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
             triangleGrid.addColorToVertex(255, 255, 255, 255);
             triangleGrid.addUVMap(textureRegion.getU2(), textureRegion.getV2());
+            triangleGrid.addTextureIndex(0);
             
             triangleGrid.addIndices(n3,n2,n1);
           } else {
@@ -82,16 +86,19 @@ public class Sector {
             n1 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
             triangleGrid.addColorToVertex(255, 255, 255, 255);
             triangleGrid.addUVMap(textureRegion.getU2(), textureRegion.getV());
+            triangleGrid.addTextureIndex(0);
             
             /* Top left Vertex */
             n2 = triangleGrid.addVertex(x, tile.getY1(), z);
             triangleGrid.addColorToVertex(255, 255, 255, 255);
             triangleGrid.addUVMap(textureRegion.getU(), textureRegion.getV());
+            triangleGrid.addTextureIndex(0);
             
             /* Bottom right Vertex */
             n3 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
             triangleGrid.addColorToVertex(255, 255, 255, 255);
             triangleGrid.addUVMap(textureRegion.getU2(), textureRegion.getV2());
+            triangleGrid.addTextureIndex(0);
             
             triangleGrid.addIndices(n1,n2,n3);
             
@@ -99,6 +106,8 @@ public class Sector {
             n1 = triangleGrid.addVertex(x, tile.getY2(), z+1f);
             triangleGrid.addColorToVertex(255, 255, 255, 255);
             triangleGrid.addUVMap(textureRegion.getU(), textureRegion.getV2());
+            triangleGrid.addTextureIndex(0);
+            
             triangleGrid.addIndices(n3,n2,n1);
           }
         }

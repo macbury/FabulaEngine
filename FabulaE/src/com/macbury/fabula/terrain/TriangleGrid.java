@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class TriangleGrid {
-  private static final int ATTRIBUTES_PER_VERTEXT = 7; // Only Position
+  private static final int ATTRIBUTES_PER_VERTEXT = 8; // Only Position
   private static final int VERTEXT_PER_COL        = 4;
   private int rows;
   private int columns;
@@ -27,7 +27,8 @@ public class TriangleGrid {
     this.mesh = new Mesh(isStatic, verties.length, indices.length, 
       new VertexAttribute(Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
       new VertexAttribute(Usage.ColorPacked, 4, ShaderProgram.COLOR_ATTRIBUTE),
-      new VertexAttribute(Usage.TextureCoordinates, 2, "a_textCords")
+      new VertexAttribute(Usage.TextureCoordinates, 2, "a_textCords"),
+      new VertexAttribute(Usage.Generic, 1, "a_textureNumber")
     );
   }
   
@@ -46,6 +47,10 @@ public class TriangleGrid {
     this.verties[vertexCursor++] = y;
     this.verties[vertexCursor++] = z;
     return vertexIndex++;
+  }
+  
+  public void addTextureIndex(float i) {
+    this.verties[vertexCursor++] = i;
   }
   
   public void addColorToVertex(int r, int g, int b, int a) {

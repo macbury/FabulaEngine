@@ -106,7 +106,7 @@ public class Terrain {
     
     terrainShader.begin();
     terrainShader.setUniformMatrix("u_projectionViewMatrix", camera.combined);
-    terrainShader.setUniformi("u_texture", 0);
+    terrainShader.setUniformi("u_texture0", 0);
     visibleSectors.clear();
     
     for (int x = 0; x < horizontalSectorCount; x++) {
