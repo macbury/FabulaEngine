@@ -34,7 +34,7 @@ public class Sector {
     this.terrain           = terrain;
     this.topLeftCorner     = pos;
     this.bottomRightCorner = pos.cpy().add(COLUMN_COUNT, 0, ROW_COUNT);
-    this.triangleGrid      = new TriangleGrid(COLUMN_COUNT, ROW_COUNT);
+    this.triangleGrid      = new TriangleGrid(COLUMN_COUNT, ROW_COUNT, false); //TODO: change to static for non world edit
   }
 
   public void build() {
@@ -44,10 +44,14 @@ public class Sector {
     short n2 = 0;
     short n3 = 0;
     
+    short rowEnd    = (short) (ROW_COUNT + topLeftCorner.z);
+    short columnEnd = (short) (COLUMN_COUNT+topLeftCorner.x);
+    
     triangleGrid.begin();
-      for (int z = (int) topLeftCorner.z; z < ROW_COUNT + topLeftCorner.z; z++) {
-        for (int x = (int) topLeftCorner.x; x < COLUMN_COUNT+topLeftCorner.x; x++) {
-          Tile tile                   = terrain.getTile(x, z);
+      for (int z = (int) topLeftCorner.z; z < rowEnd; z++) {
+        for (int x = (int) topLeftCorner.x; x < columnEnd; x++) {
+          Tile tile = terrain.getTile(x, z);
+          height    = Math.max(tile.getY(), height);
           TextureRegion textureRegion = tile.getTextureRegion();
           if (tile.getType() == Tile.Type.CornerTopRight || tile.getType() == Tile.Type.CornerBottomLeft) {
             /* Top left Vertex */

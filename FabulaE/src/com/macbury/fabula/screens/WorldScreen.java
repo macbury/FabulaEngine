@@ -2,6 +2,7 @@ package com.macbury.fabula.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -26,9 +27,10 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.terrain.Terrain;
 import com.macbury.fabula.terrain.Tile;
+import com.macbury.fabula.utils.EditorCamController;
 import com.macbury.fabula.utils.TopDownCamera;
 
-public class WorldScreen extends BaseScreen {
+public class WorldScreen extends BaseScreen implements InputProcessor {
   private static final String TAG = "WorldScreen";
   private TopDownCamera camera;
   private Terrain terrain;
@@ -37,6 +39,7 @@ public class WorldScreen extends BaseScreen {
   private ModelInstance cursorInstance;
   private ModelBatch modelBatch;
   //public  Lights lights;
+  private EditorCamController camController;
   
   public WorldScreen(GameManager manager) {
     super(manager);
@@ -58,13 +61,15 @@ public class WorldScreen extends BaseScreen {
     font = generator.generateFont(16);
     this.camera = new TopDownCamera();
     Gdx.app.log(TAG, "Initialized screen");
-    this.terrain = new Terrain(this, 20, 20);
+    this.terrain = new Terrain(this, 100, 100);
     //terrain.buildTerrainUsingImageHeightMap("data/textures/heightmap.png");
     terrain.fillEmptyTilesWithDebugTile();
     terrain.buildSectors();
     camera.position.set(0, 17, 0);
     camera.lookAt(0, 0, 0);
-    Gdx.input.setInputProcessor(new CameraInputController(camera));
+    
+    this.camController = new EditorCamController(camera);
+    Gdx.input.setInputProcessor(camController);
   }
 
   @Override
@@ -87,6 +92,7 @@ public class WorldScreen extends BaseScreen {
   
   @Override
   public void render(float delta) {
+    camController.update();
     camera.update();
     
     this.terrain.render(this.camera);
@@ -113,8 +119,9 @@ public class WorldScreen extends BaseScreen {
       
       if (pos != null) {
         cursorInstance.transform.setToTranslation(pos.add(-0.5f, 0.05f, -0.5f));
-        Gdx.app.log(TAG, "Picked: "+ pos.toString());
+        //Gdx.app.log(TAG, "Picked: "+ pos.toString());
       }
+      
     } else if (Gdx.input.isKeyPressed(Keys.F)) {
       Vector3 pos = new Vector3();
       cursorInstance.transform.getTranslation(pos);
@@ -151,5 +158,53 @@ public class WorldScreen extends BaseScreen {
   
   public TopDownCamera getCamera() {
     return camera;
+  }
+
+  @Override
+  public boolean keyDown(int arg0) {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public boolean keyTyped(char arg0) {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public boolean keyUp(int arg0) {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public boolean mouseMoved(int x, int y) {
+    
+    return true;
+  }
+
+  @Override
+  public boolean scrolled(int arg0) {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public boolean touchDown(int x, int y, int pointer, int button) {
+    Gdx.app.log(TAG, "Pointer: " + pointer + " Button: " + button);
+    return false;
+  }
+
+  @Override
+  public boolean touchDragged(int arg0, int arg1, int arg2) {
+    //Gdx.app.log(TAG, "Dragging");
+    return false;
+  }
+
+  @Override
+  public boolean touchUp(int arg0, int arg1, int arg2, int arg3) {
+    // TODO Auto-generated method stub
+    return false;
   }
 }

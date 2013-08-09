@@ -1,5 +1,6 @@
 package com.macbury.fabula.terrain;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 import com.badlogic.gdx.Gdx;
@@ -27,7 +28,7 @@ public class Terrain {
   private int visibleSectorCount;
   
   private Stack<Sector> visibleSectors;
-  
+  private ArrayList<Sector> rebuildSectorsArray = new ArrayList<>();
   private Vector3 intersection = new Vector3();
   
   public Terrain(WorldScreen screen, int columns, int rows) {
@@ -50,30 +51,6 @@ public class Terrain {
     
   }
 
-  public void applySlopes() {
-    for (int z = 0; z < rows; z++) {
-      for (int x = 0; x < columns; x++) {
-        Tile topTile    = getTile(x, z-1);
-        Tile topRightTile    = getTile(x, z-1);
-        Tile bottomTile = getTile(x, z+1);
-        Tile leftTile   = getTile(x-1, z);
-        Tile rightTile  = getTile(x+1, z);
-        
-        Tile currentTile = getTile(x, z);
-        
-        if (topTile != null) {
-          currentTile.setY1(topTile.getY1());
-          currentTile.setY3(topTile.getY3());
-        }
-        
-        if (bottomTile != null) {
-          currentTile.setY2(bottomTile.getY2());
-          currentTile.setY4(bottomTile.getY4());
-        }
-      }
-    }
-  }
-  
   public void buildSectors() {
     for (int x = 0; x < horizontalSectorCount; x++) {
       for (int z = 0; z < veriticalSectorCount; z++) {
@@ -82,6 +59,8 @@ public class Terrain {
         this.sectors[x][z] = sector;
       }
     }
+    
+    System.gc();
   }
   
   public void fillEmptyTilesWithDebugTile() {
@@ -199,7 +178,20 @@ public class Terrain {
   public Tile getTile(Vector3 pos) {
     return getTile((int)pos.x, (int)pos.z);
   }
-
+  
+  public Sector getSectorForTile(Tile tile) {
+    int x = (int) Math.floor(tile.getX() / Sector.COLUMN_COUNT);
+    int z = (int) Math.floor(tile.getZ() / Sector.ROW_COUNT);
+    return sectors[x][z];
+  }
+  
+  public void addSectorToRebuildFromTile(Tile tile) {
+    Sector sector = getSectorForTile(tile);
+    if (sector != null && this.rebuildSectorsArray.indexOf(sector) == -1) {
+      this.rebuildSectorsArray.add(sector);
+    }
+  }
+  
   public void applyHill(Vector3 pos, float power) {
     int x = (int)pos.x;
     int z = (int)pos.z;
@@ -218,49 +210,64 @@ public class Terrain {
       
       Tile bottomLeftTile   = getTile(x-1, z+1);
       Tile bottomRightTile   = getTile(x+1, z+1);
+      
       currentTile.setY(currentTile.getY()+power);
+      addSectorToRebuildFromTile(currentTile);
+      
       if (topTile != null) {
         topTile.setY2(currentTile.getY1());
         topTile.setY4(currentTile.getY3());
+        addSectorToRebuildFromTile(topTile);
       }
       
       if (bottomTile != null) {
         bottomTile.setY1(currentTile.getY2());
         bottomTile.setY3(currentTile.getY4());
+        addSectorToRebuildFromTile(bottomTile);
       }
       
       if (leftTile != null) {
         leftTile.setY3(currentTile.getY1());
         leftTile.setY4(currentTile.getY2());
+        addSectorToRebuildFromTile(leftTile);
       }
       
       if (rightTile != null) {
         rightTile.setY1(currentTile.getY3());
         rightTile.setY2(currentTile.getY4());
+        addSectorToRebuildFromTile(rightTile);
       }
       
       if (topLeftTile != null) {
         topLeftTile.setY4(currentTile.getY1());
         topLeftTile.setType(Tile.Type.CornerTopLeft);
         //topLeftTile.setY2(currentTile.getY1());
+        addSectorToRebuildFromTile(topLeftTile);
       }
       
       if (topRightTile != null) {
         topRightTile.setY2(currentTile.getY3());
         topRightTile.setType(Tile.Type.CornerTopRight);
+        addSectorToRebuildFromTile(topRightTile);
       }
       
       if (bottomLeftTile != null) {
         bottomLeftTile.setY3(currentTile.getY2());
         bottomLeftTile.setType(Tile.Type.CornerBottomLeft);
+        addSectorToRebuildFromTile(bottomLeftTile);
       }
       
       if (bottomRightTile != null) {
         bottomRightTile.setY1(currentTile.getY4());
         bottomRightTile.setType(Tile.Type.CornerBottomRight);
+        addSectorToRebuildFromTile(bottomRightTile);
       }
       
-      this.buildSectors();
+      for (Sector sector : rebuildSectorsArray) {
+        sector.build();
+      }
+      rebuildSectorsArray.clear();
+      //this.buildSectors();
     }
   }
 }
