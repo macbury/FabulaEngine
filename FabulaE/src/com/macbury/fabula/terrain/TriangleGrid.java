@@ -27,7 +27,8 @@ public class TriangleGrid {
   private boolean tilePosAttribute;
   private boolean colorAttribute;
   private boolean uvMapAttribute;
-  
+  private boolean wireframeAttribute;
+  private byte baryCentricCursor = 0;
   public TriangleGrid(int width, int height, boolean isStatic, int attr_count) {
     this.attributes_per_vertex = attr_count;
     this.rows          = height;
@@ -68,6 +69,34 @@ public class TriangleGrid {
     this.tilePosAttribute = true;
     this.verties[vertexCursor++] = x;
     this.verties[vertexCursor++] = z;
+  }
+  
+  public void addBaryCentric(float x, float y, float z) {
+    this.wireframeAttribute = true;
+    this.verties[vertexCursor++] = x;
+    this.verties[vertexCursor++] = y;
+    this.verties[vertexCursor++] = z;
+  }
+  
+  public void addBaryCentric() {
+    switch (baryCentricCursor) {
+      case 0:
+        addBaryCentric(1f,0.0f,0.0f);
+      break;
+      
+      case 1:
+        addBaryCentric(0.0f,1f,0f);
+      break;
+      
+      case 2:
+        addBaryCentric(0.0f,0.0f,1f);
+      break;
+    }
+    
+    baryCentricCursor++;
+    if (baryCentricCursor >= 2) {
+      baryCentricCursor = 0;
+    }
   }
   
   public void addColorToVertex(int r, int g, int b, int a) {
@@ -136,6 +165,10 @@ public class TriangleGrid {
     
     if (tilePosAttribute) {
       attributes.add(new VertexAttribute(Usage.Generic, 2, "a_tile_position"));
+    }
+    
+    if (wireframeAttribute) {
+      attributes.add(new VertexAttribute(Usage.Generic, 3, "a_barycentric"));
     }
     
     return attributes.toArray(new VertexAttribute[attributes.size()]);

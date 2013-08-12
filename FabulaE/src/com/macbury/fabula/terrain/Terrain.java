@@ -32,9 +32,8 @@ public class Terrain {
   private ArrayList<Sector> rebuildSectorsArray = new ArrayList<>();
   private Vector3 intersection = new Vector3();
   private boolean debug = false;
-  private Vector2 brushPosition = new Vector2(0,0);
-  private int brushSize         = 3;
-  private float brushPower      = 0.1f;
+
+  private TerrainDebugListener debugListener;
   
   public Terrain(WorldEditScreen screen, int columns, int rows, boolean debug) {
     this.debug   = debug;
@@ -115,8 +114,9 @@ public class Terrain {
     terrainShader.setUniformi("u_texture0", 0);
     
     if (debug) {
-      terrainShader.setUniformf("u_brush_position", brushPosition);
-      terrainShader.setUniformf("u_brush_size", brushSize);
+      if (debugListener != null) {
+        debugListener.onDebugTerrainConfigureShader(terrainShader);
+      }
     }
     
     visibleSectors.clear();
@@ -286,23 +286,20 @@ public class Terrain {
     return debug;
   }
   
-  public void setBrushPosition(float x, float z) {
-    this.brushPosition.set(x, z);
-  }
-  
-  public Vector2 getBrushPosition() {
-    return this.brushPosition;
-  }
 
   public int getTileIdByPos(Vector3 pos) {
     return (int)((pos.z - 1) * this.columns + pos.x);
   }
-
-  public int getBrushSize() {
-    return brushSize;
+  
+  public TerrainDebugListener getDebugListener() {
+    return debugListener;
   }
 
-  public void setBrushSize(int brushSize) {
-    this.brushSize = brushSize;
+  public void setDebugListener(TerrainDebugListener debugListener) {
+    this.debugListener = debugListener;
+  }
+
+  public interface TerrainDebugListener {
+    public void onDebugTerrainConfigureShader(ShaderProgram shader);
   }
 }

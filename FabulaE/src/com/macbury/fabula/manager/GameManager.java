@@ -55,10 +55,10 @@ public class GameManager extends Game {
 
   @Override
   public void render() {
-    
     Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-
+    
     super.render();
   }
   

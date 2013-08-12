@@ -145,7 +145,7 @@ public class Sector {
     Tile tile = terrain.getTile(0, 0);
     //tile.getTextureRegion().getTexture().i
     tile.getTextureRegion().getTexture().bind(0);
-    triangleGrid.getMesh().render(terrainShader, GL20.GL_TRIANGLES);
+    triangleGrid.getMesh().render(terrainShader, GL20.GL_TRIANGLES); // GL20.GL_LINES wireframe
   }
 
   public boolean visibleInCamera(Camera camera) {
