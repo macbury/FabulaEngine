@@ -54,6 +54,11 @@ public class ResourceManager {
     this.shaders      = new HashMap<String, ShaderProgram>();
   }
   
+  public void loadSynch() throws Exception {
+    load();
+    assetManager.finishLoading();
+  }
+  
   public void load() throws Exception {
     File rawXml = Gdx.files.internal("data/assets.game").file();
     Gdx.app.log(TAG, "Loaded resources XML");

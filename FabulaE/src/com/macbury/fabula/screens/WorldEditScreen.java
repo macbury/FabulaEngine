@@ -2,6 +2,7 @@ package com.macbury.fabula.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
@@ -24,52 +25,45 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
+import com.macbury.fabula.editor.WorldEditorFrame;
 import com.macbury.fabula.manager.GameManager;
+import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.terrain.Terrain;
 import com.macbury.fabula.terrain.Tile;
 import com.macbury.fabula.utils.EditorCamController;
 import com.macbury.fabula.utils.TopDownCamera;
 
-public class WorldScreen extends BaseScreen implements InputProcessor {
+public class WorldEditScreen extends BaseScreen implements InputProcessor {
+  public String debugInfo = "";
   private static final String TAG = "WorldScreen";
   private TopDownCamera camera;
   private Terrain terrain;
-  private BitmapFont font;
-  private SpriteBatch guiBatch;
-  private ModelInstance cursorInstance;
   private ModelBatch modelBatch;
-  //public  Lights lights;
   private EditorCamController camController;
   
-  public WorldScreen(GameManager manager) {
+  public WorldEditScreen(GameManager manager) {
     super(manager);
     
-    //lights = new Lights();
-    //lights.ambientLight.set(0.1f, 0.1f, 0.1f, 1f);
-    //lights.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+    try {
+      ResourceManager.shared().loadSynch();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
     
     ModelBuilder modelBuilder = new ModelBuilder();
     Model model               = modelBuilder.createBox(1f, 0.1f, 1f,  new Material(ColorAttribute.createDiffuse(Color.GREEN)), Usage.Position | Usage.Normal);
-    cursorInstance            = new ModelInstance(model);
     
-    modelBatch                = new ModelBatch();
-    
-    //guiCamera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
-    guiBatch = new SpriteBatch();
-    
-    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("data/font/Courier New.ttf"));
-    font = generator.generateFont(16);
     this.camera = new TopDownCamera();
     Gdx.app.log(TAG, "Initialized screen");
-    this.terrain = new Terrain(this, 100, 100);
-    //terrain.buildTerrainUsingImageHeightMap("data/textures/heightmap.png");
+    this.terrain = new Terrain(this, 10, 10, true);
     terrain.fillEmptyTilesWithDebugTile();
     terrain.buildSectors();
     camera.position.set(0, 17, 0);
     camera.lookAt(0, 0, 0);
     
     this.camController = new EditorCamController(camera);
-    Gdx.input.setInputProcessor(camController);
+    InputMultiplexer inputMultiplexer = new InputMultiplexer(this, camController);
+    Gdx.input.setInputProcessor(inputMultiplexer);
   }
 
   @Override
@@ -96,53 +90,39 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
     camera.update();
     
     this.terrain.render(this.camera);
-    modelBatch.begin(camera);
-    modelBatch.render(cursorInstance);
-    modelBatch.end();
+    //modelBatch.begin(camera);
+    //modelBatch.render(cursorInstance);
+    //modelBatch.end();
     
-    //guiBatch.setProjectionMatrix(camera.combined);
-    
-    guiBatch.begin();
-    font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-    font.draw(guiBatch, "Visible sector count: "+ this.terrain.getVisibleSectorCount(), 20f, 90f);
-    font.draw(guiBatch, "Sector count: "+ this.terrain.getTotalSectorCount(), 20f, 60f);
-    font.draw(guiBatch, "FPS: "+ Gdx.graphics.getFramesPerSecond() + " Java Heap: " + (Gdx.app.getJavaHeap() / 1024) + " KB" + " Native Heap: " + (Gdx.app.getNativeHeap() / 1024) + " KB", 20f, 30f);
-    guiBatch.end();
+    debugInfo = "FPS: "+ Gdx.graphics.getFramesPerSecond() + " Java Heap: " + (Gdx.app.getJavaHeap() / 1024) + " KB" + " Native Heap: " + (Gdx.app.getNativeHeap() / 1024);
     
     handlePick();
   }
   
   private void handlePick() {
-    if (Gdx.input.isKeyPressed(Keys.W)) {
-      Ray ray     = camera.getPickRay(Gdx.input.getX(), Gdx.input.getY());
-      Vector3 pos = terrain.getSnappedPositionForRay(ray);
-      
-      if (pos != null) {
-        cursorInstance.transform.setToTranslation(pos.add(-0.5f, 0.05f, -0.5f));
-        //Gdx.app.log(TAG, "Picked: "+ pos.toString());
-      }
-      
-    } else if (Gdx.input.isKeyPressed(Keys.F)) {
+    if (Gdx.input.isKeyPressed(Keys.F)) {
       Vector3 pos = new Vector3();
-      cursorInstance.transform.getTranslation(pos);
+      //cursorInstance.transform.getTranslation(pos);
       camera.lookAt(pos);
     } 
     
     if (Gdx.input.isKeyPressed(Keys.Q)) {
       Vector3 pos = new Vector3();
-      cursorInstance.transform.getTranslation(pos);
+      //cursorInstance.transform.getTranslation(pos);
       terrain.applyHill(pos, 0.1f);
     } else if (Gdx.input.isKeyPressed(Keys.A))  {
       Vector3 pos = new Vector3();
-      cursorInstance.transform.getTranslation(pos);
+      //cursorInstance.transform.getTranslation(pos);
       terrain.applyHill(pos, -0.1f);
     }
   }
 
   @Override
   public void resize(int width, int height) {
-    // TODO Auto-generated method stub
     
+    camera.viewportWidth = Gdx.graphics.getWidth();
+    camera.viewportHeight = Gdx.graphics.getHeight();
+    this.camera.update(true);
   }
   
   @Override
@@ -177,10 +157,18 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
     // TODO Auto-generated method stub
     return false;
   }
-
+  
+  Vector3 mouseTilePosition = new Vector3();
   @Override
   public boolean mouseMoved(int x, int y) {
+    Ray ray     = camera.getPickRay(Gdx.input.getX(), Gdx.input.getY());
+    Vector3 pos = terrain.getSnappedPositionForRay(ray, mouseTilePosition);
     
+    if (pos != null) {
+      int gid = terrain.getTileIdByPos(pos);
+      terrain.setCurrentTileId(gid);
+      //Gdx.app.log(TAG, "Picked: "+ pos.toString());
+    }
     return true;
   }
 
@@ -207,4 +195,5 @@ public class WorldScreen extends BaseScreen implements InputProcessor {
     // TODO Auto-generated method stub
     return false;
   }
+
 }

@@ -14,7 +14,7 @@ public class Tile {
   }
 
   private TextureRegion textureRegion;
-  private static int GID_COUNTER  = 0;
+  public static int GID_COUNTER  = 0;
   private Type type               = Type.Normal;
   private Vector3 position;
   float y1 = 0; // |1----3|

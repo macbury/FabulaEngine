@@ -5,9 +5,10 @@ import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector3;
 
 public class TriangleGrid {
-  private static final int ATTRIBUTES_PER_VERTEXT = 8; // Only Position
+  ///private static final int ATTRIBUTES_PER_VERTEXT = 9; // Only Position
   private static final int VERTEXT_PER_COL        = 4;
   private int rows;
   private int columns;
@@ -17,23 +18,30 @@ public class TriangleGrid {
   private float[] verties;
   private short[] indices;
   private Mesh mesh;
+  private int attributes_per_vertex;
   
-  public TriangleGrid(int width, int height, boolean isStatic) {
+  public TriangleGrid(int width, int height, boolean isStatic, int attr_count) {
+    this.attributes_per_vertex = attr_count;
     this.rows          = height;
     this.columns       = width;
     int vertextCount   = rows*columns* VERTEXT_PER_COL;
-    this.verties       = new float[vertextCount * ATTRIBUTES_PER_VERTEXT];
+    this.verties       = new float[vertextCount * getAttributesPerVertex()];
     this.indices       = new short[vertextCount * 3];
     this.mesh = new Mesh(isStatic, verties.length, indices.length, 
       new VertexAttribute(Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
       new VertexAttribute(Usage.ColorPacked, 4, ShaderProgram.COLOR_ATTRIBUTE),
       new VertexAttribute(Usage.TextureCoordinates, 2, "a_textCords"),
-      new VertexAttribute(Usage.Generic, 1, "a_textureNumber")
+      new VertexAttribute(Usage.Generic, 1, "a_textureNumber"),
+      new VertexAttribute(Usage.Generic, 2, "a_tile_position")
     );
   }
   
+  public int getAttributesPerVertex() {
+    return this.attributes_per_vertex;
+  }
+  
   public int getVertexSize() {
-    return ATTRIBUTES_PER_VERTEXT-1;
+    return getAttributesPerVertex()-1;
   }
   
   public void begin() {
@@ -51,6 +59,11 @@ public class TriangleGrid {
   
   public void addTextureIndex(float i) {
     this.verties[vertexCursor++] = i;
+  }
+  
+  public void addTilePos(float x, float z) {
+    this.verties[vertexCursor++] = x;
+    this.verties[vertexCursor++] = z;
   }
   
   public void addColorToVertex(int r, int g, int b, int a) {

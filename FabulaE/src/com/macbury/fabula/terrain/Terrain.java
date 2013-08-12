@@ -14,7 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.macbury.fabula.manager.ResourceManager;
-import com.macbury.fabula.screens.WorldScreen;
+import com.macbury.fabula.screens.WorldEditScreen;
 
 public class Terrain {
   private Sector[][] sectors;
@@ -30,13 +30,17 @@ public class Terrain {
   private Stack<Sector> visibleSectors;
   private ArrayList<Sector> rebuildSectorsArray = new ArrayList<>();
   private Vector3 intersection = new Vector3();
+  private boolean debug = false;
+  private int currentTileId = 0;
+  private int brushSize = 5;
   
-  public Terrain(WorldScreen screen, int columns, int rows) {
+  public Terrain(WorldEditScreen screen, int columns, int rows, boolean debug) {
+    this.debug   = debug;
     this.columns = columns;
     this.rows    = rows;
-    
+    Tile.GID_COUNTER = 1;
     this.tiles    = new Tile[columns][rows];
-    terrainShader = ResourceManager.shared().getShaderProgram("SHADER_TERRAIN");
+    terrainShader = ResourceManager.shared().getShaderProgram(debug ? "SHADER_TERRAIN_EDITOR" : "SHADER_TERRAIN");
     
     if (columns % Sector.COLUMN_COUNT != 0 || rows%Sector.ROW_COUNT != 0) {
       throw new RuntimeException("Map size must be proper!");
@@ -107,6 +111,12 @@ public class Terrain {
     terrainShader.begin();
     terrainShader.setUniformMatrix("u_projectionViewMatrix", camera.combined);
     terrainShader.setUniformi("u_texture0", 0);
+    
+    if (debug) {
+      //terrainShader.setUniformf("u_current_tile_id", currentTileId);
+      //terrainShader.setUniformf("u_brush_size", currentTileId);
+    }
+    
     visibleSectors.clear();
     
     for (int x = 0; x < horizontalSectorCount; x++) {
@@ -134,10 +144,10 @@ public class Terrain {
     return this.visibleSectorCount;
   }
 
-  public Vector3 getPositionForRay(Ray ray) {
+  public Vector3 getPositionForRay(Ray ray, Vector3 mouseTilePosition) {
     Vector3 intersectedVector = null;
     for (Sector sector : visibleSectors) {
-      intersectedVector = sector.getPositionForRay(ray);
+      intersectedVector = sector.getPositionForRay(ray, mouseTilePosition);
       
       if (intersectedVector != null) {
         break;
@@ -159,20 +169,19 @@ public class Terrain {
     }
   }
 
-  public Vector3 getSnappedPositionForRay(Ray ray) {
-    Vector3 pos = getPositionForRay(ray);
+  public Vector3 getSnappedPositionForRay(Ray ray, Vector3 mouseTilePosition) {
+    Vector3 pos = getPositionForRay(ray, mouseTilePosition);
     if (pos != null) {
-      Tile tile = getTile(pos);
+      Tile tile   = getTile(pos);
       
       float y = Math.max(0, pos.y);
       if (tile != null) {
         y = tile.getY();
       }
       pos.set((float)Math.floor(pos.x)+1, y, (float)Math.floor(pos.z)+1);
-      return pos;
-    } else {
-      return null;
     }
+    
+    return pos;
   }
 
   public Tile getTile(Vector3 pos) {
@@ -269,5 +278,29 @@ public class Terrain {
       rebuildSectorsArray.clear();
       //this.buildSectors();
     }
+  }
+  
+  public boolean isDebuging() {
+    return debug;
+  }
+
+  public int getCurrentTileId() {
+    return currentTileId;
+  }
+
+  public void setCurrentTileId(int currentTileId) {
+    this.currentTileId = currentTileId;
+  }
+
+  public int getTileIdByPos(Vector3 pos) {
+    return (int)((pos.z - 1) * this.columns + pos.x);
+  }
+
+  public int getBrushSize() {
+    return brushSize;
+  }
+
+  public void setBrushSize(int brushSize) {
+    this.brushSize = brushSize;
   }
 }

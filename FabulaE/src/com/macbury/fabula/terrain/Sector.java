@@ -34,7 +34,7 @@ public class Sector {
     this.terrain           = terrain;
     this.topLeftCorner     = pos;
     this.bottomRightCorner = pos.cpy().add(COLUMN_COUNT, 0, ROW_COUNT);
-    this.triangleGrid      = new TriangleGrid(COLUMN_COUNT, ROW_COUNT, false); //TODO: change to static for non world edit
+    this.triangleGrid      = new TriangleGrid(COLUMN_COUNT, ROW_COUNT, false, terrain.isDebuging() ? 10 : 8); //TODO: change to static for non world edit
   }
 
   public void build() {
@@ -59,18 +59,27 @@ public class Sector {
             triangleGrid.addColorToVertex(255, 255, 255, 255);
             triangleGrid.addUVMap(textureRegion.getU(), textureRegion.getV());
             triangleGrid.addTextureIndex(255);
+            if (terrain.isDebuging()) {
+              triangleGrid.addTilePos(tile.getX(), tile.getZ());
+            }
             
             /* Bottom left Vertex */
             n2 = triangleGrid.addVertex(x, tile.getY2(), z+1f);
             triangleGrid.addColorToVertex(255, 255, 255, 255);
             triangleGrid.addUVMap(textureRegion.getU(), textureRegion.getV2());
             triangleGrid.addTextureIndex(0);
+            if (terrain.isDebuging()) {
+              triangleGrid.addTilePos(tile.getX(), tile.getZ());
+            }
             
             /* Top Right Vertex */
             n3 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
             triangleGrid.addColorToVertex(255, 255, 255, 255);
             triangleGrid.addUVMap(textureRegion.getU2(), textureRegion.getV());
             triangleGrid.addTextureIndex(0);
+            if (terrain.isDebuging()) {
+              triangleGrid.addTilePos(tile.getX(), tile.getZ());
+            }
             
             triangleGrid.addIndices(n1,n2,n3);
             
@@ -79,6 +88,9 @@ public class Sector {
             triangleGrid.addColorToVertex(255, 255, 255, 255);
             triangleGrid.addUVMap(textureRegion.getU2(), textureRegion.getV2());
             triangleGrid.addTextureIndex(0);
+            if (terrain.isDebuging()) {
+              triangleGrid.addTilePos(tile.getX(), tile.getZ());
+            }
             
             triangleGrid.addIndices(n3,n2,n1);
           } else {
@@ -87,18 +99,27 @@ public class Sector {
             triangleGrid.addColorToVertex(255, 255, 255, 255);
             triangleGrid.addUVMap(textureRegion.getU2(), textureRegion.getV());
             triangleGrid.addTextureIndex(0);
+            if (terrain.isDebuging()) {
+              triangleGrid.addTilePos(tile.getX(), tile.getZ());
+            }
             
             /* Top left Vertex */
             n2 = triangleGrid.addVertex(x, tile.getY1(), z);
             triangleGrid.addColorToVertex(255, 255, 255, 255);
             triangleGrid.addUVMap(textureRegion.getU(), textureRegion.getV());
             triangleGrid.addTextureIndex(0);
+            if (terrain.isDebuging()) {
+              triangleGrid.addTilePos(tile.getX(), tile.getZ());
+            }
             
             /* Bottom right Vertex */
             n3 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
             triangleGrid.addColorToVertex(255, 255, 255, 255);
             triangleGrid.addUVMap(textureRegion.getU2(), textureRegion.getV2());
             triangleGrid.addTextureIndex(0);
+            if (terrain.isDebuging()) {
+              triangleGrid.addTilePos(tile.getX(), tile.getZ());
+            }
             
             triangleGrid.addIndices(n1,n2,n3);
             
@@ -107,6 +128,9 @@ public class Sector {
             triangleGrid.addColorToVertex(255, 255, 255, 255);
             triangleGrid.addUVMap(textureRegion.getU(), textureRegion.getV2());
             triangleGrid.addTextureIndex(0);
+            if (terrain.isDebuging()) {
+              triangleGrid.addTilePos(tile.getX(), tile.getZ());
+            }
             
             triangleGrid.addIndices(n3,n2,n1);
           }
@@ -128,25 +152,9 @@ public class Sector {
     return camera.frustum.boundsInFrustum(boundingBox);
   }
 
-  public Vector3 getPositionForRay(Ray ray) {
-    Vector3 intersectedVector = new Vector3();
-    /*if (Intersector.intersectRayBoundsFast(ray, this.boundingBox)) {
-      Vector3 intersectedVector = new Vector3();
-      /*for (BoundingBox boundingBox : boundingBoxes) {
-        if (Intersector.intersectRayBounds(ray, boundingBox, intersectedVector)) { //TODO check which mesh is to intersect wit thirangles
-          return intersectedVector;
-        }
-      }*/
-      
-      /*for (MeshRow row : meshes) {
-        if (Intersector.intersectRayTriangles(ray, row.getTriangles(), intersectedVector)) {
-          return intersectedVector;
-        }
-      }
-    }*/
-    
-    if (Intersector.intersectRayTriangles(ray, triangleGrid.getVerties(), triangleGrid.getIndices(), triangleGrid.getVertexSize(), intersectedVector)) {
-      return intersectedVector;
+  public Vector3 getPositionForRay(Ray ray, Vector3 mouseTilePosition) {
+    if (Intersector.intersectRayTriangles(ray, triangleGrid.getVerties(), triangleGrid.getIndices(), triangleGrid.getVertexSize(), mouseTilePosition)) {
+      return mouseTilePosition;
     } else {
       return null;
     }

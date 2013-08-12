@@ -59,7 +59,7 @@ public class MeshScreen extends BaseScreen {
     // V == Y
     
     
-    TriangleGrid builder = new TriangleGrid(10, 10, true);
+    TriangleGrid builder = new TriangleGrid(10, 10, true, 8);
     
     short n1 = 0;
     short n2 = 0;
