@@ -52,16 +52,25 @@ import javax.swing.border.BevelBorder;
 import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
-public class WorldEditorFrame extends JFrame {
+public class WorldEditorFrame extends JFrame implements ChangeListener {
   
+  protected static final String TAG = "WorldEditorFrame";
   private JPanel contentPane;
   private LwjglCanvas gameCanvas;
   public JLabel statusBarLabel;
   private GameManager gameManager;
+  private JTabbedPane tabbedInspectorPane;
+  private JSpinner terrainBrushSizeSpinner;
+  private JSpinner terrainBrushAmountSpinner;
+  private JComboBox terrainChangeModeComboBox;
   
   public WorldEditorFrame(GameManager game) {
-    setTitle("WorldEd");
+    setTitle("WorldEd - [No Name]");
     setDefaultCloseOperation(EXIT_ON_CLOSE);
     Runtime.getRuntime().addShutdownHook(new Thread() {
       public void run () {
@@ -138,7 +147,8 @@ public class WorldEditorFrame extends JFrame {
     JTree mapTree = new JTree();
     mapsTreeAndInspectorSplitPane.setLeftComponent(mapTree);
     
-    JTabbedPane tabbedInspectorPane = new JTabbedPane(JTabbedPane.TOP);
+    this.tabbedInspectorPane = new JTabbedPane(JTabbedPane.TOP);
+    
     tabbedInspectorPane.setBorder(new EmptyBorder(5, 5, 5, 5));
     mapsTreeAndInspectorSplitPane.setRightComponent(tabbedInspectorPane);
     
@@ -163,22 +173,25 @@ public class WorldEditorFrame extends JFrame {
     JLabel lblNewLabel = new JLabel("Type");
     panel.add(lblNewLabel, "2, 2");
     
-    JComboBox terrainChangeModeComboBox = new JComboBox();
+    this.terrainChangeModeComboBox = new JComboBox();
     terrainChangeModeComboBox.setModel(new DefaultComboBoxModel(new String[] {"Up", "Down", "Set"}));
     panel.add(terrainChangeModeComboBox, "6, 2, fill, default");
     
-    JLabel lblNewLabel_1 = new JLabel("Amount");
+    JLabel lblNewLabel_1 = new JLabel("Power");
     panel.add(lblNewLabel_1, "2, 4");
     
-    JSpinner terrainBrushAmountSpinner = new JSpinner();
-    terrainBrushAmountSpinner.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
+    this.terrainBrushAmountSpinner = new JSpinner();
+    terrainBrushAmountSpinner.addChangeListener(this);
+    terrainBrushAmountSpinner.setModel(new SpinnerNumberModel(new Float(0.1f), new Float(0.1f), null, new Float(0.1f)));
     panel.add(terrainBrushAmountSpinner, "6, 4");
     
     JLabel lblNewLabel_2 = new JLabel("Size");
     panel.add(lblNewLabel_2, "2, 6");
     
-    JSpinner terrainBrushSizeSpinner = new JSpinner();
-    terrainBrushSizeSpinner.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
+    this.terrainBrushSizeSpinner = new JSpinner();
+    terrainBrushSizeSpinner.addChangeListener(this);
+    
+    terrainBrushSizeSpinner.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(2)));
     panel.add(terrainBrushSizeSpinner, "6, 6");
     
     JPanel panel_1 = new JPanel();
@@ -216,6 +229,9 @@ public class WorldEditorFrame extends JFrame {
     
     Thread statusbarThread = new Thread(new StatusBarInfoRunnable());
     statusbarThread.start();
+    
+    tabbedInspectorPane.addChangeListener(this);
+    
   }
   
   private class StatusBarInfoRunnable implements Runnable {
@@ -224,7 +240,7 @@ public class WorldEditorFrame extends JFrame {
       while (running) {
         try {
           if (!WorldEditorFrame.this.gameManager.loading()) {
-            Thread.sleep(200);
+            Thread.sleep(50);
             WorldEditorFrame.this.statusBarLabel.setText(WorldEditorFrame.this.gameManager.getWorldEditScreen().debugInfo);
           }
         } catch (InterruptedException e) {
@@ -232,5 +248,32 @@ public class WorldEditorFrame extends JFrame {
         }
       }
     }
+  }
+
+  @Override
+  public void stateChanged(ChangeEvent e) {
+    if (e.getSource() == tabbedInspectorPane) {
+      switch (tabbedInspectorPane.getSelectedIndex()) {
+        case 0:
+          updateInfoForTerrainBrush();
+        break;
+        
+        default:
+          break;
+      }
+    }
+    
+    if (e.getSource() == terrainBrushSizeSpinner) {
+      this.gameManager.getWorldEditScreen().getTerrainBrush().setSize((int)terrainBrushSizeSpinner.getValue());
+    }
+    
+    if (e.getSource() == terrainBrushAmountSpinner) {
+      this.gameManager.getWorldEditScreen().getTerrainBrush().setPower((float)terrainBrushAmountSpinner.getValue());
+    }
+  }
+
+  private void updateInfoForTerrainBrush() {
+    terrainBrushSizeSpinner.setValue(this.gameManager.getWorldEditScreen().getTerrainBrush().getSize());
+    terrainBrushAmountSpinner.setValue(this.gameManager.getWorldEditScreen().getTerrainBrush().getPower());
   }
 }

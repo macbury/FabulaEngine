@@ -2,22 +2,26 @@ package com.macbury.fabula.editor.brushes;
 
 import com.badlogic.gdx.math.Vector2;
 import com.macbury.fabula.terrain.Terrain;
+import com.macbury.fabula.terrain.Tile;
 
 public abstract class Brush {
   protected int size         = 4;
   protected float power      = 0.1f;
   protected Vector2 position = new Vector2(0, 0);
   protected Terrain terrain;
+  protected Tile[]  brushTiles;
   
   public Brush(Terrain terrain) {
     this.terrain = terrain;
+    setSize(1);
   }
   
   public int getSize() {
     return size;
   }
   public void setSize(int size) {
-    this.size = size;
+    this.size  = size;
+    brushTiles = new Tile[size * size];
   }
   public float getPower() {
     return power;

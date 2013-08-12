@@ -76,7 +76,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     camera.lookAt(0, 0, 0);
     
     terrainBrush = new TerrainBrush(terrain);
-    currentBrush = terrainBrush;
+    setCurrentBrush(terrainBrush);
     
     this.camController = new EditorCamController(camera);
     InputMultiplexer inputMultiplexer = new InputMultiplexer(this, camController);
@@ -112,7 +112,8 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     //modelBatch.render(cursorInstance);
     //modelBatch.end();
     
-    debugInfo = "FPS: "+ Gdx.graphics.getFramesPerSecond() + " Java Heap: " + (Gdx.app.getJavaHeap() / 1024) + " KB" + " Native Heap: " + (Gdx.app.getNativeHeap() / 1024);
+    debugInfo = "X: "+ getCurrentBrush().getPosition().x + " Y: " +  getCurrentBrush().getPosition().y +
+        " FPS: "+ Gdx.graphics.getFramesPerSecond() + " Java Heap: " + (Gdx.app.getJavaHeap() / 1024) + " KB" + " Native Heap: " + (Gdx.app.getNativeHeap() / 1024);
     
     handlePick();
   }
@@ -228,6 +229,18 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     shader.setUniformf("u_brush_position", currentBrush.getPosition());
     shader.setUniformf("u_brush_size", currentBrush.getSize());
     shader.setUniformf("u_wireframe", 0.0f);
+  }
+
+  public Brush getCurrentBrush() {
+    return currentBrush;
+  }
+
+  public void setCurrentBrush(Brush currentBrush) {
+    this.currentBrush = currentBrush;
+  }
+
+  public TerrainBrush getTerrainBrush() {
+    return terrainBrush;
   }
 
 }
