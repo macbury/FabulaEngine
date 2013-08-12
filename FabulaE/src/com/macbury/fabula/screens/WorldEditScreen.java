@@ -112,7 +112,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     //modelBatch.render(cursorInstance);
     //modelBatch.end();
     
-    debugInfo = "X: "+ getCurrentBrush().getPosition().x + " Y: " +  getCurrentBrush().getPosition().y +
+    debugInfo = "X: "+ getCurrentBrush().getPosition().x + " Y " + getCurrentBrush().getY() + " Z: " +  getCurrentBrush().getPosition().y +
         " FPS: "+ Gdx.graphics.getFramesPerSecond() + " Java Heap: " + (Gdx.app.getJavaHeap() / 1024) + " KB" + " Native Heap: " + (Gdx.app.getNativeHeap() / 1024);
     
     handlePick();

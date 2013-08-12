@@ -61,4 +61,17 @@ public abstract class Brush {
     position.x = x;
     position.y = z;
   }
+
+  public float getY() {
+    Tile tile = getTile();
+    if (tile == null) {
+      return 0.0f;
+    } else {
+      return tile.getY();
+    }
+  }
+
+  private Tile getTile() {
+    return terrain.getTile((int)getPosition().x, (int)getPosition().y);
+  }
 }

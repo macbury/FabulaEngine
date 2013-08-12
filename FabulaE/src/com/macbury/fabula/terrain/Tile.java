@@ -53,7 +53,7 @@ public class Tile {
   }
 
   public void setY(int i) {
-    this.position.y = 1;
+    this.position.y = this.y1 = this.y2 = this.y3 = this.y4 = i;
   }
   
   public float getY1() {
@@ -73,7 +73,7 @@ public class Tile {
   }
 
   public void calculateHeight() {
-    this.position.y = Math.max(y1, Math.max(y2, Math.max(y3, Math.max(y4, this.position.y))));
+    this.position.y = Math.round(Math.max(y1, Math.max(y2, Math.max(y3, Math.max(y4, this.position.y)))) * 100.0f) / 100.0f;
   }
   
   public void setY1(float y1) {
@@ -82,7 +82,7 @@ public class Tile {
   }
 
   public void setY2(float y2) {
-    this.y2 = y2;
+    this.y2 = y2;;
     calculateHeight();
   }
 

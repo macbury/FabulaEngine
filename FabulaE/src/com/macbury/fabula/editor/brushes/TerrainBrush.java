@@ -25,7 +25,9 @@ public class TerrainBrush extends Brush {
       } else {
         tile.setY(power);
       }
-      
+    }
+    
+    for (Tile tile : brushTiles) {
       terrain.applySlope(tile);
     }
   }
