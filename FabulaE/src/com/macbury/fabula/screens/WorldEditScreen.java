@@ -1,6 +1,7 @@
 package com.macbury.fabula.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
@@ -30,16 +31,20 @@ import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.terrain.Terrain;
 import com.macbury.fabula.terrain.Tile;
+import com.macbury.fabula.utils.ActionTimer;
+import com.macbury.fabula.utils.ActionTimer.TimerListener;
 import com.macbury.fabula.utils.EditorCamController;
 import com.macbury.fabula.utils.TopDownCamera;
 
-public class WorldEditScreen extends BaseScreen implements InputProcessor {
+public class WorldEditScreen extends BaseScreen implements InputProcessor, TimerListener {
   public String debugInfo = "";
   private static final String TAG = "WorldScreen";
+  private static final float APPLY_BRUSH_EVERY = 0.01f;
   private TopDownCamera camera;
   private Terrain terrain;
   private ModelBatch modelBatch;
   private EditorCamController camController;
+  private ActionTimer brushTimer;
   
   public WorldEditScreen(GameManager manager) {
     super(manager);
@@ -50,12 +55,14 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor {
       e.printStackTrace();
     }
     
+    this.brushTimer = new ActionTimer(APPLY_BRUSH_EVERY, this);
+    
     ModelBuilder modelBuilder = new ModelBuilder();
     Model model               = modelBuilder.createBox(1f, 0.1f, 1f,  new Material(ColorAttribute.createDiffuse(Color.GREEN)), Usage.Position | Usage.Normal);
     
     this.camera = new TopDownCamera();
     Gdx.app.log(TAG, "Initialized screen");
-    this.terrain = new Terrain(this, 10, 10, true);
+    this.terrain = new Terrain(this, 50, 50, true);
     terrain.fillEmptyTilesWithDebugTile();
     terrain.buildSectors();
     camera.position.set(0, 17, 0);
@@ -86,6 +93,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor {
   
   @Override
   public void render(float delta) {
+    this.brushTimer.update(delta);
     camController.update();
     camera.update();
     
@@ -109,11 +117,11 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor {
     if (Gdx.input.isKeyPressed(Keys.Q)) {
       Vector3 pos = new Vector3();
       //cursorInstance.transform.getTranslation(pos);
-      terrain.applyHill(pos, 0.1f);
+      //terrain.applyHill(pos, 0.1f);
     } else if (Gdx.input.isKeyPressed(Keys.A))  {
       Vector3 pos = new Vector3();
       //cursorInstance.transform.getTranslation(pos);
-      terrain.applyHill(pos, -0.1f);
+      //terrain.applyHill(pos, -0.1f);
     }
   }
 
@@ -165,8 +173,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor {
     Vector3 pos = terrain.getSnappedPositionForRay(ray, mouseTilePosition);
     
     if (pos != null) {
-      int gid = terrain.getTileIdByPos(pos);
-      terrain.setCurrentTileId(gid);
+      terrain.setBrushPosition(pos.x, pos.z);
       //Gdx.app.log(TAG, "Picked: "+ pos.toString());
     }
     return true;
@@ -180,7 +187,11 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor {
 
   @Override
   public boolean touchDown(int x, int y, int pointer, int button) {
-    Gdx.app.log(TAG, "Pointer: " + pointer + " Button: " + button);
+    Gdx.app.log(TAG, "touchDown");
+    if (button == Buttons.LEFT) {
+      this.brushTimer.start();
+      return true;
+    }
     return false;
   }
 
@@ -191,9 +202,18 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor {
   }
 
   @Override
-  public boolean touchUp(int arg0, int arg1, int arg2, int arg3) {
-    // TODO Auto-generated method stub
+  public boolean touchUp(int x, int y, int pointer, int button) {
+    Gdx.app.log(TAG, "touchUp");
+    if (button == Buttons.LEFT) {
+      this.brushTimer.stop();
+      return true;
+    }
     return false;
+  }
+
+  @Override
+  public void onTimerTick(ActionTimer timer) {
+    terrain.applyHill(terrain.getBrushPosition(), 0.1f);
   }
 
 }

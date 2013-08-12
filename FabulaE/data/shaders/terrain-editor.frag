@@ -7,12 +7,13 @@ varying float v_textureNumber;
 varying vec2  v_tile_position;
 
 uniform sampler2D u_texture0;
-uniform float u_current_tile_id;
+uniform vec2      u_brush_position;
+uniform float     u_brush_size;
 void main() {
   vec4 current_texture = texture2D(u_texture0, v_textCords);
-  
-  if (false){//(round(v_tileID) == round(u_current_tile_id)) {
-    gl_FragColor = vec4(1.0f, 255.0f, 1.0f, 1.0f) * current_texture;
+  float dist           = length(round(u_brush_position) - round(v_tile_position));
+  if (dist <= u_brush_size && u_brush_size > 0.0f) {
+    gl_FragColor = vec4(1.5f, 1.5f, 1.5f, 0.5f) * current_texture;
   } else {
     gl_FragColor = current_texture;
   }

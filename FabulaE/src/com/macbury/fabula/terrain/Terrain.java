@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.macbury.fabula.manager.ResourceManager;
@@ -31,8 +32,9 @@ public class Terrain {
   private ArrayList<Sector> rebuildSectorsArray = new ArrayList<>();
   private Vector3 intersection = new Vector3();
   private boolean debug = false;
-  private int currentTileId = 0;
-  private int brushSize = 5;
+  private Vector2 brushPosition = new Vector2(0,0);
+  private int brushSize         = 3;
+  private float brushPower      = 0.1f;
   
   public Terrain(WorldEditScreen screen, int columns, int rows, boolean debug) {
     this.debug   = debug;
@@ -113,8 +115,8 @@ public class Terrain {
     terrainShader.setUniformi("u_texture0", 0);
     
     if (debug) {
-      //terrainShader.setUniformf("u_current_tile_id", currentTileId);
-      //terrainShader.setUniformf("u_brush_size", currentTileId);
+      terrainShader.setUniformf("u_brush_position", brushPosition);
+      terrainShader.setUniformf("u_brush_size", brushSize);
     }
     
     visibleSectors.clear();
@@ -178,7 +180,7 @@ public class Terrain {
       if (tile != null) {
         y = tile.getY();
       }
-      pos.set((float)Math.floor(pos.x)+1, y, (float)Math.floor(pos.z)+1);
+      pos.set((float)Math.floor(pos.x), y, (float)Math.floor(pos.z));
     }
     
     return pos;
@@ -201,9 +203,9 @@ public class Terrain {
     }
   }
   
-  public void applyHill(Vector3 pos, float power) {
-    int x = (int)pos.x;
-    int z = (int)pos.z;
+  public void applyHill(Vector2 vector2, float power) {
+    int x = (int)vector2.x;
+    int z = (int)vector2.y;
     
     Tile currentTile = getTile(x, z);
     
@@ -283,13 +285,13 @@ public class Terrain {
   public boolean isDebuging() {
     return debug;
   }
-
-  public int getCurrentTileId() {
-    return currentTileId;
+  
+  public void setBrushPosition(float x, float z) {
+    this.brushPosition.set(x, z);
   }
-
-  public void setCurrentTileId(int currentTileId) {
-    this.currentTileId = currentTileId;
+  
+  public Vector2 getBrushPosition() {
+    return this.brushPosition;
   }
 
   public int getTileIdByPos(Vector3 pos) {
