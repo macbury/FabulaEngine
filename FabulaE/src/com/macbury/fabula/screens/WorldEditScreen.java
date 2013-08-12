@@ -43,7 +43,7 @@ import com.macbury.fabula.utils.TopDownCamera;
 public class WorldEditScreen extends BaseScreen implements InputProcessor, TimerListener, TerrainDebugListener {
   public String debugInfo = "";
   private static final String TAG = "WorldScreen";
-  private static final float APPLY_BRUSH_EVERY = 0.01f;
+  private static final float APPLY_BRUSH_EVERY = 0.02f;
   private TopDownCamera camera;
   private Terrain terrain;
   private ModelBatch modelBatch;
@@ -221,7 +221,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
 
   @Override
   public void onTimerTick(ActionTimer timer) {
-    currentBrush.onApply();
+    currentBrush.applyBrush();
   }
 
   @Override

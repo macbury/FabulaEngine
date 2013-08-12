@@ -73,7 +73,7 @@ public class Tile {
   }
 
   public void calculateHeight() {
-    this.position.y = (y1 + y2 + y3 + y4) / 4;
+    this.position.y = Math.max(y1, Math.max(y2, Math.max(y3, Math.max(y4, this.position.y))));
   }
   
   public void setY1(float y1) {

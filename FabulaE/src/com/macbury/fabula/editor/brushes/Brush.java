@@ -1,5 +1,7 @@
 package com.macbury.fabula.editor.brushes;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.math.Vector2;
 import com.macbury.fabula.terrain.Terrain;
 import com.macbury.fabula.terrain.Tile;
@@ -9,10 +11,11 @@ public abstract class Brush {
   protected float power      = 0.1f;
   protected Vector2 position = new Vector2(0, 0);
   protected Terrain terrain;
-  protected Tile[]  brushTiles;
+  protected ArrayList<Tile>  brushTiles;
   
   public Brush(Terrain terrain) {
     this.terrain = terrain;
+    brushTiles = new ArrayList<Tile>();
     setSize(1);
   }
   
@@ -21,7 +24,6 @@ public abstract class Brush {
   }
   public void setSize(int size) {
     this.size  = size;
-    brushTiles = new Tile[size * size];
   }
   public float getPower() {
     return power;
@@ -34,6 +36,23 @@ public abstract class Brush {
   }
   public void setPosition(Vector2 position) {
     this.position = position;
+  }
+  
+  public void applyBrush() {
+    brushTiles.clear();
+    
+    for (int x = (int) (this.position.x - size); x < this.position.x + size + 1; x++) {
+      for (int y = (int) (this.position.y - size); y < this.position.y + size + 1; y++) {
+        Tile tile = this.terrain.getTile(x,y);
+        if (tile != null) {
+          this.brushTiles.add(tile);
+          this.terrain.addSectorToRebuildFromTile(tile);
+        }
+      }
+    }
+    
+    this.onApply();
+    this.terrain.rebuildUsedSectors();
   }
   
   public abstract void onApply();

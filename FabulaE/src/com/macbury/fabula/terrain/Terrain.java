@@ -203,83 +203,77 @@ public class Terrain {
     }
   }
   
-  public void applyHill(Vector2 vector2, float power) {
-    int x = (int)vector2.x;
-    int z = (int)vector2.y;
+  public void applySlope(Tile currentTile) {
+    int x = (int)currentTile.getX();
+    int z = (int)currentTile.getZ();
     
-    Tile currentTile = getTile(x, z);
+    Tile topTile           = getTile(x, z-1);
+    Tile bottomTile        = getTile(x, z+1);
     
-    if (currentTile != null) {
-      Tile topTile      = getTile(x, z-1);
-      Tile bottomTile   = getTile(x, z+1);
-      
-      Tile leftTile     = getTile(x-1, z);
-      Tile rightTile    = getTile(x+1, z);
-      
-      Tile topLeftTile     = getTile(x-1, z-1);
-      Tile topRightTile     = getTile(x+1, z-1);
-      
-      Tile bottomLeftTile   = getTile(x-1, z+1);
-      Tile bottomRightTile   = getTile(x+1, z+1);
-      
-      currentTile.setY(currentTile.getY()+power);
-      addSectorToRebuildFromTile(currentTile);
-      
-      if (topTile != null) {
-        topTile.setY2(currentTile.getY1());
-        topTile.setY4(currentTile.getY3());
-        addSectorToRebuildFromTile(topTile);
-      }
-      
-      if (bottomTile != null) {
-        bottomTile.setY1(currentTile.getY2());
-        bottomTile.setY3(currentTile.getY4());
-        addSectorToRebuildFromTile(bottomTile);
-      }
-      
-      if (leftTile != null) {
-        leftTile.setY3(currentTile.getY1());
-        leftTile.setY4(currentTile.getY2());
-        addSectorToRebuildFromTile(leftTile);
-      }
-      
-      if (rightTile != null) {
-        rightTile.setY1(currentTile.getY3());
-        rightTile.setY2(currentTile.getY4());
-        addSectorToRebuildFromTile(rightTile);
-      }
-      
-      if (topLeftTile != null) {
-        topLeftTile.setY4(currentTile.getY1());
-        topLeftTile.setType(Tile.Type.CornerTopLeft);
-        //topLeftTile.setY2(currentTile.getY1());
-        addSectorToRebuildFromTile(topLeftTile);
-      }
-      
-      if (topRightTile != null) {
-        topRightTile.setY2(currentTile.getY3());
-        topRightTile.setType(Tile.Type.CornerTopRight);
-        addSectorToRebuildFromTile(topRightTile);
-      }
-      
-      if (bottomLeftTile != null) {
-        bottomLeftTile.setY3(currentTile.getY2());
-        bottomLeftTile.setType(Tile.Type.CornerBottomLeft);
-        addSectorToRebuildFromTile(bottomLeftTile);
-      }
-      
-      if (bottomRightTile != null) {
-        bottomRightTile.setY1(currentTile.getY4());
-        bottomRightTile.setType(Tile.Type.CornerBottomRight);
-        addSectorToRebuildFromTile(bottomRightTile);
-      }
-      
-      for (Sector sector : rebuildSectorsArray) {
-        sector.build();
-      }
-      rebuildSectorsArray.clear();
-      //this.buildSectors();
+    Tile leftTile          = getTile(x-1, z);
+    Tile rightTile         = getTile(x+1, z);
+    
+    Tile topLeftTile       = getTile(x-1, z-1);
+    Tile topRightTile      = getTile(x+1, z-1);
+    
+    Tile bottomLeftTile    = getTile(x-1, z+1);
+    Tile bottomRightTile   = getTile(x+1, z+1);
+    
+    if (topTile != null) {
+      topTile.setY2(currentTile.getY1());
+      topTile.setY4(currentTile.getY3());
+      addSectorToRebuildFromTile(topTile);
     }
+    
+    if (bottomTile != null) {
+      bottomTile.setY1(currentTile.getY2());
+      bottomTile.setY3(currentTile.getY4());
+      addSectorToRebuildFromTile(bottomTile);
+    }
+    
+    if (leftTile != null) {
+      leftTile.setY3(currentTile.getY1());
+      leftTile.setY4(currentTile.getY2());
+      addSectorToRebuildFromTile(leftTile);
+    }
+    
+    if (rightTile != null) {
+      rightTile.setY1(currentTile.getY3());
+      rightTile.setY2(currentTile.getY4());
+      addSectorToRebuildFromTile(rightTile);
+    }
+    
+    if (topLeftTile != null) {
+      topLeftTile.setY4(currentTile.getY1());
+      topLeftTile.setType(Tile.Type.CornerTopLeft);
+      //topLeftTile.setY2(currentTile.getY1());
+      addSectorToRebuildFromTile(topLeftTile);
+    }
+    
+    if (topRightTile != null) {
+      topRightTile.setY2(currentTile.getY3());
+      topRightTile.setType(Tile.Type.CornerTopRight);
+      addSectorToRebuildFromTile(topRightTile);
+    }
+    
+    if (bottomLeftTile != null) {
+      bottomLeftTile.setY3(currentTile.getY2());
+      bottomLeftTile.setType(Tile.Type.CornerBottomLeft);
+      addSectorToRebuildFromTile(bottomLeftTile);
+    }
+    
+    if (bottomRightTile != null) {
+      bottomRightTile.setY1(currentTile.getY4());
+      bottomRightTile.setType(Tile.Type.CornerBottomRight);
+      addSectorToRebuildFromTile(bottomRightTile);
+    }
+  }
+  
+  public void rebuildUsedSectors() {
+    for (Sector sector : rebuildSectorsArray) {
+      sector.build();
+    }
+    rebuildSectorsArray.clear();
   }
   
   public boolean isDebuging() {

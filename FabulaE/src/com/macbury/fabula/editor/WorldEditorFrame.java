@@ -29,6 +29,8 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
+import com.macbury.fabula.editor.brushes.TerrainBrush;
+import com.macbury.fabula.editor.brushes.TerrainBrush.TerrainBrushType;
 import com.macbury.fabula.manager.GameManager;
 
 import java.awt.Canvas;
@@ -56,8 +58,10 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
-public class WorldEditorFrame extends JFrame implements ChangeListener {
+public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener {
   
   protected static final String TAG = "WorldEditorFrame";
   private JPanel contentPane;
@@ -133,6 +137,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener {
     btnNewButton.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/editor/play.png")));
     toolBar.add(btnNewButton);
     
+    JButton btnNewButton_1 = new JButton("");
+    btnNewButton_1.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/editor/hash.png")));
+    toolBar.add(btnNewButton_1);
+    
     JSplitPane inspectorAndOpenGlContainerSplitPane = new JSplitPane();
     inspectorAndOpenGlContainerSplitPane.setContinuousLayout(true);
     inspectorAndOpenGlContainerSplitPane.setResizeWeight(0.1);
@@ -174,6 +182,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener {
     panel.add(lblNewLabel, "2, 2");
     
     this.terrainChangeModeComboBox = new JComboBox();
+    terrainChangeModeComboBox.addItemListener(this);
     terrainChangeModeComboBox.setModel(new DefaultComboBoxModel(new String[] {"Up", "Down", "Set"}));
     panel.add(terrainChangeModeComboBox, "6, 2, fill, default");
     
@@ -182,7 +191,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener {
     
     this.terrainBrushAmountSpinner = new JSpinner();
     terrainBrushAmountSpinner.addChangeListener(this);
-    terrainBrushAmountSpinner.setModel(new SpinnerNumberModel(new Float(0.1f), new Float(0.1f), null, new Float(0.1f)));
+    terrainBrushAmountSpinner.setModel(new SpinnerNumberModel(new Float(0.1f), new Float(0.0f), null, new Float(0.1f)));
     panel.add(terrainBrushAmountSpinner, "6, 4");
     
     JLabel lblNewLabel_2 = new JLabel("Size");
@@ -191,7 +200,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener {
     this.terrainBrushSizeSpinner = new JSpinner();
     terrainBrushSizeSpinner.addChangeListener(this);
     
-    terrainBrushSizeSpinner.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(2)));
+    terrainBrushSizeSpinner.setModel(new SpinnerNumberModel(new Integer(1), new Integer(0), null, new Integer(1)));
     panel.add(terrainBrushSizeSpinner, "6, 6");
     
     JPanel panel_1 = new JPanel();
@@ -275,5 +284,52 @@ public class WorldEditorFrame extends JFrame implements ChangeListener {
   private void updateInfoForTerrainBrush() {
     terrainBrushSizeSpinner.setValue(this.gameManager.getWorldEditScreen().getTerrainBrush().getSize());
     terrainBrushAmountSpinner.setValue(this.gameManager.getWorldEditScreen().getTerrainBrush().getPower());
+    int terrainChangeModeIndex = 0;
+    
+    //if (this.gameManager.getWorldEditScreen().getTerrainBrush().getType() == TerrainBrushType.)
+    
+    switch (this.gameManager.getWorldEditScreen().getTerrainBrush().getType()) {
+      case Up:
+        terrainChangeModeIndex = 0;
+      break;
+      
+      case Down:
+        terrainChangeModeIndex = 1;
+      break;
+      
+      case Set:
+        terrainChangeModeIndex = 2;
+      break;
+      
+      default:
+        terrainChangeModeIndex = 0;
+      break;
+    }
+      
+    terrainChangeModeComboBox.setSelectedIndex(terrainChangeModeIndex);
+  }
+
+  @Override
+  public void itemStateChanged(ItemEvent e) {
+    if (e.getSource() == terrainChangeModeComboBox) {
+      TerrainBrush terrainBrush = this.gameManager.getWorldEditScreen().getTerrainBrush();
+      switch (terrainChangeModeComboBox.getSelectedIndex()) {
+        case 0:
+          terrainBrush.setType(TerrainBrushType.Up);
+        break;
+        
+        case 1:
+          terrainBrush.setType(TerrainBrushType.Down);
+        break;
+        
+        case 2:
+          terrainBrush.setType(TerrainBrushType.Set);
+        break;
+        
+        default:
+          terrainBrush.setType(TerrainBrushType.Up);
+        break;
+      }
+    }
   }
 }
