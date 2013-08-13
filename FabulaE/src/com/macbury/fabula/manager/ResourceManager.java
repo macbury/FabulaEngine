@@ -52,6 +52,7 @@ public class ResourceManager {
     this.textures     = new HashMap<String, String>();
     this.music        = new HashMap<String, String>();
     this.shaders      = new HashMap<String, ShaderProgram>();
+    this.atlasMap     = new HashMap<String, TextureAtlas>();
   }
   
   public void loadSynch() throws Exception {
@@ -171,7 +172,7 @@ public class ResourceManager {
   private void addElementAsAtlas(Element resourceElement) {
     String id   = resourceElement.getAttribute("id");
     String path = resourceElement.getTextContent();
-    path        = "assets/textures/"+path + ".atlas";
+    path        = "data/textures/"+path + ".atlas";
     Gdx.app.log(TAG, "Loading: " + id + " from " + path);
     atlasMap.put(id, new TextureAtlas( Gdx.files.internal( path ) ) );
   }

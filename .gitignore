@@ -1,2 +1,5 @@
 .metadata/
 FabulaE/bin/
+FabulaE/preprocessed/expanded
+FabulaE/preprocessed/parts
+FabulaE/preprocessed/whole

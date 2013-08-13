@@ -99,7 +99,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setBounds(100, 100, 1280, 760);
-    setExtendedState(Frame.MAXIMIZED_BOTH); 
+    //setExtendedState(Frame.MAXIMIZED_BOTH); 
     
     JMenuBar menuBar = new JMenuBar();
     setJMenuBar(menuBar);
