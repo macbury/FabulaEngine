@@ -2,6 +2,7 @@ package com.macbury.fabula.terrain;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import com.macbury.fabula.terrain.AutoTiles.Types;
 import com.macbury.fabula.utils.PNG;
 import com.badlogic.gdx.graphics.PixmapIO;
 
@@ -20,12 +22,13 @@ public class AutoTiles {
   public static final int TILE_SIZE      = 32;
   private static final Format TILE_FORMAT = Format.RGBA8888;
   private Array<AtlasRegion> tileParts;
+  private Tileset tileset;
   public TextureRegion debugTexture;
   private Array<AutoTile> list;
   private String name;
   
   public static enum Types {
-    Start, InnerReapeating, CornerTopLeft, CornerTopRight, CornerBottomLeft, CornerBottomRight, EdgeLeft, EdgeRight, EdgeTop, EdgeBottom, PathHorizontal, PathVertical, PathVerticalTop, PathVerticalBottom, PathHorizontalLeft, PathHorizontalRight, PathCornerBottomLeft, PathCornerBottomRight, PathCornerTopRight, PathCornerTopLeft, PathCross
+    Start, InnerReapeating, CornerTopLeft, CornerTopRight, CornerBottomLeft, CornerBottomRight, EdgeLeft, EdgeRight, EdgeTop, EdgeBottom, PathHorizontal, PathVertical, PathVerticalTop, PathVerticalBottom, PathHorizontalLeft, PathHorizontalRight, PathCornerBottomLeft, PathCornerBottomRight, PathCornerTopRight, PathCornerTopLeft, PathCross, InnerEdgeBottomRight, InnerEdgeBottomLeft, InnerEdgeTopLeft, InnerEdgeTopRight
   };
   
   private final static byte[] tileCombinations = {
@@ -49,7 +52,11 @@ public class AutoTiles {
     2,19,22,23,
     16,3,20,21,
     8,9, 12,7,
-    10,11,6,15
+    10,11,6,15,
+    13,14,17,7,
+    13,14,6,18,
+    2,14,17,18,
+    13,3,17,18
   };
   
   private final static Types[] tileTypes = {
@@ -74,6 +81,10 @@ public class AutoTiles {
     Types.PathCornerBottomLeft,
     Types.PathCornerTopRight,
     Types.PathCornerTopLeft,
+    Types.InnerEdgeBottomRight,
+    Types.InnerEdgeBottomLeft,
+    Types.InnerEdgeTopLeft,
+    Types.InnerEdgeTopRight,
   };
   private static final String TAG = "AutoTiles";
   
@@ -95,6 +106,21 @@ public class AutoTiles {
       AutoTile      autoTile   = new AutoTile(tileRegion, tileTypes[i/4]);
       debugTexture             = tileRegion;
       autoTile.setIndex(i/4);
+      list.add(autoTile);
+    }
+  }
+  
+  public AutoTiles(Tileset tileset, String name) {
+    this.tileset      = tileset;
+    this.name         = name;
+    this.tileParts    = tileset.getAtlas().findRegions(name);
+    this.debugTexture = null;
+    this.list         = new Array<AutoTile>();
+    
+    for (int i = 0; i < tileTypes.length; i++) {
+      AutoTile      autoTile   = new AutoTile(tileParts.get(i), tileTypes[i]);
+      autoTile.setIndex(i);
+      autoTile.setAutoTiles(this);
       list.add(autoTile);
     }
   }
@@ -134,6 +160,9 @@ public class AutoTiles {
   public Array<AutoTile> all() {
     return list;
   }
-  
 
+  public AutoTile getAutoTile(Types type) {
+    int id = Arrays.asList(tileTypes).indexOf(type);
+    return list.get(id);
+  }
 }

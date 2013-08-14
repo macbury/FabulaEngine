@@ -27,19 +27,21 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeBitm
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.macbury.fabula.terrain.Tileset;
 
 public class ResourceManager {
-  private AssetManager assetManager;
   private static final String TAG = "ResourceManager";
   private static ResourceManager _shared;
   
   private Map<String, TextureAtlas> atlasMap;
   private Map<String, Skin> skinMap;
   private Map<String, BitmapFont> fonts;
-  private Map<String, String> textures;
+  private Map<String, Texture> textures;
   private Map<String, String> music;
+  private Map<String, Tileset> tilesets;
   private Map<String, ShaderProgram> shaders;
   private boolean loadedXML = false;
+  
   public static ResourceManager shared() {
     if (_shared == null) {
       _shared = new ResourceManager();
@@ -48,16 +50,15 @@ public class ResourceManager {
   }
   
   public ResourceManager() {
-    this.assetManager = new AssetManager();
-    this.textures     = new HashMap<String, String>();
+    this.textures     = new HashMap<String, Texture>();
     this.music        = new HashMap<String, String>();
     this.shaders      = new HashMap<String, ShaderProgram>();
     this.atlasMap     = new HashMap<String, TextureAtlas>();
+    this.tilesets     = new HashMap<String, Tileset>();
   }
   
   public void loadSynch() throws Exception {
     load();
-    assetManager.finishLoading();
   }
   
   public void load() throws Exception {
@@ -103,11 +104,33 @@ public class ResourceManager {
           addElementAsMusic(resourceElement);
         } else if (type.equals("shader")) {
           addElementAsShader(resourceElement);
+        } else if (type.equals("tileset")) {
+          addElementAsTileset(resourceElement);
         }
       }
     }
     
     loadedXML = true;
+  }
+
+  private void addElementAsTileset(Element resourceElement) {
+    String id    = resourceElement.getAttribute("id");
+    String atlas = resourceElement.getAttribute("atlas");
+    String path  = "data/textures/"+atlas + ".atlas";
+    Gdx.app.log(TAG, "Loading tileset atlas: " + id + " from " + path);
+    TextureAtlas textureAtlas = new TextureAtlas( Gdx.files.internal( path ) );
+    atlasMap.put(id, textureAtlas);
+    Tileset tileset = new Tileset(textureAtlas, id);
+    
+    NodeList autoTileResources = resourceElement.getElementsByTagName("autotile");
+    
+    for (int i = 0; i < autoTileResources.getLength(); i++) {
+      Element autoTileResource = (Element) autoTileResources.item(i); 
+      String name              = autoTileResource.getAttribute("name");
+      tileset.buildAutotiles(name);
+    }
+    
+    tilesets.put(id, tileset);
   }
 
   private void addElementAsShader(Element resourceElement) {
@@ -131,7 +154,7 @@ public class ResourceManager {
     path        = "data/music/"+path;
     Gdx.app.log(TAG, "Found music: " + id + " from " + path);
     music.put(id, path);
-    assetManager.load(path, Music.class);
+    //assetManager.load(path, Music.class);
   }
 
   private void addElementAsTexture(Element resourceElement) {
@@ -143,8 +166,8 @@ public class ResourceManager {
     //TextureParameter param = new TextureParameter();
     //param. 
     //TODO Load texture parameters from xml 
-    textures.put(id, path);
-    assetManager.load(path, Texture.class);
+    textures.put(id, new Texture(Gdx.files.internal(path)));
+    //assetManager.load(path, Texture.class);
   }
 
   private void addElementAsFont(Element resourceElement) {
@@ -195,18 +218,15 @@ public class ResourceManager {
   }
 
   public Texture getTexture(String key) {
-    return assetManager.get(this.textures.get(key), Texture.class);
+    return textures.get(key);
   }
   
   public ShaderProgram getShaderProgram(String key) {
     return shaders.get(key);
   }
-  
-  public boolean isLoading() {
-    return !this.assetManager.update();
+
+  public Tileset getTileset(String key) {
+    return tilesets.get(key);
   }
 
-  public float getLoadingProgress() {
-    return this.assetManager.getProgress();
-  }
 }

@@ -7,6 +7,8 @@ public class AutoTile {
   private TextureRegion textureRegion;
   private AutoTiles.Types type;
   private int index;
+  private AutoTiles autoTiles;
+  
   public AutoTile(TextureRegion textureRegion, AutoTiles.Types type) {
     this.textureRegion = textureRegion;
     this.type          = type;
@@ -22,5 +24,9 @@ public class AutoTile {
   
   public int getIndex() {
     return index;
+  }
+
+  public void setAutoTiles(AutoTiles autoTiles) {
+    this.autoTiles = autoTiles;
   }
 }

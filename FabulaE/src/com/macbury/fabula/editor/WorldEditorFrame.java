@@ -32,6 +32,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import com.macbury.fabula.editor.brushes.TerrainBrush;
 import com.macbury.fabula.editor.brushes.TerrainBrush.TerrainBrushType;
 import com.macbury.fabula.manager.GameManager;
+import com.macbury.fabula.terrain.AutoTiles;
 
 import java.awt.Canvas;
 import javax.swing.JRadioButton;
@@ -60,6 +61,14 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import javax.swing.JTable;
+import javax.swing.JList;
+import javax.swing.AbstractListModel;
+import javax.swing.table.DefaultTableModel;
+import java.awt.SystemColor;
+import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
+import java.awt.event.InputEvent;
 
 public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener {
   
@@ -108,38 +117,31 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     menuBar.add(mnFile);
     
     JMenuItem mntmNewMenuItem = new JMenuItem("New");
+    mntmNewMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
     mnFile.add(mntmNewMenuItem);
+    
+    JMenuItem mntmNewMenuItem_2 = new JMenuItem("Open");
+    mntmNewMenuItem_2.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
+    mnFile.add(mntmNewMenuItem_2);
     
     JSeparator separator = new JSeparator();
     mnFile.add(separator);
     
+    JMenuItem mntmQuit = new JMenuItem("Quit");
+    mnFile.add(mntmQuit);
+    
     JMenuBar menuBar_1 = new JMenuBar();
     mnFile.add(menuBar_1);
+    
+    JMenu mnAssets = new JMenu("Assets");
+    menuBar.add(mnAssets);
+    
+    JMenuItem mntmNewMenuItem_1 = new JMenuItem("Rebuild tilesets");
+    mnAssets.add(mntmNewMenuItem_1);
     contentPane = new JPanel();
     contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
     contentPane.setLayout(new BorderLayout(0, 0));
     setContentPane(contentPane);
-    
-    JToolBar toolBar = new JToolBar();
-    toolBar.setRollover(true);
-    toolBar.setFloatable(false);
-    contentPane.add(toolBar, BorderLayout.NORTH);
-    
-    JButton button = new JButton("");
-    button.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/editor/document-new.png")));
-    toolBar.add(button);
-    
-    JButton button_1 = new JButton("");
-    button_1.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/editor/document-open.png")));
-    toolBar.add(button_1);
-    
-    JButton btnNewButton = new JButton("");
-    btnNewButton.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/editor/play.png")));
-    toolBar.add(btnNewButton);
-    
-    JButton btnNewButton_1 = new JButton("");
-    btnNewButton_1.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/editor/hash.png")));
-    toolBar.add(btnNewButton_1);
     
     JSplitPane inspectorAndOpenGlContainerSplitPane = new JSplitPane();
     inspectorAndOpenGlContainerSplitPane.setContinuousLayout(true);
@@ -161,6 +163,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mapsTreeAndInspectorSplitPane.setRightComponent(tabbedInspectorPane);
     
     JPanel panel = new JPanel();
+    panel.setBackground(SystemColor.window);
     tabbedInspectorPane.addTab("Terrain", null, panel, null);
     panel.setLayout(new FormLayout(new ColumnSpec[] {
         ColumnSpec.decode("left:4dlu"),
@@ -205,6 +208,14 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     JPanel panel_1 = new JPanel();
     tabbedInspectorPane.addTab("Paint", null, panel_1, null);
+    panel_1.setLayout(new GridLayout(0, 1, 0, 0));
+    
+    JList autoTileList = new JList();
+    autoTileList.setVisibleRowCount(0);
+    autoTileList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+    autoTileList.setFixedCellWidth(AutoTiles.TILE_SIZE);
+    autoTileList.setFixedCellHeight(AutoTiles.TILE_SIZE);
+    panel_1.add(autoTileList);
     
     JPanel panel_2 = new JPanel();
     tabbedInspectorPane.addTab("Objects", null, panel_2, null);

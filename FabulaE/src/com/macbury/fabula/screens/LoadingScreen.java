@@ -37,11 +37,7 @@ public class LoadingScreen extends BaseScreen {
   
   @Override
   public void render(float arg0) {
-    if (ResourceManager.shared().isLoading()) {
-      Gdx.app.log(TAG, "Loading assets progress: " + ResourceManager.shared().getLoadingProgress());
-    } else {
-      this.gameManager.setScreen(new AutoTileTestScreen(this.gameManager));
-    }
+    this.gameManager.setScreen(new AutoTileTestScreen(this.gameManager));
   }
   
   @Override

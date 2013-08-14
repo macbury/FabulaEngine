@@ -29,13 +29,15 @@ public class AutoTileTestScreen extends BaseScreen {
   public AutoTileTestScreen(GameManager manager) {
     super(manager);
     debugBatch = new SpriteBatch();
-    TexturePacker2.process("preprocessed/parts/tile/", "preprocessed/whole/", "autotile.atlas");
-    this.rawTiles = new TextureAtlas(Gdx.files.internal("preprocessed/whole/autotile.atlas"));
-    
+    TexturePacker2.process("preprocessed/parts/", "preprocessed/whole/", "autotile.atlas");
+    this.rawTiles   = new TextureAtlas(Gdx.files.internal("preprocessed/whole/autotile.atlas"));
     this.autoTiles = new AutoTiles(rawTiles, "road");
-    this.autoTiles = new AutoTiles(rawTiles, "grass");
     
-    TexturePacker2.process("preprocessed/expanded/", "preprocessed/whole/", "final_map_tile.atlas");
+    //new AutoTiles(rawTiles, "grass");
+    //new AutoTiles(rawTiles, "sidewalk");
+    //new AutoTiles(rawTiles, "city_sidewalk");
+    //new AutoTiles(rawTiles, "sand");
+    TexturePacker2.process("preprocessed/expanded/", "data/textures/", "outside.atlas");
     /*this.tileParts = rawTiles.findRegions("road");
     Pixmap tilePixmap = new Pixmap(32, 32, Format.RGBA8888);
     

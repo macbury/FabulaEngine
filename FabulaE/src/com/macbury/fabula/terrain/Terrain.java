@@ -32,7 +32,8 @@ public class Terrain {
   private ArrayList<Sector> rebuildSectorsArray = new ArrayList<>();
   private Vector3 intersection = new Vector3();
   private boolean debug = false;
-
+  
+  private Tileset tileset;
   private TerrainDebugListener debugListener;
   
   public Terrain(WorldEditScreen screen, int columns, int rows, boolean debug) {
@@ -54,6 +55,7 @@ public class Terrain {
     this.sectors        = new Sector[horizontalSectorCount][veriticalSectorCount];
     this.visibleSectors = new Stack<Sector>();
     
+    tileset = ResourceManager.shared().getTileset("OUTSIDE_TILESET");
   }
 
   public void buildSectors() {
@@ -72,7 +74,8 @@ public class Terrain {
     for (int z = 0; z < rows; z++) {
       for (int x = 0; x < columns; x++) {
         if (!haveTile(x,z)) {
-          setTile(x, z, new Tile(x, 0, z));
+          Tile tile = new Tile(x, 0, z);
+          setTile(x, z, tile);
         }
       }
     }
@@ -295,5 +298,9 @@ public class Terrain {
 
   public interface TerrainDebugListener {
     public void onDebugTerrainConfigureShader(ShaderProgram shader);
+  }
+
+  public Tileset getTileset() {
+    return this.tileset;
   }
 }
