@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.g3d.lights.Lights;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -105,7 +106,7 @@ public class Terrain {
     this.tiles[x][z] = tile;
   }
 
-  public void render(Camera camera) {
+  public void render(Camera camera, Lights lights) {
     GL20 gl = Gdx.graphics.getGL20();
     gl.glEnable(GL10.GL_DEPTH_TEST);
     gl.glEnable(GL20.GL_TEXTURE_2D);
@@ -117,6 +118,7 @@ public class Terrain {
     terrainShader.begin();
     terrainShader.setUniformMatrix("u_projectionViewMatrix", camera.combined);
     terrainShader.setUniformi("u_texture0", 0);
+    terrainShader.setUniformf("u_ambient_color", lights.ambientLight);
     
     if (debug) {
       if (debugListener != null) {

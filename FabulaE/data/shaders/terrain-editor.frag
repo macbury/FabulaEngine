@@ -2,27 +2,20 @@
 precision mediump float;
 #endif 
 
-
 varying vec4  v_color;
 varying vec2  v_textCords;
-varying float v_textureNumber;
 varying vec2  v_tile_position;
 
 uniform sampler2D u_texture0;
 uniform vec2      u_brush_position;
 uniform float     u_brush_size;
-uniform float     u_wireframe;
+
 void main() {
-  if (u_wireframe == 1.0) {
-    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+  vec4 current_texture = v_color * texture2D(u_texture0, v_textCords);
+    
+  if ((round(u_brush_position.x - u_brush_size) <= round(v_tile_position.x) && round(u_brush_position.x + u_brush_size) >= round(v_tile_position.x)) && (round(u_brush_position.y - u_brush_size) <= round(v_tile_position.y) && round(u_brush_position.y + u_brush_size) >= round(v_tile_position.y))) {
+    gl_FragColor = vec4(1.5f, 1.5f, 1.5f, 0.5f) * current_texture;
   } else {
-    vec4 current_texture = texture2D(u_texture0, v_textCords);
-    if ((round(u_brush_position.x - u_brush_size) <= round(v_tile_position.x) && round(u_brush_position.x + u_brush_size) >= round(v_tile_position.x)) && (round(u_brush_position.y - u_brush_size) <= round(v_tile_position.y) && round(u_brush_position.y + u_brush_size) >= round(v_tile_position.y))) {
-    //float dist           = length(round(u_brush_position) - round(v_tile_position));
-    //if (dist <= u_brush_size && u_brush_size > 0.0f) {
-      gl_FragColor = vec4(1.5f, 1.5f, 1.5f, 0.5f) * current_texture;
-    } else {
-      gl_FragColor = current_texture;
-    }
+    gl_FragColor = current_texture;
   }
 }

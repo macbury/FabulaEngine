@@ -1,6 +1,7 @@
 package com.macbury.fabula.editor;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Frame;
 
@@ -14,6 +15,7 @@ import java.awt.Component;
 import javax.swing.Box;
 import javax.swing.DefaultListModel;
 import javax.swing.Icon;
+import javax.swing.JColorChooser;
 import javax.swing.JToolBar;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
@@ -77,6 +79,9 @@ import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
 import javax.swing.ListSelectionModel;
+import javax.swing.JTextField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener {
   
@@ -91,6 +96,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JComboBox terrainChangeModeComboBox;
   private JList autoTileList;
   private IconListRenderer autoTileListRenderer;
+  private JTextField txtffffff;
   
   public WorldEditorFrame(GameManager game) {
     setTitle("WorldEd - [No Name]");
@@ -171,6 +177,39 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     tabbedInspectorPane.setBorder(new EmptyBorder(5, 5, 5, 5));
     mapsTreeAndInspectorSplitPane.setRightComponent(tabbedInspectorPane);
+    
+    JPanel panel_6 = new JPanel();
+    tabbedInspectorPane.addTab("Settings", null, panel_6, null);
+    panel_6.setLayout(new FormLayout(new ColumnSpec[] {
+        ColumnSpec.decode("5px"),
+        FormFactory.DEFAULT_COLSPEC,
+        FormFactory.RELATED_GAP_COLSPEC,
+        ColumnSpec.decode("default:grow"),
+        ColumnSpec.decode("5px"),
+        FormFactory.DEFAULT_COLSPEC,
+        FormFactory.RELATED_GAP_COLSPEC,},
+      new RowSpec[] {
+        FormFactory.RELATED_GAP_ROWSPEC,
+        FormFactory.DEFAULT_ROWSPEC,}));
+    
+    JLabel lblNewLabel_3 = new JLabel("Ambient Color:");
+    panel_6.add(lblNewLabel_3, "2, 2, right, default");
+    
+    txtffffff = new JTextField();
+    txtffffff.setText("#ffffff");
+    txtffffff.setHorizontalAlignment(SwingConstants.LEFT);
+    panel_6.add(txtffffff, "4, 2, fill, default");
+    txtffffff.setColumns(10);
+    
+    JButton btnNewButton = new JButton("Pick Color");
+    btnNewButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        JColorChooser.showDialog(
+            WorldEditorFrame.this,
+            "Choose Background Color", Color.BLUE);
+      }
+    });
+    panel_6.add(btnNewButton, "6, 2, center, default");
     
     JPanel panel = new JPanel();
     panel.setBackground(SystemColor.window);
@@ -286,11 +325,11 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   public void stateChanged(ChangeEvent e) {
     if (e.getSource() == tabbedInspectorPane) {
       switch (tabbedInspectorPane.getSelectedIndex()) {
-        case 0:
+        case 1:
           updateInfoForTerrainBrush();
         break;
         
-        case 1:
+        case 2:
           updateInfoForAutotileBrush();
         break;
         

@@ -53,9 +53,14 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   private Brush         currentBrush;
   private TerrainBrush  terrainBrush;
   private AutoTileBrush autoTileBrush;
+  private Lights        lights;
   
   public WorldEditScreen(GameManager manager) {
     super(manager);
+    
+    lights = new Lights();
+    lights.ambientLight.set(0.4f, 0.4f, 0.4f, 1f);
+    lights.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
     
     this.brushTimer = new ActionTimer(APPLY_BRUSH_EVERY, this);
     
@@ -64,7 +69,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     
     this.camera = new TopDownCamera();
     Gdx.app.log(TAG, "Initialized screen");
-    this.terrain = new Terrain(this, 100, 100, true);
+    this.terrain = new Terrain(this, 50, 50, true);
     terrain.setDebugListener(this);
     terrain.fillEmptyTilesWithDebugTile();
     terrain.buildSectors();
@@ -105,7 +110,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     camController.update();
     camera.update();
     
-    this.terrain.render(this.camera);
+    this.terrain.render(this.camera, this.lights);
     //modelBatch.begin(camera);
     //modelBatch.render(cursorInstance);
     //modelBatch.end();
@@ -207,7 +212,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   public void onDebugTerrainConfigureShader(ShaderProgram shader) {
     shader.setUniformf("u_brush_position", currentBrush.getPosition());
     shader.setUniformf("u_brush_size", currentBrush.getSize());
-    shader.setUniformf("u_wireframe", 0.0f);
+    //shader.setUniformf("u_wireframe", 0.0f);
   }
 
   public Brush getCurrentBrush() {

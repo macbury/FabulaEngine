@@ -7,107 +7,138 @@ import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
+import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder.VertexInfo;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 
 public class TriangleGrid {
-  ///private static final int ATTRIBUTES_PER_VERTEXT = 9; // Only Position
+  public static enum AttributeType {
+    Position, Normal, Color, TextureCord, TilePosition
+  }
+  
   private static final int VERTEXT_PER_COL        = 4;
   private int rows;
   private int columns;
   private short vertexCursor;
   private short vertexIndex;
   private short indicesCursor;
+  private ArrayList<GridVertex> vertexsList;
+  private ArrayList<AttributeType> attributeTypes;
+  
   private float[] verties;
   private short[] indices;
-  private int attributes_per_vertex;
   private Mesh mesh;
-  private boolean positionAttribute;
-  private boolean textureIndexAttribute;
-  private boolean tilePosAttribute;
-  private boolean colorAttribute;
-  private boolean uvMapAttribute;
-  private boolean wireframeAttribute;
-  private byte baryCentricCursor = 0;
-  public TriangleGrid(int width, int height, boolean isStatic, int attr_count) {
-    this.attributes_per_vertex = attr_count;
-    this.rows          = height;
-    this.columns       = width;
-    int vertextCount   = rows*columns* VERTEXT_PER_COL;
-    this.verties       = new float[vertextCount * getAttributesPerVertex()];
-    this.indices       = new short[vertextCount * 3];
+  private int vertextCount;
+  private GridVertex currentVertex;
+  
+  public TriangleGrid(int width, int height, boolean isStatic) {
+    this.rows           = height;
+    this.columns        = width;
+    this.vertextCount   = rows*columns* VERTEXT_PER_COL;
+    this.indices        = new short[vertextCount * 3];
+    this.vertexsList    = new ArrayList<GridVertex>(rows*columns);
+    this.attributeTypes = new ArrayList<AttributeType>();
+  }
+  
+  public void using(AttributeType type) {
+    if (!isUsing(type)) {
+      this.attributeTypes.add(type);
+    }
+  }
+  
+  public boolean isUsing(AttributeType type) {
+    return (this.attributeTypes.indexOf(type) >= 0);
   }
   
   public int getAttributesPerVertex() {
-    return this.attributes_per_vertex;
+    int count = 0;
+    if (isUsing(AttributeType.Position)) {
+      count+=3;
+    }
+    
+    if (isUsing(AttributeType.Normal)) {
+      count+=3;
+    }
+    
+    if (isUsing(AttributeType.TextureCord)) {
+      count+=2;
+    }
+    
+    if (isUsing(AttributeType.TilePosition)) {
+      count+=2;
+    }
+    
+    if (isUsing(AttributeType.Color)) {
+      count++;
+    }
+    return count;
+  }
+  
+  public void calculateNormals(int normalStart) {
+    Vector3 side1  = new Vector3();
+    Vector3 side2  = new Vector3();
+    Vector3 normal = new Vector3();
+    
+    for (int i = 0; i < indices.length / 3; i++) {
+      int index1 = indices[i * 3] * getAttributesPerVertex();
+      int index2 = indices[i * 3 + 1] * getAttributesPerVertex();
+      int index3 = indices[i * 3 + 2] * getAttributesPerVertex();
+      
+      
+      side1.set(verties[index1 + normalStart], verties[index1 + normalStart+1], verties[index1 + normalStart+2]);
+      normal = side1.crs(side2);
+      //Vector3 side1 = vertices[index1].Position - vertices[index3].Position;
+      ////Vector3 side2 = vertices[index1].Position - vertices[index2].Position;
+      //Vector3 normal = Vector3.Cross(side1, side2);
+  
+      //vertices[index1].Normal += normal;
+      //vertices[index2].Normal += normal;
+      //vertices[index3].Normal += normal;
+    }
   }
   
   public int getVertexSize() {
-    return getAttributesPerVertex()-1;
+    return getAttributesPerVertex();
   }
   
   public void begin() {
     this.vertexCursor  = 0;
     this.indicesCursor = 0;
     this.vertexIndex   = 0;
+    this.attributeTypes.clear();
+    this.vertexsList.clear();
   }
   
   public short addVertex(float x, float y, float z) {
-    this.verties[vertexCursor++] = x;
-    this.verties[vertexCursor++] = y;
-    this.verties[vertexCursor++] = z;
-    this.positionAttribute = true;
+    currentVertex = new GridVertex();
+    currentVertex.position.set(x, y, z);
+    using(AttributeType.Position);
+    this.vertexsList.add(currentVertex);
     return vertexIndex++;
   }
   
-  public void addTextureIndex(float i) {
-    this.textureIndexAttribute = true;
-    this.verties[vertexCursor++] = i;
+  public void addNormal() {
+    this.addNormal(0.0f,0.0f,0.0f);
   }
-  
+
+  public void addNormal(float x, float y, float z) {
+    currentVertex.normal.set(x, y, z);
+    using(AttributeType.Normal);
+  }
+
   public void addTilePos(float x, float z) {
-    this.tilePosAttribute = true;
-    this.verties[vertexCursor++] = x;
-    this.verties[vertexCursor++] = z;
-  }
-  
-  public void addBaryCentric(float x, float y, float z) {
-    this.wireframeAttribute = true;
-    this.verties[vertexCursor++] = x;
-    this.verties[vertexCursor++] = y;
-    this.verties[vertexCursor++] = z;
-  }
-  
-  public void addBaryCentric() {
-    switch (baryCentricCursor) {
-      case 0:
-        addBaryCentric(1f,0.0f,0.0f);
-      break;
-      
-      case 1:
-        addBaryCentric(0.0f,1f,0f);
-      break;
-      
-      case 2:
-        addBaryCentric(0.0f,0.0f,1f);
-      break;
-    }
-    
-    baryCentricCursor++;
-    if (baryCentricCursor >= 2) {
-      baryCentricCursor = 0;
-    }
+    using(AttributeType.TilePosition);
+    currentVertex.tilePosition.set(x, z);
   }
   
   public void addColorToVertex(int r, int g, int b, int a) {
-    this.colorAttribute = true;
-    this.verties[vertexCursor++] = Color.toFloatBits(r, g, b, a);
+    using(AttributeType.Color);
+    currentVertex.color.set(r, g, b, a);
   }
   
   public void addUVMap(float u, float v) {
-    this.uvMapAttribute = true;
-    this.verties[vertexCursor++] = u;
-    this.verties[vertexCursor++] = v;
+    using(AttributeType.TextureCord);
+    currentVertex.textureCordinates.set(u, v);
   }
   
   public void addRectangle(float x, float y, float z, float width, float height) {
@@ -127,9 +158,30 @@ public class TriangleGrid {
   }
 
   public void end() {
-    this.mesh = new Mesh(true, this.getVerties().length, this.getIndices().length, this.getVertexAttributes());
-    mesh.setVertices(this.getVerties());
-    mesh.setIndices(this.getIndices());
+    this.verties       = new float[vertextCount * getAttributesPerVertex()];
+    
+    vertexCursor = 0;
+    for (GridVertex vertex : this.vertexsList) {
+      this.verties[vertexCursor++] = vertex.position.x;
+      this.verties[vertexCursor++] = vertex.position.y;
+      this.verties[vertexCursor++] = vertex.position.z;
+      
+      this.verties[vertexCursor++] = vertex.normal.x;
+      this.verties[vertexCursor++] = vertex.normal.y;
+      this.verties[vertexCursor++] = vertex.normal.z;
+      
+      this.verties[vertexCursor++] = Color.toFloatBits(vertex.color.r, vertex.color.g, vertex.color.b, vertex.color.a);
+      
+      this.verties[vertexCursor++] = vertex.textureCordinates.x;
+      this.verties[vertexCursor++] = vertex.textureCordinates.y;
+      
+      this.verties[vertexCursor++] = vertex.tilePosition.x;
+      this.verties[vertexCursor++] = vertex.tilePosition.y;
+    }
+    
+    this.mesh = new Mesh(true, this.verties.length, this.indices.length, this.getVertexAttributes());
+    mesh.setVertices(this.verties);
+    mesh.setIndices(this.indices);
   }
 
   public float[] getVerties() {
@@ -147,31 +199,29 @@ public class TriangleGrid {
   public VertexAttribute[] getVertexAttributes() {
     ArrayList<VertexAttribute> attributes = new ArrayList<VertexAttribute>();
     
-    if (positionAttribute) {
+    if (isUsing(AttributeType.Position)) {
       attributes.add(new VertexAttribute(Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE));
     }
     
-    if (colorAttribute) {
+    if (isUsing(AttributeType.Normal)) {
+      attributes.add(new VertexAttribute(Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE));
+    }
+    
+    if (isUsing(AttributeType.Color)) {
       attributes.add(new VertexAttribute(Usage.ColorPacked, 4, ShaderProgram.COLOR_ATTRIBUTE));
     }
     
-    if (uvMapAttribute) {
+    if (isUsing(AttributeType.TextureCord)) {
       attributes.add(new VertexAttribute(Usage.TextureCoordinates, 2, "a_textCords"));
     }
     
-    if (textureIndexAttribute) {
-      attributes.add(new VertexAttribute(Usage.Generic, 1, "a_textureNumber"));
-    }
-    
-    if (tilePosAttribute) {
+    if (isUsing(AttributeType.TilePosition)) {
       attributes.add(new VertexAttribute(Usage.Generic, 2, "a_tile_position"));
-    }
-    
-    if (wireframeAttribute) {
-      attributes.add(new VertexAttribute(Usage.Generic, 3, "a_barycentric"));
     }
     
     return attributes.toArray(new VertexAttribute[attributes.size()]);
   }
+
+  
   
 }
