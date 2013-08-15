@@ -2,6 +2,7 @@ package com.macbury.fabula.terrain;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
@@ -74,26 +75,21 @@ public class TriangleGrid {
     return count;
   }
   
-  public void calculateNormals(int normalStart) {
-    Vector3 side1  = new Vector3();
-    Vector3 side2  = new Vector3();
-    Vector3 normal = new Vector3();
-    
+  public void calculateNormals() {
+    //Gdx.app.log("Debug", "Indices: " + indices.length + " Vertex: " + vertexsList.size());
     for (int i = 0; i < indices.length / 3; i++) {
-      int index1 = indices[i * 3] * getAttributesPerVertex();
-      int index2 = indices[i * 3 + 1] * getAttributesPerVertex();
-      int index3 = indices[i * 3 + 2] * getAttributesPerVertex();
+      int index1 = indices[i * 3];
+      int index2 = indices[i * 3 + 1];
+      int index3 = indices[i * 3 + 2];
       
       
-      side1.set(verties[index1 + normalStart], verties[index1 + normalStart+1], verties[index1 + normalStart+2]);
-      normal = side1.crs(side2);
-      //Vector3 side1 = vertices[index1].Position - vertices[index3].Position;
-      ////Vector3 side2 = vertices[index1].Position - vertices[index2].Position;
-      //Vector3 normal = Vector3.Cross(side1, side2);
-  
-      //vertices[index1].Normal += normal;
-      //vertices[index2].Normal += normal;
-      //vertices[index3].Normal += normal;
+      Vector3 side1   = this.vertexsList.get(index1).position.cpy().sub(this.vertexsList.get(index3).position);
+      Vector3 side2   = this.vertexsList.get(index1).position.cpy().sub(this.vertexsList.get(index2).position);
+      Vector3 normal  = side1.crs(side2);
+      
+      this.vertexsList.get(index1).normal.add(normal);
+      this.vertexsList.get(index2).normal.add(normal);
+      this.vertexsList.get(index3).normal.add(normal);
     }
   }
   
@@ -158,6 +154,7 @@ public class TriangleGrid {
   }
 
   public void end() {
+    calculateNormals();
     this.verties       = new float[vertextCount * getAttributesPerVertex()];
     
     vertexCursor = 0;
@@ -166,6 +163,7 @@ public class TriangleGrid {
       this.verties[vertexCursor++] = vertex.position.y;
       this.verties[vertexCursor++] = vertex.position.z;
       
+      vertex.normal.nor();
       this.verties[vertexCursor++] = vertex.normal.x;
       this.verties[vertexCursor++] = vertex.normal.y;
       this.verties[vertexCursor++] = vertex.normal.z;
