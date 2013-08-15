@@ -12,6 +12,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JMenu;
 import java.awt.Component;
 import javax.swing.Box;
+import javax.swing.DefaultListModel;
+import javax.swing.Icon;
 import javax.swing.JToolBar;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
@@ -29,6 +31,7 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
+import com.macbury.fabula.editor.brushes.AutoTileBrush;
 import com.macbury.fabula.editor.brushes.TerrainBrush;
 import com.macbury.fabula.editor.brushes.TerrainBrush.TerrainBrushType;
 import com.macbury.fabula.manager.GameManager;
@@ -59,16 +62,21 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import javax.swing.JTable;
 import javax.swing.JList;
 import javax.swing.AbstractListModel;
+import javax.swing.plaf.metal.MetalIconFactory;
 import javax.swing.table.DefaultTableModel;
 import java.awt.SystemColor;
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
+import javax.swing.ListSelectionModel;
 
 public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener {
   
@@ -81,6 +89,8 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JSpinner terrainBrushSizeSpinner;
   private JSpinner terrainBrushAmountSpinner;
   private JComboBox terrainChangeModeComboBox;
+  private JList autoTileList;
+  private IconListRenderer autoTileListRenderer;
   
   public WorldEditorFrame(GameManager game) {
     setTitle("WorldEd - [No Name]");
@@ -207,14 +217,17 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     panel.add(terrainBrushSizeSpinner, "6, 6");
     
     JPanel panel_1 = new JPanel();
-    tabbedInspectorPane.addTab("Paint", null, panel_1, null);
+    tabbedInspectorPane.addTab("Tiles", null, panel_1, null);
     panel_1.setLayout(new GridLayout(0, 1, 0, 0));
     
-    JList autoTileList = new JList();
+    this.autoTileList = new JList(new Object[] { });
+    autoTileList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     autoTileList.setVisibleRowCount(0);
     autoTileList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
     autoTileList.setFixedCellWidth(AutoTiles.TILE_SIZE);
     autoTileList.setFixedCellHeight(AutoTiles.TILE_SIZE);
+    
+    
     panel_1.add(autoTileList);
     
     JPanel panel_2 = new JPanel();
@@ -251,7 +264,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     statusbarThread.start();
     
     tabbedInspectorPane.addChangeListener(this);
-    
   }
   
   private class StatusBarInfoRunnable implements Runnable {
@@ -278,6 +290,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
           updateInfoForTerrainBrush();
         break;
         
+        case 1:
+          updateInfoForAutotileBrush();
+        break;
+        
         default:
           break;
       }
@@ -290,6 +306,20 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     if (e.getSource() == terrainBrushAmountSpinner) {
       this.gameManager.getWorldEditScreen().getTerrainBrush().setPower((float)terrainBrushAmountSpinner.getValue());
     }
+  }
+
+  private void updateInfoForAutotileBrush() {
+    AutoTileBrush atBrush     = this.gameManager.getWorldEditScreen().getAutoTileBrush();
+    this.autoTileListRenderer = new IconListRenderer(atBrush.getAutoTileIcons());
+    autoTileList.setCellRenderer(autoTileListRenderer);
+
+    DefaultListModel listModel = new DefaultListModel();
+    
+    for (String key : atBrush.getOrderedTileNames()) {
+      listModel.addElement(key);
+    }
+    
+    autoTileList.setModel(listModel);
   }
 
   private void updateInfoForTerrainBrush() {
@@ -322,6 +352,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
 
   @Override
   public void itemStateChanged(ItemEvent e) {
+    System.gc();
     if (e.getSource() == terrainChangeModeComboBox) {
       TerrainBrush terrainBrush = this.gameManager.getWorldEditScreen().getTerrainBrush();
       switch (terrainChangeModeComboBox.getSelectedIndex()) {

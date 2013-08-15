@@ -29,4 +29,8 @@ public class AutoTile {
   public void setAutoTiles(AutoTiles autoTiles) {
     this.autoTiles = autoTiles;
   }
+
+  public String getName() {
+    return autoTiles.getName();
+  }
 }

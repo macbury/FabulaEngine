@@ -9,6 +9,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.graphics.GL10;
 import com.macbury.fabula.editor.WorldEditorFrame;
+import com.macbury.fabula.screens.AutoTileTestScreen;
+import com.macbury.fabula.screens.FrameBufferTest;
 import com.macbury.fabula.screens.LoadingScreen;
 import com.macbury.fabula.screens.WorldEditScreen;
 
@@ -37,8 +39,14 @@ public class GameManager extends Game {
     Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
     Gdx.gl.glDepthFunc(GL10.GL_LESS);
     
+    try {
+      ResourceManager.shared().load();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    
     if (getMode() == Mode.Game) {
-      setScreen(new LoadingScreen(this));
+      setScreen(new AutoTileTestScreen(this));
     } else {
       setScreen(getWorldEditScreen());
     }

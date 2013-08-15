@@ -28,6 +28,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.macbury.fabula.editor.WorldEditorFrame;
+import com.macbury.fabula.editor.brushes.AutoTileBrush;
 import com.macbury.fabula.editor.brushes.Brush;
 import com.macbury.fabula.editor.brushes.TerrainBrush;
 import com.macbury.fabula.manager.GameManager;
@@ -48,18 +49,13 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   private Terrain terrain;
   private ModelBatch modelBatch;
   private EditorCamController camController;
-  private ActionTimer brushTimer;
-  private Brush        currentBrush;
-  private TerrainBrush terrainBrush;
+  private ActionTimer   brushTimer;
+  private Brush         currentBrush;
+  private TerrainBrush  terrainBrush;
+  private AutoTileBrush autoTileBrush;
   
   public WorldEditScreen(GameManager manager) {
     super(manager);
-    
-    try {
-      ResourceManager.shared().loadSynch();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
     
     this.brushTimer = new ActionTimer(APPLY_BRUSH_EVERY, this);
     
@@ -68,14 +64,16 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     
     this.camera = new TopDownCamera();
     Gdx.app.log(TAG, "Initialized screen");
-    this.terrain = new Terrain(this, 50, 50, true);
+    this.terrain = new Terrain(this, 100, 100, true);
     terrain.setDebugListener(this);
     terrain.fillEmptyTilesWithDebugTile();
     terrain.buildSectors();
     camera.position.set(0, 17, 0);
     camera.lookAt(0, 0, 0);
     
-    terrainBrush = new TerrainBrush(terrain);
+    terrainBrush  = new TerrainBrush(terrain);
+    autoTileBrush = new AutoTileBrush(terrain);
+    autoTileBrush.buildPreviews();
     setCurrentBrush(terrainBrush);
     
     this.camController = new EditorCamController(camera);
@@ -115,25 +113,6 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     debugInfo = "X: "+ getCurrentBrush().getPosition().x + " Y " + getCurrentBrush().getY() + " Z: " +  getCurrentBrush().getPosition().y +
         " FPS: "+ Gdx.graphics.getFramesPerSecond() + " Java Heap: " + (Gdx.app.getJavaHeap() / 1024) + " KB" + " Native Heap: " + (Gdx.app.getNativeHeap() / 1024);
     
-    handlePick();
-  }
-  
-  private void handlePick() {
-    if (Gdx.input.isKeyPressed(Keys.F)) {
-      Vector3 pos = new Vector3();
-      //cursorInstance.transform.getTranslation(pos);
-      camera.lookAt(pos);
-    } 
-    
-    if (Gdx.input.isKeyPressed(Keys.Q)) {
-      Vector3 pos = new Vector3();
-      //cursorInstance.transform.getTranslation(pos);
-      //terrain.applyHill(pos, 0.1f);
-    } else if (Gdx.input.isKeyPressed(Keys.A))  {
-      Vector3 pos = new Vector3();
-      //cursorInstance.transform.getTranslation(pos);
-      //terrain.applyHill(pos, -0.1f);
-    }
   }
 
   @Override
@@ -241,6 +220,10 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
 
   public TerrainBrush getTerrainBrush() {
     return terrainBrush;
+  }
+
+  public AutoTileBrush getAutoTileBrush() {
+    return autoTileBrush;
   }
 
 }

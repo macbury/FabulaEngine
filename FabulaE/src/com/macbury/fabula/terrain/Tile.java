@@ -22,16 +22,11 @@ public class Tile {
   float y3 = 0; // |      |
   float y4 = 0; // |2----4|
   
-  int gid = 0; 
+  int gid = 0;
+  private AutoTile autoTile; 
   
   public Tile(float x, float y, float z) {
-    gid = GID_COUNTER++;
-    
-    Texture texture = ResourceManager.shared().getTexture("TEXTURE_DEBUG");
-    
-    //texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-    textureRegion = new TextureRegion(texture, gid % 16 * 64, 0, 64, 64);
-    //this.setPosition(x,y,z);
+    gid      = GID_COUNTER++;
     position = new Vector3(x,y,z);
     setY(y);
   }
@@ -41,7 +36,7 @@ public class Tile {
   }
   
   public TextureRegion getTextureRegion() {
-    return textureRegion;
+    return autoTile.getRegion();
   }
 
   public float getY() {
@@ -110,6 +105,10 @@ public class Tile {
 
   public float getZ() {
     return position.z;
+  }
+
+  public void setAutoTile(AutoTile autoTile) {
+    this.autoTile = autoTile;
   }
 
 }

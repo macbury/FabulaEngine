@@ -71,10 +71,12 @@ public class Terrain {
   }
   
   public void fillEmptyTilesWithDebugTile() {
+    Tileset tileset = ResourceManager.shared().getTileset("OUTSIDE_TILESET");
     for (int z = 0; z < rows; z++) {
       for (int x = 0; x < columns; x++) {
         if (!haveTile(x,z)) {
           Tile tile = new Tile(x, 0, z);
+          tile.setAutoTile(tileset.getDefaultAutoTile());
           setTile(x, z, tile);
         }
       }

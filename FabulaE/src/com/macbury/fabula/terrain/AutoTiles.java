@@ -118,7 +118,9 @@ public class AutoTiles {
     this.list         = new Array<AutoTile>();
     
     for (int i = 0; i < tileTypes.length; i++) {
-      AutoTile      autoTile   = new AutoTile(tileParts.get(i), tileTypes[i]);
+      TextureRegion region     = tileParts.get(i);
+      AutoTile      autoTile   = new AutoTile(region, tileTypes[i]);
+      //Gdx.app.log(TAG, "X:" + region.getRegionX() + " Y: " + region.getRegionY());
       autoTile.setIndex(i);
       autoTile.setAutoTiles(this);
       list.add(autoTile);
@@ -164,5 +166,9 @@ public class AutoTiles {
   public AutoTile getAutoTile(Types type) {
     int id = Arrays.asList(tileTypes).indexOf(type);
     return list.get(id);
+  }
+
+  public String getName() {
+    return this.name;
   }
 }

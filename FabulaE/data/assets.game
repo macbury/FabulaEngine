@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
   <resource type="texture" id="TEXTURE_GRASS">grass.png</resource>
-  <resource type="texture" id="TEXTURE_DEBUG">DebugTerrain.png</resource>
+  <resource type="texture" id="TEXTURE_DEBUG">testgrid.png</resource>
 
   <resource type="shader" id="SHADER_TERRAIN">mesh</resource>
   <resource type="shader" id="SHADER_TERRAIN_EDITOR">terrain-editor</resource>
@@ -9,6 +9,8 @@
   
   <resource type="tileset" id="OUTSIDE_TILESET" atlas="outside">
     <autotile name="grass" />
+    <autotile name="road" />
     <autotile name="sand" />
+    <autotile name="city_sidewalk" />
   </resource>
 </resources>
