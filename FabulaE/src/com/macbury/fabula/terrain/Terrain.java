@@ -119,7 +119,8 @@ public class Terrain {
     terrainShader.setUniformMatrix("u_projectionViewMatrix", camera.combined);
     terrainShader.setUniformi("u_texture0", 0);
     terrainShader.setUniformf("u_ambient_color", lights.ambientLight);
-    
+    terrainShader.setUniformf("u_light_color", lights.directionalLights.get(0).color);
+    terrainShader.setUniformf("u_light_direction", lights.directionalLights.get(0).direction);
     if (debug) {
       if (debugListener != null) {
         debugListener.onDebugTerrainConfigureShader(terrainShader);

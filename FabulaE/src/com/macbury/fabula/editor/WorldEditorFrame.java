@@ -97,6 +97,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JList autoTileList;
   private IconListRenderer autoTileListRenderer;
   private JTextField txtffffff;
+  private JTextField txtffffff_1;
   
   public WorldEditorFrame(GameManager game) {
     setTitle("WorldEd - [No Name]");
@@ -190,6 +191,14 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
         FormFactory.RELATED_GAP_COLSPEC,},
       new RowSpec[] {
         FormFactory.RELATED_GAP_ROWSPEC,
+        FormFactory.DEFAULT_ROWSPEC,
+        FormFactory.RELATED_GAP_ROWSPEC,
+        FormFactory.DEFAULT_ROWSPEC,
+        FormFactory.RELATED_GAP_ROWSPEC,
+        FormFactory.DEFAULT_ROWSPEC,
+        FormFactory.RELATED_GAP_ROWSPEC,
+        FormFactory.DEFAULT_ROWSPEC,
+        FormFactory.RELATED_GAP_ROWSPEC,
         FormFactory.DEFAULT_ROWSPEC,}));
     
     JLabel lblNewLabel_3 = new JLabel("Ambient Color:");
@@ -210,6 +219,35 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
       }
     });
     panel_6.add(btnNewButton, "6, 2, center, default");
+    
+    JLabel lblDirectionalLightColor = new JLabel("Directional light color");
+    panel_6.add(lblDirectionalLightColor, "2, 4, right, default");
+    
+    txtffffff_1 = new JTextField();
+    txtffffff_1.setText("#ffffff");
+    panel_6.add(txtffffff_1, "4, 4, fill, default");
+    txtffffff_1.setColumns(10);
+    
+    JButton btnPickColor = new JButton("Pick Color");
+    panel_6.add(btnPickColor, "6, 4");
+    
+    JLabel lblLightPosition = new JLabel("Light position X:");
+    panel_6.add(lblLightPosition, "2, 6");
+    
+    JSpinner spinner = new JSpinner();
+    panel_6.add(spinner, "4, 6");
+    
+    JLabel lblLightPositionY = new JLabel("Light position Y:");
+    panel_6.add(lblLightPositionY, "2, 8");
+    
+    JSpinner spinner_1 = new JSpinner();
+    panel_6.add(spinner_1, "4, 8");
+    
+    JLabel lblLightPositionZ = new JLabel("Light position Z:");
+    panel_6.add(lblLightPositionZ, "2, 10");
+    
+    JSpinner spinner_2 = new JSpinner();
+    panel_6.add(spinner_2, "4, 10");
     
     JPanel panel = new JPanel();
     panel.setBackground(SystemColor.window);

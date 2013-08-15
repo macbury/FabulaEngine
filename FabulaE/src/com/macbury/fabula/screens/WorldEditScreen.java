@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeBitm
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.lights.BaseLight;
 import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.lights.Lights;
 import com.badlogic.gdx.graphics.g3d.materials.ColorAttribute;
@@ -54,13 +55,16 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   private TerrainBrush  terrainBrush;
   private AutoTileBrush autoTileBrush;
   private Lights        lights;
+  private DirectionalLight directionLight;
   
   public WorldEditScreen(GameManager manager) {
     super(manager);
     
     lights = new Lights();
-    lights.ambientLight.set(0.4f, 0.4f, 0.4f, 1f);
-    lights.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+    lights.ambientLight.set(1f, 1f, 1f, 1f);
+    directionLight = new DirectionalLight();
+    directionLight.set(1f, 1f, 1f, -1f, -2f, -1f);
+    lights.add(directionLight);
     
     this.brushTimer = new ActionTimer(APPLY_BRUSH_EVERY, this);
     
