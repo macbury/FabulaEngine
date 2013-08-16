@@ -28,6 +28,10 @@ public class Tileset {
     this.orderedAutotiles.add(name);
     //Gdx.app.log("Test", name);
   }
+  
+  public AutoTiles getAutoTile(String key) {
+    return autotiles.get(key);
+  }
 
   public TextureAtlas getAtlas() {
     return textureAtlas;

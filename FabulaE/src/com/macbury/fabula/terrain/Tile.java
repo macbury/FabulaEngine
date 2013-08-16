@@ -110,5 +110,9 @@ public class Tile {
   public void setAutoTile(AutoTile autoTile) {
     this.autoTile = autoTile;
   }
+  
+  public AutoTile getAutoTile() {
+    return autoTile;
+  }
 
 }

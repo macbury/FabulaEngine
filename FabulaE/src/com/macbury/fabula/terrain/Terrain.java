@@ -16,7 +16,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.macbury.fabula.manager.ResourceManager;
-import com.macbury.fabula.screens.WorldEditScreen;
 
 public class Terrain {
   private Sector[][] sectors;
@@ -37,13 +36,12 @@ public class Terrain {
   private Tileset tileset;
   private TerrainDebugListener debugListener;
   
-  public Terrain(WorldEditScreen screen, int columns, int rows, boolean debug) {
+  public Terrain(int columns, int rows) {
+    Tile.GID_COUNTER = 1;
     this.debug   = debug;
     this.columns = columns;
     this.rows    = rows;
-    Tile.GID_COUNTER = 1;
     this.tiles    = new Tile[columns][rows];
-    terrainShader = ResourceManager.shared().getShaderProgram(debug ? "SHADER_TERRAIN_EDITOR" : "SHADER_TERRAIN");
     
     if (columns % Sector.COLUMN_COUNT != 0 || rows%Sector.ROW_COUNT != 0) {
       throw new RuntimeException("Map size must be proper!");
@@ -299,6 +297,8 @@ public class Terrain {
 
   public void setDebugListener(TerrainDebugListener debugListener) {
     this.debugListener = debugListener;
+    this.debug         = true;
+    terrainShader = ResourceManager.shared().getShaderProgram(debug ? "SHADER_TERRAIN_EDITOR" : "SHADER_TERRAIN");
   }
 
   public interface TerrainDebugListener {

@@ -19,6 +19,7 @@ import com.macbury.fabula.utils.PNG;
 import com.badlogic.gdx.graphics.PixmapIO;
 
 public class AutoTiles {
+  public static int GID = 0;
   public static final int TILE_SIZE      = 32;
   private static final Format TILE_FORMAT = Format.RGBA8888;
   private Array<AtlasRegion> tileParts;
@@ -26,6 +27,7 @@ public class AutoTiles {
   public TextureRegion debugTexture;
   private Array<AutoTile> list;
   private String name;
+  private int id;
   
   public static enum Types {
     Start, InnerReapeating, CornerTopLeft, CornerTopRight, CornerBottomLeft, CornerBottomRight, EdgeLeft, EdgeRight, EdgeTop, EdgeBottom, PathHorizontal, PathVertical, PathVerticalTop, PathVerticalBottom, PathHorizontalLeft, PathHorizontalRight, PathCornerBottomLeft, PathCornerBottomRight, PathCornerTopRight, PathCornerTopLeft, PathCross, InnerEdgeBottomRight, InnerEdgeBottomLeft, InnerEdgeTopLeft, InnerEdgeTopRight
@@ -103,6 +105,7 @@ public class AutoTiles {
     
     for (int i = 0; i < tileCombinations.length; i+=4) {
       TextureRegion tileRegion = generateTileForCombination(i);
+      //Gdx.app.log(TAG, "Id: "+ computeIndex(i));
       AutoTile      autoTile   = new AutoTile(tileRegion, tileTypes[i/4]);
       debugTexture             = tileRegion;
       autoTile.setIndex(i/4);
@@ -111,6 +114,8 @@ public class AutoTiles {
   }
   
   public AutoTiles(Tileset tileset, String name) {
+    GID+=100;
+    this.id           = GID;
     this.tileset      = tileset;
     this.name         = name;
     this.tileParts    = tileset.getAtlas().findRegions(name);
@@ -125,6 +130,14 @@ public class AutoTiles {
       autoTile.setAutoTiles(this);
       list.add(autoTile);
     }
+  }
+  
+  private int computeIndex(int i) {
+    int i0 = tileCombinations[i];
+    int i1 = tileCombinations[i+1];
+    int i2 = tileCombinations[i+2];
+    int i3 = tileCombinations[i+3];
+    return i0 + i1 + i2 + i3; 
   }
   
   private TextureRegion generateTileForCombination(int i) {

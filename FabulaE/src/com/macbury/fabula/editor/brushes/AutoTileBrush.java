@@ -20,10 +20,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.macbury.fabula.editor.brushes.TerrainBrush.TerrainBrushType;
 import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.terrain.AutoTile;
 import com.macbury.fabula.terrain.AutoTiles;
 import com.macbury.fabula.terrain.Terrain;
+import com.macbury.fabula.terrain.Tile;
 import com.macbury.fabula.terrain.Tileset;
 import com.macbury.fabula.utils.OffScreen2DRenderer;
 import com.macbury.fabula.utils.PNG;
@@ -32,10 +34,13 @@ public class AutoTileBrush extends Brush {
   private static final String TAG = "AutoTileBrush";
   private HashMap<String, ImageIcon> autoTileIcons;
   private ArrayList<String> autoTileNames;
+  private AutoTiles currentAutoTiles;
+  
   public AutoTileBrush(Terrain terrain) {
     super(terrain);
     this.autoTileIcons = new HashMap<String, ImageIcon>();
     this.autoTileNames = new ArrayList<String>();
+    setSize(0);
   }
   
   public void buildPreviews() {
@@ -68,7 +73,68 @@ public class AutoTileBrush extends Brush {
   
   @Override
   public void onApply() {
+    if (currentAutoTiles == null) {
+      return;
+    }
     
+    AutoTile at = getCurrentAutoTiles().getAutoTile(AutoTiles.Types.InnerReapeating);
+    
+    for (Tile tile : brushTiles) {
+      tile.setAutoTile(at);
+    }
+  }
+  
+  public int computeAutoTileUID(Tile currentTile, AutoTile at) {
+    int x = (int) currentTile.getX();
+    int z = (int) currentTile.getZ();
+    
+    int out = at.getIndex();
+    
+    Tile topTile           = terrain.getTile(x, z-1);
+    Tile bottomTile        = terrain.getTile(x, z+1);
+    
+    Tile leftTile          = terrain.getTile(x-1, z);
+    Tile rightTile         = terrain.getTile(x+1, z);
+    
+    Tile topLeftTile       = terrain.getTile(x-1, z-1);
+    Tile topRightTile      = terrain.getTile(x+1, z-1);
+    
+    Tile bottomLeftTile    = terrain.getTile(x-1, z+1);
+    Tile bottomRightTile   = terrain.getTile(x+1, z+1);
+    
+    if (topTile != null) {
+      out += topTile.getAutoTile().getIndex();
+    }
+    
+    if (bottomTile != null) {
+      out += bottomTile.getAutoTile().getIndex();
+    }
+    
+    if (leftTile != null) {
+      out += leftTile.getAutoTile().getIndex();
+    }
+    
+    if (rightTile != null) {
+      out += rightTile.getAutoTile().getIndex();
+    }
+    
+    if (topLeftTile != null) {
+      out += topLeftTile.getAutoTile().getIndex();
+    }
+    
+    if (topRightTile != null) {
+      out += topRightTile.getAutoTile().getIndex();
+    }
+    
+    if (bottomLeftTile != null) {
+      out += bottomLeftTile.getAutoTile().getIndex();
+    }
+    
+    if (bottomRightTile != null) {
+      out += bottomRightTile.getAutoTile().getIndex();
+    }
+    
+    return out;
   }
 
   public HashMap<String, ImageIcon> getAutoTileIcons() {
@@ -89,9 +155,15 @@ public class AutoTileBrush extends Brush {
 
     @Override
     public void onRender(SpriteBatch batch) {
-      //Texture texture = new ResourceManager().shared().getTexture("TEXTURE_GRASS");
-      //batch.draw(texture, 0, 0, 32, 32);
       batch.draw(at.getRegion(), 0, 0);
     }
+  }
+
+  public AutoTiles getCurrentAutoTiles() {
+    return currentAutoTiles;
+  }
+
+  public void setCurrentAutoTiles(AutoTiles currentAutoTiles) {
+    this.currentAutoTiles = currentAutoTiles;
   }
 }

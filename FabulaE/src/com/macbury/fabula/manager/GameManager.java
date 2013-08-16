@@ -47,7 +47,7 @@ public class GameManager extends Game {
     }
     
     if (getMode() == Mode.Game) {
-      setScreen(new TerrainTestScreen(this));
+      setScreen(new AutoTileTestScreen(this));
     } else {
       setScreen(getWorldEditScreen());
     }

@@ -33,11 +33,15 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
+import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
 import com.macbury.fabula.editor.brushes.AutoTileBrush;
 import com.macbury.fabula.editor.brushes.TerrainBrush;
 import com.macbury.fabula.editor.brushes.TerrainBrush.TerrainBrushType;
 import com.macbury.fabula.manager.GameManager;
+import com.macbury.fabula.map.Scene;
+import com.macbury.fabula.screens.WorldEditScreen;
 import com.macbury.fabula.terrain.AutoTiles;
+import com.macbury.fabula.terrain.Tileset;
 
 import java.awt.Canvas;
 import javax.swing.JRadioButton;
@@ -82,8 +86,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
-public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener {
+public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener {
   
   protected static final String TAG = "WorldEditorFrame";
   private JPanel contentPane;
@@ -98,6 +104,9 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private IconListRenderer autoTileListRenderer;
   private JTextField txtffffff;
   private JTextField txtffffff_1;
+  private JSpinner lightPositionZSpinner;
+  private JSpinner lightPositionYSpinner;
+  private JSpinner lightPositionXSpinner;
   
   public WorldEditorFrame(GameManager game) {
     setTitle("WorldEd - [No Name]");
@@ -162,7 +171,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     JSplitPane inspectorAndOpenGlContainerSplitPane = new JSplitPane();
     inspectorAndOpenGlContainerSplitPane.setContinuousLayout(true);
-    inspectorAndOpenGlContainerSplitPane.setResizeWeight(0.1);
+    inspectorAndOpenGlContainerSplitPane.setResizeWeight(0.03);
     contentPane.add(inspectorAndOpenGlContainerSplitPane, BorderLayout.CENTER);
     
     JSplitPane mapsTreeAndInspectorSplitPane = new JSplitPane();
@@ -180,6 +189,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mapsTreeAndInspectorSplitPane.setRightComponent(tabbedInspectorPane);
     
     JPanel panel_6 = new JPanel();
+    panel_6.setBackground(Color.WHITE);
     tabbedInspectorPane.addTab("Settings", null, panel_6, null);
     panel_6.setLayout(new FormLayout(new ColumnSpec[] {
         ColumnSpec.decode("5px"),
@@ -234,20 +244,26 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     JLabel lblLightPosition = new JLabel("Light position X:");
     panel_6.add(lblLightPosition, "2, 6");
     
-    JSpinner spinner = new JSpinner();
-    panel_6.add(spinner, "4, 6");
+    this.lightPositionXSpinner = new JSpinner();
+    lightPositionXSpinner.addChangeListener(this);
+    lightPositionXSpinner.setModel(new SpinnerNumberModel(new Float(0), new Float(-1000), new Float(1000), new Float(0.010f)));
+    panel_6.add(lightPositionXSpinner, "4, 6");
     
     JLabel lblLightPositionY = new JLabel("Light position Y:");
     panel_6.add(lblLightPositionY, "2, 8");
     
-    JSpinner spinner_1 = new JSpinner();
-    panel_6.add(spinner_1, "4, 8");
+    this.lightPositionYSpinner = new JSpinner();
+    lightPositionYSpinner.addChangeListener(this);
+    lightPositionYSpinner.setModel(new SpinnerNumberModel(new Float(0), new Float(-1000), new Float(1000), new Float(0.010f)));
+    panel_6.add(lightPositionYSpinner, "4, 8");
     
     JLabel lblLightPositionZ = new JLabel("Light position Z:");
     panel_6.add(lblLightPositionZ, "2, 10");
     
-    JSpinner spinner_2 = new JSpinner();
-    panel_6.add(spinner_2, "4, 10");
+    this.lightPositionZSpinner = new JSpinner();
+    lightPositionZSpinner.addChangeListener(this);
+    lightPositionZSpinner.setModel(new SpinnerNumberModel(new Float(0), new Float(-1000), new Float(1000), new Float(0.010f)));
+    panel_6.add(lightPositionZSpinner, "4, 10");
     
     JPanel panel = new JPanel();
     panel.setBackground(SystemColor.window);
@@ -298,6 +314,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     panel_1.setLayout(new GridLayout(0, 1, 0, 0));
     
     this.autoTileList = new JList(new Object[] { });
+    autoTileList.addListSelectionListener(this);
     autoTileList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     autoTileList.setVisibleRowCount(0);
     autoTileList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
@@ -341,17 +358,26 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     statusbarThread.start();
     
     tabbedInspectorPane.addChangeListener(this);
+    
   }
   
   private class StatusBarInfoRunnable implements Runnable {
     public void run() {
       boolean running = true;
+      while(WorldEditorFrame.this.gameManager.loading()) {
+        try {
+          Thread.sleep(50);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+      
+      updateInfoForMapSettings();
+      
       while (running) {
         try {
-          if (!WorldEditorFrame.this.gameManager.loading()) {
-            Thread.sleep(50);
-            WorldEditorFrame.this.statusBarLabel.setText(WorldEditorFrame.this.gameManager.getWorldEditScreen().debugInfo);
-          }
+          Thread.sleep(50);
+          WorldEditorFrame.this.statusBarLabel.setText(WorldEditorFrame.this.gameManager.getWorldEditScreen().debugInfo);
         } catch (InterruptedException e) {
           running = false;
         }
@@ -361,19 +387,40 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
 
   @Override
   public void stateChanged(ChangeEvent e) {
+    WorldEditScreen screen = this.gameManager.getWorldEditScreen();
+    Scene scene = screen.getScene();
+    DirectionalLight sun = scene.getSunLight();
+    
     if (e.getSource() == tabbedInspectorPane) {
       switch (tabbedInspectorPane.getSelectedIndex()) {
+        case 0:
+          updateInfoForMapSettings();
+        break;
         case 1:
+          screen.setCurrentBrush(screen.getTerrainBrush());
           updateInfoForTerrainBrush();
         break;
         
         case 2:
+          screen.setCurrentBrush(screen.getAutoTileBrush());
           updateInfoForAutotileBrush();
         break;
         
         default:
           break;
       }
+    }
+    
+    if (e.getSource() == lightPositionXSpinner) {
+      sun.direction.x = (float) lightPositionXSpinner.getValue();
+    }
+    
+    if (e.getSource() == lightPositionYSpinner) {
+      sun.direction.y = (float) lightPositionYSpinner.getValue();
+    }
+    
+    if (e.getSource() == lightPositionZSpinner) {
+      sun.direction.z = (float) lightPositionZSpinner.getValue();
     }
     
     if (e.getSource() == terrainBrushSizeSpinner) {
@@ -383,6 +430,14 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     if (e.getSource() == terrainBrushAmountSpinner) {
       this.gameManager.getWorldEditScreen().getTerrainBrush().setPower((float)terrainBrushAmountSpinner.getValue());
     }
+  }
+
+  private void updateInfoForMapSettings() {
+    Scene scene = this.gameManager.getWorldEditScreen().getScene();
+    DirectionalLight sun = scene.getSunLight();
+    this.lightPositionXSpinner.setValue(sun.direction.x);
+    this.lightPositionYSpinner.setValue(sun.direction.y);
+    this.lightPositionZSpinner.setValue(sun.direction.z);
   }
 
   private void updateInfoForAutotileBrush() {
@@ -449,6 +504,18 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
           terrainBrush.setType(TerrainBrushType.Up);
         break;
       }
+    }
+  }
+
+  @Override
+  public void valueChanged(ListSelectionEvent e) {
+    WorldEditScreen screen = this.gameManager.getWorldEditScreen();
+    if (e.getSource() == autoTileList) {
+      Tileset tileset     = screen.getScene().getTerrain().getTileset();
+      AutoTiles autoTiles = tileset.getAutoTile((String)autoTileList.getSelectedValue());
+      AutoTileBrush brush = screen.getAutoTileBrush();
+
+      brush.setCurrentAutoTiles(autoTiles);
     }
   }
 }

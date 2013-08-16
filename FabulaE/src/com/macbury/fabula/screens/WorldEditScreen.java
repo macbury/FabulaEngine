@@ -34,6 +34,7 @@ import com.macbury.fabula.editor.brushes.Brush;
 import com.macbury.fabula.editor.brushes.TerrainBrush;
 import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.manager.ResourceManager;
+import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.terrain.Terrain;
 import com.macbury.fabula.terrain.Terrain.TerrainDebugListener;
 import com.macbury.fabula.terrain.Tile;
@@ -47,33 +48,23 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   private static final String TAG = "WorldScreen";
   private static final float APPLY_BRUSH_EVERY = 0.02f;
   private TopDownCamera camera;
-  private Terrain terrain;
-  private ModelBatch modelBatch;
   private EditorCamController camController;
   private ActionTimer   brushTimer;
   private Brush         currentBrush;
   private TerrainBrush  terrainBrush;
   private AutoTileBrush autoTileBrush;
-  private Lights        lights;
-  private DirectionalLight directionLight;
+  private Scene scene;
+  private Terrain terrain;
   
   public WorldEditScreen(GameManager manager) {
     super(manager);
     
-    lights = new Lights();
-    lights.ambientLight.set(1f, 1f, 1f, 1f);
-    directionLight = new DirectionalLight();
-    directionLight.set(1f, 1f, 1f, -1f, -2f, -1f);
-    lights.add(directionLight);
-    
     this.brushTimer = new ActionTimer(APPLY_BRUSH_EVERY, this);
-    
-    ModelBuilder modelBuilder = new ModelBuilder();
-    Model model               = modelBuilder.createBox(1f, 0.1f, 1f,  new Material(ColorAttribute.createDiffuse(Color.GREEN)), Usage.Position | Usage.Normal);
-    
     this.camera = new TopDownCamera();
     Gdx.app.log(TAG, "Initialized screen");
-    this.terrain = new Terrain(this, 50, 50, true);
+    
+    this.scene   = new Scene(50, 50);
+    this.terrain = this.scene.getTerrain();
     terrain.setDebugListener(this);
     terrain.fillEmptyTilesWithDebugTile();
     terrain.buildSectors();
@@ -113,8 +104,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     this.brushTimer.update(delta);
     camController.update();
     camera.update();
-    
-    this.terrain.render(this.camera, this.lights);
+    this.scene.render(this.camera);
     //modelBatch.begin(camera);
     //modelBatch.render(cursorInstance);
     //modelBatch.end();
@@ -233,6 +223,10 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
 
   public AutoTileBrush getAutoTileBrush() {
     return autoTileBrush;
+  }
+
+  public Scene getScene() {
+    return this.scene;
   }
 
 }
