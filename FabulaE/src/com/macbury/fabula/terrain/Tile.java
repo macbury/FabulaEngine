@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.macbury.fabula.manager.ResourceManager;
+import com.macbury.fabula.terrain.AutoTiles.Types;
 
 public class Tile {
   public enum Type {
@@ -113,6 +114,18 @@ public class Tile {
   
   public AutoTile getAutoTile() {
     return autoTile;
+  }
+
+  public Types getAutoType() {
+    return autoTile.getType();
+  }
+
+  public boolean haveDiffrentAutotileThan(AutoTile at) {
+    return !haveTheSameAutoTile(at);
+  }
+
+  public boolean haveTheSameAutoTile(AutoTile at) {
+    return autoTile.getAutoTiles().equals(at.getAutoTiles());
   }
 
 }

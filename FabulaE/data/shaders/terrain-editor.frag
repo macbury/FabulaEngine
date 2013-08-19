@@ -12,7 +12,8 @@ uniform vec2      u_brush_position;
 uniform float     u_brush_size;
 uniform vec3      u_light_direction;
 uniform vec4      u_light_color;
-uniform mat4 u_projectionViewMatrix;
+uniform mat4      u_projectionViewMatrix;
+uniform vec4      u_ambient_color;
 
 void main() {
   vec3 normalized_light_direction = normalize(u_light_direction);

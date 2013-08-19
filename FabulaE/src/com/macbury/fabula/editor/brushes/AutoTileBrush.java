@@ -77,18 +77,32 @@ public class AutoTileBrush extends Brush {
       return;
     }
     
-    AutoTile at = getCurrentAutoTiles().getAutoTile(AutoTiles.Types.InnerReapeating);
+    AutoTile defaultAutoTile = getCurrentAutoTiles().getAutoTile(AutoTiles.Types.Start);
     
     for (Tile tile : brushTiles) {
-      tile.setAutoTile(at);
+      long mask            = computeAutoTileUID(tile);
+      String tid           = Long.toHexString(mask).toUpperCase();
+      AutoTiles.Types type = null;
+      try {
+        type = AutoTiles.getCornerMap().get(tid);
+      } catch (ArrayIndexOutOfBoundsException e) {
+        
+      }
+      
+      if (type != null) {
+        tile.setAutoTile(getCurrentAutoTiles().getAutoTile(type));
+      } else {
+        Gdx.app.log(TAG, "Mask: " + tid + " = "+mask);
+        //tile.setAutoTile(defaultAutoTile);
+      }
     }
   }
   
-  public int computeAutoTileUID(Tile currentTile, AutoTile at) {
+  public long computeAutoTileUID(Tile currentTile) {
     int x = (int) currentTile.getX();
     int z = (int) currentTile.getZ();
     
-    int out = at.getIndex();
+    long out = 0;
     
     Tile topTile           = terrain.getTile(x, z-1);
     Tile bottomTile        = terrain.getTile(x, z+1);
@@ -102,37 +116,67 @@ public class AutoTileBrush extends Brush {
     Tile bottomLeftTile    = terrain.getTile(x-1, z+1);
     Tile bottomRightTile   = terrain.getTile(x+1, z+1);
     
-    if (topTile != null) {
-      out += topTile.getAutoTile().getIndex();
+    long mask = 28 << 16;
+    
+    if (topLeftTile != null && topLeftTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
+      mask = topLeftTile.getAutoTile().getCornerMask(AutoTiles.CORNER_BOTTOM_RIGHT);
+      mask <<= 28;
     }
     
-    if (bottomTile != null) {
-      out += bottomTile.getAutoTile().getIndex();
+    out |= mask;
+    
+    mask = 24 << 16;
+    if (topTile != null && topTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
+      mask = topTile.getAutoTile().getCornerMask(AutoTiles.CORNER_BOTTOM_LEFT) | topTile.getAutoTile().getCornerMask(AutoTiles.CORNER_BOTTOM_RIGHT);
+      mask <<= 24;
     }
     
-    if (leftTile != null) {
-      out += leftTile.getAutoTile().getIndex();
+    out |= mask;
+    
+    mask = 20 << 16;
+    if (topRightTile != null && topRightTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
+      mask = topRightTile.getAutoTile().getCornerMask(AutoTiles.CORNER_BOTTOM_LEFT);
+      mask <<= 20;
     }
     
-    if (rightTile != null) {
-      out += rightTile.getAutoTile().getIndex();
+    out |= mask;
+    
+    mask = 16 << 16;
+    if (leftTile != null && leftTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
+      mask = leftTile.getAutoTile().getCornerMask(AutoTiles.CORNER_TOP_RIGHT) | leftTile.getAutoTile().getCornerMask(AutoTiles.CORNER_BOTTOM_RIGHT);
+      mask <<= 16;
     }
     
-    if (topLeftTile != null) {
-      out += topLeftTile.getAutoTile().getIndex();
+    mask = 12 << 16;
+    if (rightTile != null && rightTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
+      mask = rightTile.getAutoTile().getCornerMask(AutoTiles.CORNER_TOP_LEFT) | rightTile.getAutoTile().getCornerMask(AutoTiles.CORNER_BOTTOM_LEFT);
+      mask <<= 12;
     }
     
-    if (topRightTile != null) {
-      out += topRightTile.getAutoTile().getIndex();
+    out |= mask;
+    
+    mask = 8 << 16;
+    if (bottomLeftTile != null && bottomLeftTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
+      mask = bottomLeftTile.getAutoTile().getCornerMask(AutoTiles.CORNER_TOP_RIGHT);
+      mask <<= 8;
     }
     
-    if (bottomLeftTile != null) {
-      out += bottomLeftTile.getAutoTile().getIndex();
+    out |= mask;
+    
+    mask = 4 << 16;
+    if (bottomTile != null && bottomTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
+      mask = bottomTile.getAutoTile().getCornerMask(AutoTiles.CORNER_TOP_LEFT) | bottomTile.getAutoTile().getCornerMask(AutoTiles.CORNER_TOP_RIGHT);
+      mask <<= 4;
     }
     
-    if (bottomRightTile != null) {
-      out += bottomRightTile.getAutoTile().getIndex();
+    out |= mask;
+    
+    mask = 16;
+    if (bottomRightTile != null && bottomRightTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
+      mask = bottomRightTile.getAutoTile().getCornerMask(AutoTiles.CORNER_TOP_LEFT);
     }
+    
+    out |= mask;
     
     return out;
   }

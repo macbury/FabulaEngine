@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class AutoTile {
   private TextureRegion textureRegion;
   private AutoTiles.Types type;
+
   private int index;
   private AutoTiles autoTiles;
   
@@ -29,8 +30,21 @@ public class AutoTile {
   public void setAutoTiles(AutoTiles autoTiles) {
     this.autoTiles = autoTiles;
   }
+  
+  public AutoTiles getAutoTiles() {
+    return autoTiles;
+  }
 
   public String getName() {
     return autoTiles.getName();
   }
+  
+  public AutoTiles.Types getType() {
+    return type;
+  }
+
+  public long getCornerMask(int corner) {
+    return autoTiles.getMaskForTypeAndIndex(type, corner);
+  }
+
 }
