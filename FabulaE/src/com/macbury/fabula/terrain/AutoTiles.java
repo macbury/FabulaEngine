@@ -5,6 +5,8 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import javax.management.RuntimeErrorException;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -167,11 +169,24 @@ public class AutoTiles {
   
   private static void buildCornerMap() {
     CORNER_MAP = new HashMap<String, AutoTiles.Types>();
-    CORNER_MAP.put("4C80EDFE", Types.InnerReapeating);
-    CORNER_MAP.put("DDC0ECEE", Types.Start);
-    CORNER_MAP.put("DDC4EC0E", Types.PathVerticalTop);
-    CORNER_MAP.put("D0D8ECEE", Types.PathVerticalBottom);
-    
+    /*CORNER_MAP.put("4C80EDFE", Types.InnerReapeating);
+    CORNER_MAP.put("0", Types.Start);
+    CORNER_MAP.put("1C00F0", Types.PathVerticalTop);
+    //CORNER_MAP.put("DDC4EC0E", Types.PathVerticalTop);
+    /*CORNER_MAP.put("180000", Types.PathVerticalBottom);
+    CORNER_MAP.put("F1C0010", Types.PathVerticalBottom);
+    CORNER_MAP.put("F1C00F0", Types.PathVertical);
+    CORNER_MAP.put("1CF0A0", Types.CornerTopLeft);
+    CORNER_MAP.put("1C0050", Types.CornerTopRight);
+    CORNER_MAP.put("FBC3010", Types.CornerBottomLeft);
+    CORNER_MAP.put("7F1C0010", Types.CornerBottomRight);
+    CORNER_MAP.put("7FBC3010", Types.EdgeBottom);
+    CORNER_MAP.put("FBCF0A0", Types.EdgeLeft);
+    CORNER_MAP.put("1CF0AE", Types.CornerTopLeft);
+    CORNER_MAP.put("1CF0FE", Types.EdgeTop);
+    CORNER_MAP.put("1C0DF0", Types.CornerTopRight);
+    CORNER_MAP.put("51C0050", Types.EdgeRight);
+    CORNER_MAP.put("F1C0050", Types.InnerReapeating);*/
   }
 
   public AutoTiles(Tileset tileset, String name) {
@@ -257,7 +272,7 @@ public class AutoTiles {
     int cursor = -1;
     
     for (int i = 0; i < TILE_TYPES.length; i++) {
-      if (TILE_TYPES[i] == type) {
+      if (TILE_TYPES[i].equals(type)) {
         cursor = i;
         break;
       }
@@ -274,7 +289,13 @@ public class AutoTiles {
   public long getMaskForTypeAndIndex(Types type, int offset) {
     int cursor = getIndexForType(type)+offset;
     int index = TILE_COMBINATIONS[cursor];
-    return TILE_MASK[cursor];
+    
+    try {
+      return TILE_MASK[index];
+    } catch (ArrayIndexOutOfBoundsException e) {
+      Gdx.app.log(TAG, "Error: " + e.toString());
+      return 0;
+    }
   }
 
   public AutoTile getAutoTile(Types type) {

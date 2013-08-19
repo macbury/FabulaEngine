@@ -39,5 +39,10 @@ public class TerrainBrush extends Brush {
   public void setType(TerrainBrushType type) {
     this.type = type;
   }
+
+  @Override
+  public String getStatusBarInfo() {
+    return "";
+  }
   
 }

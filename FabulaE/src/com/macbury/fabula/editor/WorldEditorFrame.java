@@ -40,6 +40,7 @@ import com.macbury.fabula.editor.brushes.TerrainBrush.TerrainBrushType;
 import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.screens.WorldEditScreen;
+import com.macbury.fabula.terrain.AutoTile;
 import com.macbury.fabula.terrain.AutoTiles;
 import com.macbury.fabula.terrain.Tileset;
 
@@ -88,6 +89,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.JSlider;
+import com.macbury.fabula.editor.brushes.AutoTileBrush.PaintMode;
 
 public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener {
   
@@ -107,6 +110,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JSpinner lightPositionZSpinner;
   private JSpinner lightPositionYSpinner;
   private JSpinner lightPositionXSpinner;
+  private JComboBox paintModeComboBox;
   
   public WorldEditorFrame(GameManager game) {
     setTitle("WorldEd - [No Name]");
@@ -311,10 +315,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     JPanel panel_1 = new JPanel();
     tabbedInspectorPane.addTab("Tiles", null, panel_1, null);
-    panel_1.setLayout(new GridLayout(0, 1, 0, 0));
     
     this.autoTileList = new JList(new Object[] { });
     autoTileList.addListSelectionListener(this);
+    panel_1.setLayout(new BorderLayout(0, 0));
     autoTileList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     autoTileList.setVisibleRowCount(0);
     autoTileList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
@@ -323,6 +327,11 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     
     panel_1.add(autoTileList);
+    
+    this.paintModeComboBox = new JComboBox();
+    paintModeComboBox.addItemListener(this);
+    paintModeComboBox.setModel(new DefaultComboBoxModel(PaintMode.values()));
+    panel_1.add(paintModeComboBox, BorderLayout.NORTH);
     
     JPanel panel_2 = new JPanel();
     tabbedInspectorPane.addTab("Objects", null, panel_2, null);
@@ -442,13 +451,20 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
 
   private void updateInfoForAutotileBrush() {
     AutoTileBrush atBrush     = this.gameManager.getWorldEditScreen().getAutoTileBrush();
+    atBrush.setPaintMode((PaintMode) this.paintModeComboBox.getSelectedItem());
     this.autoTileListRenderer = new IconListRenderer(atBrush.getAutoTileIcons());
     autoTileList.setCellRenderer(autoTileListRenderer);
 
     DefaultListModel listModel = new DefaultListModel();
     
-    for (String key : atBrush.getOrderedTileNames()) {
-      listModel.addElement(key);
+    if (atBrush.getCurrentPaintMode() == PaintMode.AutoTile) {
+      for (String key : atBrush.getOrderedTileNames()) {
+        listModel.addElement(key);
+      }
+    } else {
+      for (String key : atBrush.getAllOrderedTileNames()) {
+        listModel.addElement(key);
+      }
     }
     
     autoTileList.setModel(listModel);
@@ -505,6 +521,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
         break;
       }
     }
+    
+    if (e.getSource() == paintModeComboBox) {
+      updateInfoForAutotileBrush();
+    }
   }
 
   @Override
@@ -512,10 +532,15 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     WorldEditScreen screen = this.gameManager.getWorldEditScreen();
     if (e.getSource() == autoTileList) {
       Tileset tileset     = screen.getScene().getTerrain().getTileset();
-      AutoTiles autoTiles = tileset.getAutoTile((String)autoTileList.getSelectedValue());
       AutoTileBrush brush = screen.getAutoTileBrush();
-
-      brush.setCurrentAutoTiles(autoTiles);
+      String key          = (String)autoTileList.getSelectedValue();
+      AutoTile at         = tileset.getAutoTile(key);
+      
+      if (brush.getCurrentPaintMode().equals(PaintMode.AutoTile)) {
+        brush.setCurrentAutoTiles(at.getAutoTiles());
+      } else {
+        brush.setCurrentAutoTile(at);
+      }
     }
   }
 }

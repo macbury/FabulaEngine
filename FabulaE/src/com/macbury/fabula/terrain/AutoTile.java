@@ -36,7 +36,7 @@ public class AutoTile {
   }
 
   public String getName() {
-    return autoTiles.getName();
+    return autoTiles.getName()+"_"+getIndex();
   }
   
   public AutoTiles.Types getType() {

@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.utils.Array;
 import com.macbury.fabula.editor.brushes.TerrainBrush.TerrainBrushType;
 import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.terrain.AutoTile;
@@ -34,19 +35,42 @@ public class AutoTileBrush extends Brush {
   private static final String TAG = "AutoTileBrush";
   private HashMap<String, ImageIcon> autoTileIcons;
   private ArrayList<String> autoTileNames;
+  private ArrayList<String> allAutoTileNames;
   private AutoTiles currentAutoTiles;
+  private PaintMode currentPaintMode = PaintMode.AutoTile;
+  private AutoTile currentAutoTile;
+  
+  public static enum PaintMode {
+    AutoTile, Tile
+  };
   
   public AutoTileBrush(Terrain terrain) {
     super(terrain);
     this.autoTileIcons = new HashMap<String, ImageIcon>();
     this.autoTileNames = new ArrayList<String>();
+    this.allAutoTileNames = new ArrayList<String>();
     setSize(0);
   }
+
   
-  public void buildPreviews() {
+  public void buildAllPreviews() {
     Tileset tileset = terrain.getTileset();
+    buildPreviews(tileset.getIcons());
     
     for (AutoTile at : tileset.getIcons()) {
+      this.autoTileNames.add(at.getName());
+    }
+    
+    for (AutoTiles autoTiles : tileset.getAutoTiles()) {
+      buildPreviews(autoTiles.all());
+      for (AutoTile at : autoTiles.all()) {
+        allAutoTileNames.add(at.getName());
+      }
+    }
+  }
+  
+  private void buildPreviews(Array<AutoTile> icons) {
+    for (AutoTile at : icons) {
       String filePath     = "./preprocessed/previews/" + at.getName()+ ".png";
       File file           = new File(filePath);
       
@@ -59,42 +83,54 @@ public class AutoTileBrush extends Brush {
         renderer.dispose();
       }
       
-      
       ImageIcon icon = null;
       try {
         icon = new ImageIcon(ImageIO.read(file));
       } catch (IOException e) {
         e.printStackTrace();
       }
-      this.autoTileNames.add(at.getName());
+      
       this.autoTileIcons.put(at.getName(), icon);
     }
   }
-  
+
   @Override
   public void onApply() {
-    if (currentAutoTiles == null) {
+    if ((currentAutoTiles == null && currentPaintMode == PaintMode.AutoTile) || (currentAutoTile == null && currentPaintMode == PaintMode.Tile)) {
       return;
     }
     
-    AutoTile defaultAutoTile = getCurrentAutoTiles().getAutoTile(AutoTiles.Types.Start);
-    
     for (Tile tile : brushTiles) {
-      long mask            = computeAutoTileUID(tile);
-      String tid           = Long.toHexString(mask).toUpperCase();
-      AutoTiles.Types type = null;
-      try {
-        type = AutoTiles.getCornerMap().get(tid);
-      } catch (ArrayIndexOutOfBoundsException e) {
-        
-      }
-      
-      if (type != null) {
-        tile.setAutoTile(getCurrentAutoTiles().getAutoTile(type));
+      if (currentPaintMode == PaintMode.AutoTile) {
+        applyAutoTileToTile(tile);
       } else {
-        Gdx.app.log(TAG, "Mask: " + tid + " = "+mask);
-        //tile.setAutoTile(defaultAutoTile);
+        tile.setAutoTile(currentAutoTile);
       }
+    }
+  }
+  
+  private void updateAutotile(Tile tile) {
+    if (tile != null) {
+      applyAutoTileToTile(tile);
+    }
+  }
+
+  public void applyAutoTileToTile(Tile tile) {
+    long mask            = computeAutoTileUID(tile);
+    String tid           = Long.toHexString(mask).toUpperCase();
+    AutoTiles.Types type = null;
+    AutoTile defaultAutoTile = getCurrentAutoTiles().getAutoTile(AutoTiles.Types.Start);
+    try {
+      type = AutoTiles.getCornerMap().get(tid);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      
+    }
+    
+    if (type != null) {
+      tile.setAutoTile(getCurrentAutoTiles().getAutoTile(type));
+    } else {
+      Gdx.app.log(TAG, "Mask: " + tid + " = "+mask);
+      tile.setAutoTile(defaultAutoTile);
     }
   }
   
@@ -189,6 +225,10 @@ public class AutoTileBrush extends Brush {
     return autoTileNames;
   }
   
+  public ArrayList<String> getAllOrderedTileNames() {
+    return allAutoTileNames;
+  }
+  
   private class AutoTilePreviewRenderer extends OffScreen2DRenderer {
     private AutoTile at;
 
@@ -210,4 +250,30 @@ public class AutoTileBrush extends Brush {
   public void setCurrentAutoTiles(AutoTiles currentAutoTiles) {
     this.currentAutoTiles = currentAutoTiles;
   }
+
+  @Override
+  public String getStatusBarInfo() {
+    Tile tile            = this.terrain.getTile((int)this.position.x, (int)this.position.y);
+    if (tile != null) {
+      long mask            = computeAutoTileUID(tile);
+      String tid           = Long.toHexString(mask).toUpperCase();
+      return "AutoTile: " + tid + " => " + mask;
+    } else {
+      return "";
+    }
+  }
+
+  public void setPaintMode(PaintMode selectedItem) {
+    this.currentPaintMode = selectedItem;
+  }
+  
+  public PaintMode getCurrentPaintMode() {
+    return this.currentPaintMode;
+  }
+
+  public void setCurrentAutoTile(AutoTile at) {
+    this.currentAutoTile = at;
+  }
+
+  
 }

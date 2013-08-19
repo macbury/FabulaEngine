@@ -19,6 +19,8 @@ public abstract class Brush {
     setSize(1);
   }
   
+  public abstract String getStatusBarInfo();
+  
   public int getSize() {
     return size;
   }

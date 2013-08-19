@@ -1,6 +1,7 @@
 package com.macbury.fabula.terrain;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
@@ -29,10 +30,21 @@ public class Tileset {
     //Gdx.app.log("Test", name);
   }
   
-  public AutoTiles getAutoTile(String key) {
+  public AutoTiles getAutoTiles(String key) {
     return autotiles.get(key);
   }
 
+  public AutoTile getAutoTile(String key) {
+    for (AutoTiles at : autotiles.values()) {
+      for (AutoTile tile : at.all()) {
+        if (tile.getName().equals(key)) {
+          return tile;
+        }
+      }
+    }
+    return null;
+  }
+  
   public TextureAtlas getAtlas() {
     return textureAtlas;
   }
@@ -50,5 +62,9 @@ public class Tileset {
 
   public AutoTile getDefaultAutoTile() {
     return defaultAutoTile;
+  }
+
+  public Collection<AutoTiles> getAutoTiles() {
+    return autotiles.values();
   }
 }

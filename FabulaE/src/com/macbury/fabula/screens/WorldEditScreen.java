@@ -73,7 +73,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     
     terrainBrush  = new TerrainBrush(terrain);
     autoTileBrush = new AutoTileBrush(terrain);
-    autoTileBrush.buildPreviews();
+    autoTileBrush.buildAllPreviews();
     setCurrentBrush(terrainBrush);
     
     this.camController = new EditorCamController(camera);
@@ -110,7 +110,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     //modelBatch.end();
     
     debugInfo = "X: "+ getCurrentBrush().getPosition().x + " Y " + getCurrentBrush().getY() + " Z: " +  getCurrentBrush().getPosition().y +
-        " FPS: "+ Gdx.graphics.getFramesPerSecond() + " Java Heap: " + (Gdx.app.getJavaHeap() / 1024) + " KB" + " Native Heap: " + (Gdx.app.getNativeHeap() / 1024);
+        " FPS: "+ Gdx.graphics.getFramesPerSecond() + " Java Heap: " + (Gdx.app.getJavaHeap() / 1024) + " KB" + " Native Heap: " + (Gdx.app.getNativeHeap() / 1024) + " " + currentBrush.getStatusBarInfo();
     
   }
 
