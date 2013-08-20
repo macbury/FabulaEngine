@@ -20,6 +20,7 @@ import com.macbury.fabula.manager.ResourceManager;
 public class Terrain {
   private Sector[][] sectors;
   private Tile[][] tiles;
+
   private int columns;
   private int rows;
   private ShaderProgram terrainShader;
@@ -37,11 +38,11 @@ public class Terrain {
   private TerrainDebugListener debugListener;
   
   public Terrain(int columns, int rows) {
-    Tile.GID_COUNTER = 1;
-    this.debug   = debug;
-    this.columns = columns;
-    this.rows    = rows;
-    this.tiles    = new Tile[columns][rows];
+    Tile.GID_COUNTER  = 1;
+    this.debug        = debug;
+    this.columns      = columns;
+    this.rows         = rows;
+    this.tiles        = new Tile[columns][rows];
     
     if (columns % Sector.COLUMN_COUNT != 0 || rows%Sector.ROW_COUNT != 0) {
       throw new RuntimeException("Map size must be proper!");
@@ -80,12 +81,6 @@ public class Terrain {
         }
       }
     }
-    
-    /*this.tiles[0][0].setY(1);
-    this.tiles[0][1].setY(1);
-    this.tiles[1][0].setY(1);
-    this.tiles[1][1].setY(1);
-    */
   }
 
   private boolean haveTile(int x, int z) {
@@ -307,5 +302,17 @@ public class Terrain {
 
   public Tileset getTileset() {
     return this.tileset;
+  }
+  
+  public Tile[][] getTiles() {
+    return tiles;
+  }
+
+  public int getColumns() {
+    return columns;
+  }
+
+  public int getRows() {
+    return rows;
   }
 }

@@ -69,6 +69,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -92,7 +93,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.JSlider;
 import com.macbury.fabula.editor.brushes.AutoTileBrush.PaintMode;
 
-public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener {
+public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener {
   
   protected static final String TAG = "WorldEditorFrame";
   private JPanel contentPane;
@@ -111,6 +112,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JSpinner lightPositionYSpinner;
   private JSpinner lightPositionXSpinner;
   private JComboBox paintModeComboBox;
+  private JMenuItem mntmBuildTileMap;
   
   public WorldEditorFrame(GameManager game) {
     setTitle("WorldEd - [No Name]");
@@ -168,6 +170,13 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     JMenuItem mntmNewMenuItem_1 = new JMenuItem("Rebuild tilesets");
     mnAssets.add(mntmNewMenuItem_1);
+    
+    JMenu mnDeveloper = new JMenu("Developer");
+    menuBar.add(mnDeveloper);
+    
+    this.mntmBuildTileMap = new JMenuItem("Build tile map unique combination map");
+    mntmBuildTileMap.addActionListener(this);
+    mnDeveloper.add(mntmBuildTileMap);
     contentPane = new JPanel();
     contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
     contentPane.setLayout(new BorderLayout(0, 0));
@@ -540,6 +549,19 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
         brush.setCurrentAutoTiles(at.getAutoTiles());
       } else {
         brush.setCurrentAutoTile(at);
+      }
+    }
+  }
+
+  @Override
+  public void actionPerformed(ActionEvent e) {
+    if (e.getSource() == mntmBuildTileMap) {
+      WorldEditScreen screen = this.gameManager.getWorldEditScreen();
+      AutoTileBrush brush = screen.getAutoTileBrush();
+      try {
+        brush.rebuildAndSave();
+      } catch (IOException e1) {
+        e1.printStackTrace();
       }
     }
   }

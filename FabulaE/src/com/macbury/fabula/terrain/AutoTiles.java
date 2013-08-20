@@ -37,39 +37,39 @@ public class AutoTiles {
   private int id;
   
   public static enum Types {
-    Start, InnerReapeating, CornerTopLeft, CornerTopRight, CornerBottomLeft, CornerBottomRight, EdgeLeft, EdgeRight, EdgeTop, EdgeBottom, PathHorizontal, PathVertical, PathVerticalTop, PathVerticalBottom, PathHorizontalLeft, PathHorizontalRight, PathCornerBottomLeft, PathCornerBottomRight, PathCornerTopRight, PathCornerTopLeft, PathCross, InnerEdgeBottomRight, InnerEdgeBottomLeft, InnerEdgeTopLeft, InnerEdgeTopRight
+    Start, InnerReapeating, CornerTopLeft, CornerTopRight, CornerBottomLeft, CornerBottomRight, EdgeLeft, EdgeRight, EdgeTop, EdgeBottom, PathHorizontal, PathVertical, PathVerticalTop, PathVerticalBottom, PathHorizontalLeft, PathHorizontalRight, PathCornerBottomLeft, PathCornerBottomRight, PathCornerTopRight, PathCornerTopLeft, PathCross, InnerEdgeBottomRight, InnerEdgeBottomLeft, InnerEdgeTopLeft, InnerEdgeTopRight, PathCrossLeftTopRight, PathCrossLeftBottomRight, PathCrossLeftTopBottom, PathCrossRightTopBottom
   };
   
   public static HashMap<String, AutoTiles.Types> CORNER_MAP;
   
-  // 1 = equals border
-  // 0 = equals none
+  // 0 = equals border
+  // 1 = equals inner
   
   public final static byte[] TILE_MASK = {
-    14, //0
-    13, //1
-    8,  //2
-    4,  //3
-    11, //4
-    7,  //5
-    2,  //6
-    1,  //7
-    14, //8
-    12, //9
-    12, //10
-    13, //11,
-    10, //12,
-    0, //13,
-    0, //14,
-    5, //15,
-    10, //16,
-    0, //17,
-    0, //18,
-    5, //19,
-    11, //20
-    3,  //21
-    3, //22
-    7, //23
+    1, //0
+    2, //1
+    7,  //2
+    11,  //3
+    4, //4
+    8,  //5
+    13,  //6
+    14,  //7
+    1, //8
+    3, //9
+    3, //10
+    2, //11,
+    5, //12,
+    15, //13,
+    15, //14,
+    10, //15,
+    5, //16,
+    15, //17,
+    15, //18,
+    10, //19,
+    4, //20
+    12,  //21
+    12, //22
+    8, //23
   };
   
   public final static byte[] TILE_COMBINATIONS = {
@@ -97,10 +97,13 @@ public class AutoTiles {
     13,14,17,7,
     13,14,6,18,
     2,14,17,18,
-    13,3,17,18
+    13,3,17,18,
+    2,3,21,22,
+    9,10,6,7,
+    2,15,6,19,
+    12,3,16,7
   };
   
-  public final static int OTHER_AUTOTILE_MASK = 65535;
   
   public final static Types[] TILE_TYPES = {
     Types.Start,
@@ -128,6 +131,10 @@ public class AutoTiles {
     Types.InnerEdgeBottomLeft,
     Types.InnerEdgeTopLeft,
     Types.InnerEdgeTopRight,
+    Types.PathCrossLeftTopRight,
+    Types.PathCrossLeftBottomRight,
+    Types.PathCrossLeftTopBottom,
+    Types.PathCrossRightTopBottom,
   };
   
   private static final String TAG = "AutoTiles";
@@ -169,24 +176,37 @@ public class AutoTiles {
   
   private static void buildCornerMap() {
     CORNER_MAP = new HashMap<String, AutoTiles.Types>();
-    /*CORNER_MAP.put("4C80EDFE", Types.InnerReapeating);
     CORNER_MAP.put("0", Types.Start);
-    CORNER_MAP.put("1C00F0", Types.PathVerticalTop);
-    //CORNER_MAP.put("DDC4EC0E", Types.PathVerticalTop);
-    /*CORNER_MAP.put("180000", Types.PathVerticalBottom);
-    CORNER_MAP.put("F1C0010", Types.PathVerticalBottom);
-    CORNER_MAP.put("F1C00F0", Types.PathVertical);
-    CORNER_MAP.put("1CF0A0", Types.CornerTopLeft);
-    CORNER_MAP.put("1C0050", Types.CornerTopRight);
-    CORNER_MAP.put("FBC3010", Types.CornerBottomLeft);
-    CORNER_MAP.put("7F1C0010", Types.CornerBottomRight);
-    CORNER_MAP.put("7FBC3010", Types.EdgeBottom);
-    CORNER_MAP.put("FBCF0A0", Types.EdgeLeft);
-    CORNER_MAP.put("1CF0AE", Types.CornerTopLeft);
-    CORNER_MAP.put("1CF0FE", Types.EdgeTop);
-    CORNER_MAP.put("1C0DF0", Types.CornerTopRight);
-    CORNER_MAP.put("51C0050", Types.EdgeRight);
-    CORNER_MAP.put("F1C0050", Types.InnerReapeating);*/
+    /*CORNER_MAP.put("F0", Types.PathVerticalTop);
+    CORNER_MAP.put("F0000F0", Types.PathVertical);
+    CORNER_MAP.put("F0A0333", Types.PathVertical);
+    
+    //CORNER_MAP.put("C000000", Types.PathVerticalBottom);
+    CORNER_MAP.put("F000000", Types.PathVerticalBottom);
+    CORNER_MAP.put("A00FF000", Types.PathHorizontal);
+    //CORNER_MAP.put("F0", Types.PathVerticalTop);
+    CORNER_MAP.put("F00F000", Types.CornerBottomLeft);
+    CORNER_MAP.put("A00F0000", Types.PathHorizontalRight);
+    CORNER_MAP.put("A00AFA00", Types.PathHorizontal);
+    CORNER_MAP.put("F000", Types.PathHorizontalLeft);
+    CORNER_MAP.put("FF000", Types.PathHorizontal);
+    CORNER_MAP.put("F0000", Types.PathHorizontalRight);
+    CORNER_MAP.put("A0000", Types.PathHorizontalRight);
+    
+    CORNER_MAP.put("F0FF0", Types.CornerTopRight);
+    CORNER_MAP.put("F0F3", Types.CornerTopLeft);
+    CORNER_MAP.put("FF0F0000", Types.CornerBottomRight);
+    CORNER_MAP.put("F0F0000", Types.PathCornerBottomRight);
+    CORNER_MAP.put("50F000", Types.PathHorizontalLeft);
+    CORNER_MAP.put("C0F000", Types.PathHorizontalLeft);
+    CORNER_MAP.put("C5FF000", Types.PathHorizontal);
+    CORNER_MAP.put("A00F0A00", Types.PathHorizontal);
+    CORNER_MAP.put("A00FFA00", Types.PathHorizontal);
+    CORNER_MAP.put("F00F0F0", Types.PathCrossRightTopBottom);*/
+    //CORNER_MAP.put("51C0010", Types.CornerBottomRight);
+    //CORNER_MAP.put("A1C3010", Types.CornerBottomLeft);
+    //CORNER_MAP.put("1CC0A0", Types.CornerTopLeft);
+    //CORNER_MAP.put("1C0050", Types.CornerTopRight);
   }
 
   public AutoTiles(Tileset tileset, String name) {

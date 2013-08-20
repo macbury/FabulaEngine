@@ -1,8 +1,10 @@
 package com.macbury.fabula.editor.brushes;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -102,20 +104,63 @@ public class AutoTileBrush extends Brush {
     
     for (Tile tile : brushTiles) {
       if (currentPaintMode == PaintMode.AutoTile) {
-        applyAutoTileToTile(tile);
+        tile.setAutoTile(getCurrentAutoTiles().getAutoTile(AutoTiles.Types.InnerReapeating));
+        applyAutoTileToTile(tile, true);
+        
+        int x = (int) tile.getX();
+        int z = (int) tile.getZ();
+        
+        updateAutotile(terrain.getTile(x-1, z-1));
+        updateAutotile(terrain.getTile(x, z-1));
+        updateAutotile(terrain.getTile(x-1, z+1));
+        updateAutotile(terrain.getTile(x-1, z));
+        updateAutotile(terrain.getTile(x+1, z));
+        updateAutotile(terrain.getTile(x+1, z-1));
+        updateAutotile(terrain.getTile(x, z+1));
+        updateAutotile(terrain.getTile(x+1, z+1));
       } else {
+        Gdx.app.log(TAG, getImportMapping());
         tile.setAutoTile(currentAutoTile);
+        rebuildCombinations();
       }
     }
   }
   
-  private void updateAutotile(Tile tile) {
-    if (tile != null) {
-      applyAutoTileToTile(tile);
+  private void rebuildCombinations() {
+    Tile[][] tiles = terrain.getTiles();
+    
+    for (int x = 0; x < terrain.getColumns(); x++) {
+      for (int y = 0; y < terrain.getRows(); y++) {
+        Tile tile  = tiles[x][y];
+        if (tile.getAutoTile().getAutoTiles() == currentAutoTiles) {
+          String tid = Long.toHexString(computeAutoTileUID(tile)).toUpperCase();
+          AutoTiles.getCornerMap().put(tid, tile.getAutoType());
+        }
+      }
     }
   }
 
-  public void applyAutoTileToTile(Tile tile) {
+
+  private String getImportMapping() {
+    Tile tile            = this.terrain.getTile((int)this.position.x, (int)this.position.y);
+    if (tile != null) {
+      long mask            = computeAutoTileUID(tile);
+      String tid           = Long.toHexString(mask).toUpperCase();
+      return "CORNER_MAP.put(\""+tid+"\", Types."+tile.getAutoTile().getType().toString()+");";
+    } else {
+      return "";
+    }
+  }
+
+
+  private void updateAutotile(Tile tile) {
+    if (tile != null) {
+      applyAutoTileToTile(tile, false);
+    }
+  }
+
+  public void applyAutoTileToTile(Tile tile, boolean debug) {
+    
     long mask            = computeAutoTileUID(tile);
     String tid           = Long.toHexString(mask).toUpperCase();
     AutoTiles.Types type = null;
@@ -129,14 +174,18 @@ public class AutoTileBrush extends Brush {
     if (type != null) {
       tile.setAutoTile(getCurrentAutoTiles().getAutoTile(type));
     } else {
-      Gdx.app.log(TAG, "Mask: " + tid + " = "+mask);
-      tile.setAutoTile(defaultAutoTile);
+      if (debug) {
+        Gdx.app.log(TAG, "Mask: " + tid + " = " + mask);
+      }
+      //tile.setAutoTile(defaultAutoTile);
     }
   }
   
   public long computeAutoTileUID(Tile currentTile) {
     int x = (int) currentTile.getX();
     int z = (int) currentTile.getZ();
+    
+    this.terrain.addSectorToRebuildFromTile(currentTile);
     
     long out = 0;
     
@@ -152,64 +201,75 @@ public class AutoTileBrush extends Brush {
     Tile bottomLeftTile    = terrain.getTile(x-1, z+1);
     Tile bottomRightTile   = terrain.getTile(x+1, z+1);
     
-    long mask = 28 << 16;
+    long mask = 0;
     
     if (topLeftTile != null && topLeftTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
       mask = topLeftTile.getAutoTile().getCornerMask(AutoTiles.CORNER_BOTTOM_RIGHT);
       mask <<= 28;
+      this.terrain.addSectorToRebuildFromTile(topLeftTile);
     }
     
     out |= mask;
     
-    mask = 24 << 16;
+    mask = 0;
     if (topTile != null && topTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
       mask = topTile.getAutoTile().getCornerMask(AutoTiles.CORNER_BOTTOM_LEFT) | topTile.getAutoTile().getCornerMask(AutoTiles.CORNER_BOTTOM_RIGHT);
       mask <<= 24;
+      this.terrain.addSectorToRebuildFromTile(topTile);
     }
     
     out |= mask;
     
-    mask = 20 << 16;
+    mask = 0;
     if (topRightTile != null && topRightTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
       mask = topRightTile.getAutoTile().getCornerMask(AutoTiles.CORNER_BOTTOM_LEFT);
       mask <<= 20;
+      this.terrain.addSectorToRebuildFromTile(topRightTile);
     }
     
     out |= mask;
     
-    mask = 16 << 16;
+    mask = 0;
     if (leftTile != null && leftTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
       mask = leftTile.getAutoTile().getCornerMask(AutoTiles.CORNER_TOP_RIGHT) | leftTile.getAutoTile().getCornerMask(AutoTiles.CORNER_BOTTOM_RIGHT);
       mask <<= 16;
+      this.terrain.addSectorToRebuildFromTile(leftTile);
     }
     
-    mask = 12 << 16;
+    out |= mask;
+    
+    mask = 0;
     if (rightTile != null && rightTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
       mask = rightTile.getAutoTile().getCornerMask(AutoTiles.CORNER_TOP_LEFT) | rightTile.getAutoTile().getCornerMask(AutoTiles.CORNER_BOTTOM_LEFT);
       mask <<= 12;
+      this.terrain.addSectorToRebuildFromTile(rightTile);
     }
     
     out |= mask;
     
-    mask = 8 << 16;
+    mask = 0;
     if (bottomLeftTile != null && bottomLeftTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
       mask = bottomLeftTile.getAutoTile().getCornerMask(AutoTiles.CORNER_TOP_RIGHT);
       mask <<= 8;
+      this.terrain.addSectorToRebuildFromTile(bottomLeftTile);
     }
     
     out |= mask;
     
-    mask = 4 << 16;
+    mask = 0;
     if (bottomTile != null && bottomTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
       mask = bottomTile.getAutoTile().getCornerMask(AutoTiles.CORNER_TOP_LEFT) | bottomTile.getAutoTile().getCornerMask(AutoTiles.CORNER_TOP_RIGHT);
       mask <<= 4;
+      this.terrain.addSectorToRebuildFromTile(bottomTile);
     }
     
     out |= mask;
     
-    mask = 16;
+    mask = 0;
     if (bottomRightTile != null && bottomRightTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
       mask = bottomRightTile.getAutoTile().getCornerMask(AutoTiles.CORNER_TOP_LEFT);
+      mask <<= 0;
+      this.terrain.addSectorToRebuildFromTile(bottomRightTile);
     }
     
     out |= mask;
@@ -275,5 +335,18 @@ public class AutoTileBrush extends Brush {
     this.currentAutoTile = at;
   }
 
+
+  public void rebuildAndSave() throws IOException {
+    FileWriter fstream = new FileWriter(Gdx.files.internal("data/tileset.combination").file(), false);
+    BufferedWriter out = new BufferedWriter(fstream);
+    
+    for (String key : AutoTiles.getCornerMap().keySet()) {
+      out.write(key);
+      out.newLine();
+      out.write(AutoTiles.getCornerMap().get(key).toString());
+      out.newLine();
+    }
+    out.close();
+  }
   
 }
