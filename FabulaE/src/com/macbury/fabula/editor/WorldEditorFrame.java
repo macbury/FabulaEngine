@@ -92,6 +92,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.JSlider;
 import com.macbury.fabula.editor.brushes.AutoTileBrush.PaintMode;
+import javax.swing.JScrollPane;
 
 public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener {
   
@@ -113,8 +114,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JSpinner lightPositionXSpinner;
   private JComboBox paintModeComboBox;
   private JMenuItem mntmBuildTileMap;
+  private AutoTileDebugFrame autoTileDebugFrame;
   
   public WorldEditorFrame(GameManager game) {
+    this.autoTileDebugFrame = new AutoTileDebugFrame();
     setTitle("WorldEd - [No Name]");
     setDefaultCloseOperation(EXIT_ON_CLOSE);
     Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -125,16 +128,12 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     } catch (ClassNotFoundException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     } catch (InstantiationException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     } catch (IllegalAccessException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     } catch (UnsupportedLookAndFeelException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     
@@ -174,7 +173,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     JMenu mnDeveloper = new JMenu("Developer");
     menuBar.add(mnDeveloper);
     
-    this.mntmBuildTileMap = new JMenuItem("Build tile map unique combination map");
+    this.mntmBuildTileMap = new JMenuItem("Auto Tile Hash Map");
     mntmBuildTileMap.addActionListener(this);
     mnDeveloper.add(mntmBuildTileMap);
     contentPane = new JPanel();
@@ -324,21 +323,21 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     JPanel panel_1 = new JPanel();
     tabbedInspectorPane.addTab("Tiles", null, panel_1, null);
-    
-    this.autoTileList = new JList(new Object[] { });
-    autoTileList.addListSelectionListener(this);
     panel_1.setLayout(new BorderLayout(0, 0));
-    autoTileList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    autoTileList.setVisibleRowCount(0);
-    autoTileList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-    autoTileList.setFixedCellWidth(AutoTiles.TILE_SIZE);
-    autoTileList.setFixedCellHeight(AutoTiles.TILE_SIZE);
-    
-    
-    panel_1.add(autoTileList);
     
     this.paintModeComboBox = new JComboBox();
     paintModeComboBox.addItemListener(this);
+    
+    this.autoTileList = new JList(new Object[] { });
+    panel_1.add(new JScrollPane(autoTileList), BorderLayout.CENTER);
+    autoTileList.setValueIsAdjusting(true);
+    autoTileList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+    autoTileList.setBorder(new EmptyBorder(0, 0, 0, 0));
+    autoTileList.addListSelectionListener(this);
+    autoTileList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    autoTileList.setVisibleRowCount(0);
+    autoTileList.setFixedCellWidth(AutoTiles.TILE_SIZE);
+    autoTileList.setFixedCellHeight(AutoTiles.TILE_SIZE);
     paintModeComboBox.setModel(new DefaultComboBoxModel(PaintMode.values()));
     panel_1.add(paintModeComboBox, BorderLayout.NORTH);
     
@@ -545,10 +544,12 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
       String key          = (String)autoTileList.getSelectedValue();
       AutoTile at         = tileset.getAutoTile(key);
       
-      if (brush.getCurrentPaintMode().equals(PaintMode.AutoTile)) {
-        brush.setCurrentAutoTiles(at.getAutoTiles());
-      } else {
-        brush.setCurrentAutoTile(at);
+      if (at != null) {
+        if (brush.getCurrentPaintMode().equals(PaintMode.AutoTile)) {
+          brush.setCurrentAutoTiles(at.getAutoTiles());
+        } else {
+          brush.setCurrentAutoTile(at);
+        }
       }
     }
   }
@@ -556,13 +557,16 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   @Override
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == mntmBuildTileMap) {
-      WorldEditScreen screen = this.gameManager.getWorldEditScreen();
+      autoTileDebugFrame.updateRows();
+      autoTileDebugFrame.setVisible(true);
+    }
+      /*WorldEditScreen screen = this.gameManager.getWorldEditScreen();
       AutoTileBrush brush = screen.getAutoTileBrush();
       try {
         brush.rebuildAndSave();
       } catch (IOException e1) {
         e1.printStackTrace();
       }
-    }
+    }*/
   }
 }

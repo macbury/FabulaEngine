@@ -1,5 +1,10 @@
 package com.macbury.fabula.screens;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
@@ -29,14 +34,61 @@ public class AutoTileTestScreen extends BaseScreen {
   public AutoTileTestScreen(GameManager manager) {
     super(manager);
     debugBatch = new SpriteBatch();
+    File file = Gdx.files.internal("preprocessed/autotiles").file();
+    
+    for (File af : file.listFiles()) {
+      if (!af.isDirectory() && af.getName().contains(".png")) {
+        String workingDir     = Gdx.files.internal("preprocessed/autotiles").file().getAbsolutePath();
+        String baseName       = af.getName().replaceFirst(".png", "");
+        String targetPartName = Gdx.files.internal("preprocessed/parts/"+baseName+"_%02d.png").file().getAbsolutePath();
+        String cmd            = "convert "+af.getAbsolutePath()+" -crop 16x16 " + targetPartName;
+        //Gdx.app.log(TAG, "Found: " + af.getName() + " => " + targetPartName);
+        try {
+          Gdx.app.log(TAG, cmd);
+          Process proc = Runtime.getRuntime().exec(cmd);
+          proc.waitFor();
+          
+          BufferedReader buf = new BufferedReader( new InputStreamReader( proc.getErrorStream() ) ) ;
+          String line = null;
+          while (true)  {
+            line = buf.readLine();
+            
+            if (line == null) {
+              break;
+            } else {
+              Gdx.app.log(TAG, "Console: " + line);
+            }
+          }
+
+        } catch (IOException | InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+    
     TexturePacker2.process("preprocessed/parts/", "preprocessed/whole/", "autotile.atlas");
     this.rawTiles   = new TextureAtlas(Gdx.files.internal("preprocessed/whole/autotile.atlas"));
-    this.autoTiles = new AutoTiles(rawTiles, "road");
     
-    new AutoTiles(rawTiles, "grass");
-    new AutoTiles(rawTiles, "sidewalk");
-    new AutoTiles(rawTiles, "city_sidewalk");
-    new AutoTiles(rawTiles, "sand");
+    
+    for (AtlasRegion region : this.rawTiles.getRegions()) {
+      //Gdx.app.log(TAG, region.get);
+    }
+    
+    this.autoTiles = new AutoTiles(rawTiles, "grass_sand_road");
+    
+    new AutoTiles(rawTiles, "desert_grass_road");
+    new AutoTiles(rawTiles, "desert_rock_road");
+    new AutoTiles(rawTiles, "desert_simple");
+    new AutoTiles(rawTiles, "grass_rock_road");
+    new AutoTiles(rawTiles, "grass_simple");
+    new AutoTiles(rawTiles, "rock_road");
+    new AutoTiles(rawTiles, "rock_road_second");
+    new AutoTiles(rawTiles, "sand_grass_road");
+    new AutoTiles(rawTiles, "sand_rock_road");
+    new AutoTiles(rawTiles, "sand_simple");
+    new AutoTiles(rawTiles, "snow_rock_road");
+    new AutoTiles(rawTiles, "snow_simple");
+    
     TexturePacker2.process("preprocessed/expanded/", "data/textures/", "outside.atlas");
     /*this.tileParts = rawTiles.findRegions("road");
     Pixmap tilePixmap = new Pixmap(32, 32, Format.RGBA8888);

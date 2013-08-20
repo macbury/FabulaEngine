@@ -35,6 +35,7 @@ public class AutoTiles {
   private Array<AutoTile> list;
   private String name;
   private int id;
+  private boolean simple = false; 
   
   public static enum Types {
     Start, InnerReapeating, CornerTopLeft, CornerTopRight, CornerBottomLeft, CornerBottomRight, EdgeLeft, EdgeRight, EdgeTop, EdgeBottom, PathHorizontal, PathVertical, PathVerticalTop, PathVerticalBottom, PathHorizontalLeft, PathHorizontalRight, PathCornerBottomLeft, PathCornerBottomRight, PathCornerTopRight, PathCornerTopLeft, PathCross, InnerEdgeBottomRight, InnerEdgeBottomLeft, InnerEdgeTopLeft, InnerEdgeTopRight, PathCrossLeftTopRight, PathCrossLeftBottomRight, PathCrossLeftTopBottom, PathCrossRightTopBottom
@@ -146,12 +147,15 @@ public class AutoTiles {
    * @param baseAtlas
    * @param name
    */
-  //http://www.badlogicgames.com/forum/viewtopic.php?p=8358#p8358
   public AutoTiles(TextureAtlas baseAtlas, String name) {
     this.name         = name;
     this.tileParts    = baseAtlas.findRegions(name);
     this.debugTexture = null;
     this.list         = new Array<AutoTile>();
+    
+    if (TILE_COMBINATIONS.length != TILE_TYPES.length * 4) {
+      throw new RuntimeException("TILE_COMBINATIONS != TileTypes;");
+    }
     
     for (int i = 0; i < TILE_COMBINATIONS.length; i+=4) {
       TextureRegion tileRegion = generateTileForCombination(i);
@@ -161,9 +165,25 @@ public class AutoTiles {
       autoTile.setIndex(i/4);
       list.add(autoTile);
     }
+  }
+
+  public AutoTiles(Tileset tileset, String name) {
+    GID+=100;
+    this.id           = GID;
+    this.tileset      = tileset;
+    this.name         = name;
+    this.simple       = name.contains("_simple");
+    this.tileParts    = tileset.getAtlas().findRegions(name);
+    this.debugTexture = null;
+    this.list         = new Array<AutoTile>();
     
-    
-   
+    for (int i = 0; i < TILE_TYPES.length; i++) {
+      TextureRegion region     = tileParts.get(i);
+      AutoTile      autoTile   = new AutoTile(region, TILE_TYPES[i]);
+      autoTile.setIndex(i);
+      autoTile.setAutoTiles(this);
+      list.add(autoTile);
+    }
   }
   
   public static HashMap<String, AutoTiles.Types> getCornerMap() {
@@ -177,63 +197,6 @@ public class AutoTiles {
   private static void buildCornerMap() {
     CORNER_MAP = new HashMap<String, AutoTiles.Types>();
     CORNER_MAP.put("0", Types.Start);
-    /*CORNER_MAP.put("F0", Types.PathVerticalTop);
-    CORNER_MAP.put("F0000F0", Types.PathVertical);
-    CORNER_MAP.put("F0A0333", Types.PathVertical);
-    
-    //CORNER_MAP.put("C000000", Types.PathVerticalBottom);
-    CORNER_MAP.put("F000000", Types.PathVerticalBottom);
-    CORNER_MAP.put("A00FF000", Types.PathHorizontal);
-    //CORNER_MAP.put("F0", Types.PathVerticalTop);
-    CORNER_MAP.put("F00F000", Types.CornerBottomLeft);
-    CORNER_MAP.put("A00F0000", Types.PathHorizontalRight);
-    CORNER_MAP.put("A00AFA00", Types.PathHorizontal);
-    CORNER_MAP.put("F000", Types.PathHorizontalLeft);
-    CORNER_MAP.put("FF000", Types.PathHorizontal);
-    CORNER_MAP.put("F0000", Types.PathHorizontalRight);
-    CORNER_MAP.put("A0000", Types.PathHorizontalRight);
-    
-    CORNER_MAP.put("F0FF0", Types.CornerTopRight);
-    CORNER_MAP.put("F0F3", Types.CornerTopLeft);
-    CORNER_MAP.put("FF0F0000", Types.CornerBottomRight);
-    CORNER_MAP.put("F0F0000", Types.PathCornerBottomRight);
-    CORNER_MAP.put("50F000", Types.PathHorizontalLeft);
-    CORNER_MAP.put("C0F000", Types.PathHorizontalLeft);
-    CORNER_MAP.put("C5FF000", Types.PathHorizontal);
-    CORNER_MAP.put("A00F0A00", Types.PathHorizontal);
-    CORNER_MAP.put("A00FFA00", Types.PathHorizontal);
-    CORNER_MAP.put("F00F0F0", Types.PathCrossRightTopBottom);*/
-    //CORNER_MAP.put("51C0010", Types.CornerBottomRight);
-    //CORNER_MAP.put("A1C3010", Types.CornerBottomLeft);
-    //CORNER_MAP.put("1CC0A0", Types.CornerTopLeft);
-    //CORNER_MAP.put("1C0050", Types.CornerTopRight);
-  }
-
-  public AutoTiles(Tileset tileset, String name) {
-    GID+=100;
-    this.id           = GID;
-    this.tileset      = tileset;
-    this.name         = name;
-    this.tileParts    = tileset.getAtlas().findRegions(name);
-    this.debugTexture = null;
-    this.list         = new Array<AutoTile>();
-    
-    for (int i = 0; i < TILE_TYPES.length; i++) {
-      TextureRegion region     = tileParts.get(i);
-      AutoTile      autoTile   = new AutoTile(region, TILE_TYPES[i]);
-      //Gdx.app.log(TAG, "X:" + region.getRegionX() + " Y: " + region.getRegionY());
-      autoTile.setIndex(i);
-      autoTile.setAutoTiles(this);
-      list.add(autoTile);
-    }
-  }
-  
-  private int computeIndex(int i) {
-    int i0 = TILE_COMBINATIONS[i];
-    int i1 = TILE_COMBINATIONS[i+1];
-    int i2 = TILE_COMBINATIONS[i+2];
-    int i3 = TILE_COMBINATIONS[i+3];
-    return i0 + i1 + i2 + i3; 
   }
   
   private TextureRegion generateTileForCombination(int i) {
@@ -251,7 +214,8 @@ public class AutoTiles {
     
     Texture tileTexture = new Texture(tilePixmap);
 
-    String filePath     = "./preprocessed/expanded/" + name+"_"+i+".png";
+    String filePath     = "./preprocessed/expanded/" + name+"_"+i;
+    filePath            += ".png";
     FileHandle image    = Gdx.files.absolute(filePath);
     PixmapIO.writePNG(image, tilePixmap);
     
@@ -325,5 +289,9 @@ public class AutoTiles {
 
   public String getName() {
     return this.name;
+  }
+
+  public boolean isSimple() {
+    return simple;
   }
 }

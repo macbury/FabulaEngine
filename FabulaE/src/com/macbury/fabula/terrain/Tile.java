@@ -119,7 +119,11 @@ public class Tile {
   public Types getAutoType() {
     return autoTile.getType();
   }
-
+  
+  public boolean haveTheSameAutoTileAndIsNotSimple(AutoTile at) {
+    return haveTheSameAutoTile(at) && !at.getAutoTiles().isSimple();
+  }
+  
   public boolean haveDiffrentAutotileThan(AutoTile at) {
     return !haveTheSameAutoTile(at);
   }

@@ -110,14 +110,14 @@ public class AutoTileBrush extends Brush {
         int x = (int) tile.getX();
         int z = (int) tile.getZ();
         
-        updateAutotile(terrain.getTile(x-1, z-1));
-        updateAutotile(terrain.getTile(x, z-1));
-        updateAutotile(terrain.getTile(x-1, z+1));
-        updateAutotile(terrain.getTile(x-1, z));
-        updateAutotile(terrain.getTile(x+1, z));
-        updateAutotile(terrain.getTile(x+1, z-1));
-        updateAutotile(terrain.getTile(x, z+1));
-        updateAutotile(terrain.getTile(x+1, z+1));
+        updateAutotile(tile, terrain.getTile(x-1, z-1));
+        updateAutotile(tile, terrain.getTile(x, z-1));
+        updateAutotile(tile, terrain.getTile(x-1, z+1));
+        updateAutotile(tile, terrain.getTile(x-1, z));
+        updateAutotile(tile, terrain.getTile(x+1, z));
+        updateAutotile(tile, terrain.getTile(x+1, z-1));
+        updateAutotile(tile, terrain.getTile(x, z+1));
+        updateAutotile(tile, terrain.getTile(x+1, z+1));
       } else {
         Gdx.app.log(TAG, getImportMapping());
         tile.setAutoTile(currentAutoTile);
@@ -153,18 +153,18 @@ public class AutoTileBrush extends Brush {
   }
 
 
-  private void updateAutotile(Tile tile) {
-    if (tile != null) {
+  private void updateAutotile(Tile currentTile, Tile tile) {
+    if (tile != null && currentTile.haveTheSameAutoTile(tile.getAutoTile())) {
       applyAutoTileToTile(tile, false);
     }
   }
 
   public void applyAutoTileToTile(Tile tile, boolean debug) {
-    
-    long mask            = computeAutoTileUID(tile);
-    String tid           = Long.toHexString(mask).toUpperCase();
-    AutoTiles.Types type = null;
+    long mask                = computeAutoTileUID(tile);
+    String tid               = Long.toHexString(mask).toUpperCase();
+    AutoTiles.Types type     = null;
     AutoTile defaultAutoTile = getCurrentAutoTiles().getAutoTile(AutoTiles.Types.Start);
+    
     try {
       type = AutoTiles.getCornerMap().get(tid);
     } catch (ArrayIndexOutOfBoundsException e) {
@@ -203,7 +203,7 @@ public class AutoTileBrush extends Brush {
     
     long mask = 0;
     
-    if (topLeftTile != null && topLeftTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
+    if (topLeftTile != null && topLeftTile.haveTheSameAutoTileAndIsNotSimple(currentTile.getAutoTile())) {
       mask = topLeftTile.getAutoTile().getCornerMask(AutoTiles.CORNER_BOTTOM_RIGHT);
       mask <<= 28;
       this.terrain.addSectorToRebuildFromTile(topLeftTile);
@@ -212,7 +212,7 @@ public class AutoTileBrush extends Brush {
     out |= mask;
     
     mask = 0;
-    if (topTile != null && topTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
+    if (topTile != null && topTile.haveTheSameAutoTileAndIsNotSimple(currentTile.getAutoTile())) {
       mask = topTile.getAutoTile().getCornerMask(AutoTiles.CORNER_BOTTOM_LEFT) | topTile.getAutoTile().getCornerMask(AutoTiles.CORNER_BOTTOM_RIGHT);
       mask <<= 24;
       this.terrain.addSectorToRebuildFromTile(topTile);
@@ -221,7 +221,7 @@ public class AutoTileBrush extends Brush {
     out |= mask;
     
     mask = 0;
-    if (topRightTile != null && topRightTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
+    if (topRightTile != null && topRightTile.haveTheSameAutoTileAndIsNotSimple(currentTile.getAutoTile())) {
       mask = topRightTile.getAutoTile().getCornerMask(AutoTiles.CORNER_BOTTOM_LEFT);
       mask <<= 20;
       this.terrain.addSectorToRebuildFromTile(topRightTile);
@@ -230,7 +230,7 @@ public class AutoTileBrush extends Brush {
     out |= mask;
     
     mask = 0;
-    if (leftTile != null && leftTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
+    if (leftTile != null && leftTile.haveTheSameAutoTileAndIsNotSimple(currentTile.getAutoTile())) {
       mask = leftTile.getAutoTile().getCornerMask(AutoTiles.CORNER_TOP_RIGHT) | leftTile.getAutoTile().getCornerMask(AutoTiles.CORNER_BOTTOM_RIGHT);
       mask <<= 16;
       this.terrain.addSectorToRebuildFromTile(leftTile);
@@ -239,7 +239,7 @@ public class AutoTileBrush extends Brush {
     out |= mask;
     
     mask = 0;
-    if (rightTile != null && rightTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
+    if (rightTile != null && rightTile.haveTheSameAutoTileAndIsNotSimple(currentTile.getAutoTile())) {
       mask = rightTile.getAutoTile().getCornerMask(AutoTiles.CORNER_TOP_LEFT) | rightTile.getAutoTile().getCornerMask(AutoTiles.CORNER_BOTTOM_LEFT);
       mask <<= 12;
       this.terrain.addSectorToRebuildFromTile(rightTile);
@@ -248,7 +248,7 @@ public class AutoTileBrush extends Brush {
     out |= mask;
     
     mask = 0;
-    if (bottomLeftTile != null && bottomLeftTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
+    if (bottomLeftTile != null && bottomLeftTile.haveTheSameAutoTileAndIsNotSimple(currentTile.getAutoTile())) {
       mask = bottomLeftTile.getAutoTile().getCornerMask(AutoTiles.CORNER_TOP_RIGHT);
       mask <<= 8;
       this.terrain.addSectorToRebuildFromTile(bottomLeftTile);
@@ -257,7 +257,7 @@ public class AutoTileBrush extends Brush {
     out |= mask;
     
     mask = 0;
-    if (bottomTile != null && bottomTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
+    if (bottomTile != null && bottomTile.haveTheSameAutoTileAndIsNotSimple(currentTile.getAutoTile())) {
       mask = bottomTile.getAutoTile().getCornerMask(AutoTiles.CORNER_TOP_LEFT) | bottomTile.getAutoTile().getCornerMask(AutoTiles.CORNER_TOP_RIGHT);
       mask <<= 4;
       this.terrain.addSectorToRebuildFromTile(bottomTile);
@@ -266,7 +266,7 @@ public class AutoTileBrush extends Brush {
     out |= mask;
     
     mask = 0;
-    if (bottomRightTile != null && bottomRightTile.haveTheSameAutoTile(currentTile.getAutoTile())) {
+    if (bottomRightTile != null && bottomRightTile.haveTheSameAutoTileAndIsNotSimple(currentTile.getAutoTile())) {
       mask = bottomRightTile.getAutoTile().getCornerMask(AutoTiles.CORNER_TOP_LEFT);
       mask <<= 0;
       this.terrain.addSectorToRebuildFromTile(bottomRightTile);
