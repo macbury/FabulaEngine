@@ -1,13 +1,11 @@
 package com.macbury.fabula.terrain;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class AutoTile {
-  private TextureRegion textureRegion;
+public class AutoTile extends SimpleTile {
   private AutoTiles.Types type;
 
-  private int index;
+  
   private AutoTiles autoTiles;
   
   public AutoTile(TextureRegion textureRegion, AutoTiles.Types type) {
@@ -19,13 +17,7 @@ public class AutoTile {
     return this.textureRegion;
   }
 
-  public void setIndex(int i) {
-    index = i;
-  }
   
-  public int getIndex() {
-    return index;
-  }
 
   public void setAutoTiles(AutoTiles autoTiles) {
     this.autoTiles = autoTiles;
