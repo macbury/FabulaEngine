@@ -57,6 +57,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   private AutoTileBrush autoTileBrush;
   private Scene scene;
   private Terrain terrain;
+  private boolean isPaused;
   
   public WorldEditScreen(GameManager manager) {
     super(manager);
@@ -97,12 +98,15 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   
   @Override
   public void pause() {
-    // TODO Auto-generated method stub
-    
+    this.isPaused = true;
   }
   
   @Override
   public void render(float delta) {
+    if (isPaused) {
+      debugInfo = "Paused";
+      return;
+    }
     this.brushTimer.update(delta);
     camController.update();
     camera.update();
@@ -126,8 +130,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   
   @Override
   public void resume() {
-    // TODO Auto-generated method stub
-    
+    this.isPaused = false;
   }
   
   @Override

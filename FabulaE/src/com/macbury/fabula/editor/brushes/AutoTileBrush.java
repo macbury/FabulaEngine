@@ -1,9 +1,12 @@
 package com.macbury.fabula.editor.brushes;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +30,7 @@ import com.macbury.fabula.editor.brushes.TerrainBrush.TerrainBrushType;
 import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.terrain.AutoTile;
 import com.macbury.fabula.terrain.AutoTiles;
+import com.macbury.fabula.terrain.AutoTiles.Types;
 import com.macbury.fabula.terrain.Terrain;
 import com.macbury.fabula.terrain.Tile;
 import com.macbury.fabula.terrain.Tileset;
@@ -43,7 +47,7 @@ public class AutoTileBrush extends Brush {
   private AutoTile currentAutoTile;
   
   public static enum PaintMode {
-    AutoTile, Tile
+    AutoTile, ExpandedTile
   };
   
   public AutoTileBrush(Terrain terrain) {
@@ -66,7 +70,10 @@ public class AutoTileBrush extends Brush {
     for (AutoTiles autoTiles : tileset.getAutoTiles()) {
       buildPreviews(autoTiles.all());
       for (AutoTile at : autoTiles.all()) {
-        allAutoTileNames.add(at.getName());
+        if (!autoTiles.isSimple()) {
+          allAutoTileNames.add(at.getName());
+        }
+        
       }
     }
   }
@@ -98,7 +105,7 @@ public class AutoTileBrush extends Brush {
 
   @Override
   public void onApply() {
-    if ((currentAutoTiles == null && currentPaintMode == PaintMode.AutoTile) || (currentAutoTile == null && currentPaintMode == PaintMode.Tile)) {
+    if ((currentAutoTiles == null && currentPaintMode == PaintMode.AutoTile) || (currentAutoTile == null && currentPaintMode == PaintMode.ExpandedTile)) {
       return;
     }
     
@@ -126,7 +133,7 @@ public class AutoTileBrush extends Brush {
     }
   }
   
-  private void rebuildCombinations() {
+  public void rebuildCombinations() {
     Tile[][] tiles = terrain.getTiles();
     
     for (int x = 0; x < terrain.getColumns(); x++) {
@@ -335,7 +342,26 @@ public class AutoTileBrush extends Brush {
     this.currentAutoTile = at;
   }
 
-
+  public static void loadCornerMap() throws IOException {
+    File file = Gdx.files.internal("data/tileset.combination").file();
+    if (file != null && file.exists()) {
+      FileReader fstream    = new FileReader(file);
+      BufferedReader reader = new BufferedReader(fstream);
+      
+      AutoTiles.CORNER_MAP = new HashMap<String, AutoTiles.Types>();
+      while (true) {
+        String key   = reader.readLine();
+        String value = reader.readLine();
+        if (key == null || value == null) {
+          break;
+        } else {
+          AutoTiles.CORNER_MAP.put(key, Types.valueOf(value));
+        }
+      }
+    }
+    
+  }
+  
   public void rebuildAndSave() throws IOException {
     FileWriter fstream = new FileWriter(Gdx.files.internal("data/tileset.combination").file(), false);
     BufferedWriter out = new BufferedWriter(fstream);

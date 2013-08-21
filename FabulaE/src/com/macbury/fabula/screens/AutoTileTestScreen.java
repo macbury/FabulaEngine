@@ -74,14 +74,14 @@ public class AutoTileTestScreen extends BaseScreen {
       //Gdx.app.log(TAG, region.get);
     }
     
-    this.autoTiles = new AutoTiles(rawTiles, "grass_sand_road");
+    new AutoTiles(rawTiles, "grass_sand_road");
     
     new AutoTiles(rawTiles, "desert_grass_road");
     new AutoTiles(rawTiles, "desert_rock_road");
     new AutoTiles(rawTiles, "desert_simple");
     new AutoTiles(rawTiles, "grass_rock_road");
     new AutoTiles(rawTiles, "grass_simple");
-    new AutoTiles(rawTiles, "rock_road");
+    this.autoTiles = new AutoTiles(rawTiles, "rock_road");
     new AutoTiles(rawTiles, "rock_road_second");
     new AutoTiles(rawTiles, "sand_grass_road");
     new AutoTiles(rawTiles, "sand_rock_road");

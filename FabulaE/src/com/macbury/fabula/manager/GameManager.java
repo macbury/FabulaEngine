@@ -11,7 +11,9 @@ import com.badlogic.gdx.graphics.GL10;
 import com.macbury.fabula.editor.WorldEditorFrame;
 import com.macbury.fabula.screens.AutoTileTestScreen;
 import com.macbury.fabula.screens.FrameBufferTest;
+import com.macbury.fabula.screens.GamePlayScreen;
 import com.macbury.fabula.screens.LoadingScreen;
+import com.macbury.fabula.screens.MeshScreen;
 import com.macbury.fabula.screens.TerrainTestScreen;
 import com.macbury.fabula.screens.WorldEditScreen;
 
@@ -47,7 +49,7 @@ public class GameManager extends Game {
     }
     
     if (getMode() == Mode.Game) {
-      setScreen(new AutoTileTestScreen(this));
+      setScreen(new GamePlayScreen(this));
     } else {
       setScreen(getWorldEditScreen());
     }

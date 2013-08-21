@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import com.macbury.fabula.editor.brushes.AutoTileBrush;
 import com.macbury.fabula.terrain.AutoTiles.Types;
 import com.macbury.fabula.utils.PNG;
 import com.badlogic.gdx.graphics.PixmapIO;
@@ -38,7 +39,12 @@ public class AutoTiles {
   private boolean simple = false; 
   
   public static enum Types {
-    Start, InnerReapeating, CornerTopLeft, CornerTopRight, CornerBottomLeft, CornerBottomRight, EdgeLeft, EdgeRight, EdgeTop, EdgeBottom, PathHorizontal, PathVertical, PathVerticalTop, PathVerticalBottom, PathHorizontalLeft, PathHorizontalRight, PathCornerBottomLeft, PathCornerBottomRight, PathCornerTopRight, PathCornerTopLeft, PathCross, InnerEdgeBottomRight, InnerEdgeBottomLeft, InnerEdgeTopLeft, InnerEdgeTopRight, PathCrossLeftTopRight, PathCrossLeftBottomRight, PathCrossLeftTopBottom, PathCrossRightTopBottom
+    Start, InnerReapeating, CornerTopLeft, CornerTopRight, CornerBottomLeft, CornerBottomRight, EdgeLeft, EdgeRight, EdgeTop, EdgeBottom, 
+    PathHorizontal, PathVertical, PathVerticalTop, PathVerticalBottom, PathHorizontalLeft, PathHorizontalRight, PathCornerBottomLeft, 
+    PathCornerBottomRight, PathCornerTopRight, PathCornerTopLeft, PathCross, InnerEdgeBottomRight, InnerEdgeBottomLeft, InnerEdgeTopLeft, 
+    InnerEdgeTopRight, PathCrossLeftTopRight, PathCrossLeftBottomRight, PathCrossLeftTopBottom, PathCrossRightTopBottom, PathCrossRightTop, 
+    PathCrossRightBottom, PathCrossLeftTop, PathCrossLeftBottom, PathCrossCornerLeftBottom, PathCrossCornerRightBottom, PathCrossCornerLeftTop, 
+    PathCrossCornerRightTop, CornerInsideLeftRight, CornerInsideRightLeft
   };
   
   public static HashMap<String, AutoTiles.Types> CORNER_MAP;
@@ -102,7 +108,17 @@ public class AutoTiles {
     2,3,21,22,
     9,10,6,7,
     2,15,6,19,
-    12,3,16,7
+    12,3,16,7,
+    12,3,16,17,
+    12,13,16,7,
+    2,15,18,19,
+    14,15,6,19,
+    2,18,21,22,
+    17,3,21,22,
+    9,10,6,14,
+    9,10,13,7,
+    2,14,17,7,
+    13,3,6,18
   };
   
   
@@ -136,6 +152,16 @@ public class AutoTiles {
     Types.PathCrossLeftBottomRight,
     Types.PathCrossLeftTopBottom,
     Types.PathCrossRightTopBottom,
+    Types.PathCrossRightTop,
+    Types.PathCrossRightBottom,
+    Types.PathCrossLeftTop,
+    Types.PathCrossLeftBottom,
+    Types.PathCrossCornerLeftBottom,
+    Types.PathCrossCornerRightBottom,
+    Types.PathCrossCornerLeftTop,
+    Types.PathCrossCornerRightTop,
+    Types.CornerInsideLeftRight,
+    Types.CornerInsideRightLeft
   };
   
   private static final String TAG = "AutoTiles";
@@ -195,9 +221,18 @@ public class AutoTiles {
   }
   
   private static void buildCornerMap() {
-    CORNER_MAP = new HashMap<String, AutoTiles.Types>();
-    CORNER_MAP.put("0", Types.Start);
+    try {
+      AutoTileBrush.loadCornerMap();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    
+    if (CORNER_MAP == null) {
+      CORNER_MAP = new HashMap<String, AutoTiles.Types>();
+      CORNER_MAP.put("0", Types.Start);
+    }
   }
+
   
   private TextureRegion generateTileForCombination(int i) {
     TextureRegion topLeftRegion     = this.tileParts.get(TILE_COMBINATIONS[i]);

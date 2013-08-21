@@ -115,9 +115,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JComboBox paintModeComboBox;
   private JMenuItem mntmBuildTileMap;
   private AutoTileDebugFrame autoTileDebugFrame;
+  private RunningGameConsoleFrame runningGameConsoleFrame;
+  private JMenuItem mntmRun;
   
   public WorldEditorFrame(GameManager game) {
-    this.autoTileDebugFrame = new AutoTileDebugFrame();
     setTitle("WorldEd - [No Name]");
     setDefaultCloseOperation(EXIT_ON_CLOSE);
     Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -137,6 +138,8 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
       e.printStackTrace();
     }
     
+    this.autoTileDebugFrame = new AutoTileDebugFrame();
+    this.runningGameConsoleFrame = new RunningGameConsoleFrame();
     //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setBounds(100, 100, 1280, 760);
     //setExtendedState(Frame.MAXIMIZED_BOTH); 
@@ -164,11 +167,19 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     JMenuBar menuBar_1 = new JMenuBar();
     mnFile.add(menuBar_1);
     
-    JMenu mnAssets = new JMenu("Assets");
-    menuBar.add(mnAssets);
+    JMenu mnGame = new JMenu("Game");
+    menuBar.add(mnGame);
+    
+    this.mntmRun = new JMenuItem("Run");
+    mntmRun.addActionListener(this);
+    mntmRun.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0));
+    mnGame.add(mntmRun);
+    
+    JSeparator separator_1 = new JSeparator();
+    mnGame.add(separator_1);
     
     JMenuItem mntmNewMenuItem_1 = new JMenuItem("Rebuild tilesets");
-    mnAssets.add(mntmNewMenuItem_1);
+    mnGame.add(mntmNewMenuItem_1);
     
     JMenu mnDeveloper = new JMenu("Developer");
     menuBar.add(mnDeveloper);
@@ -340,6 +351,9 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     autoTileList.setFixedCellHeight(AutoTiles.TILE_SIZE);
     paintModeComboBox.setModel(new DefaultComboBoxModel(PaintMode.values()));
     panel_1.add(paintModeComboBox, BorderLayout.NORTH);
+    
+    JPanel panel_7 = new JPanel();
+    tabbedInspectorPane.addTab("Grass", null, panel_7, null);
     
     JPanel panel_2 = new JPanel();
     tabbedInspectorPane.addTab("Objects", null, panel_2, null);
@@ -556,17 +570,16 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
 
   @Override
   public void actionPerformed(ActionEvent e) {
+    WorldEditScreen screen = this.gameManager.getWorldEditScreen();
+    AutoTileBrush brush = screen.getAutoTileBrush();
     if (e.getSource() == mntmBuildTileMap) {
+      autoTileDebugFrame.setBrush(brush);
       autoTileDebugFrame.updateRows();
       autoTileDebugFrame.setVisible(true);
     }
-      /*WorldEditScreen screen = this.gameManager.getWorldEditScreen();
-      AutoTileBrush brush = screen.getAutoTileBrush();
-      try {
-        brush.rebuildAndSave();
-      } catch (IOException e1) {
-        e1.printStackTrace();
-      }
-    }*/
+
+    if (e.getSource() == mntmRun) {
+      runningGameConsoleFrame.runGame(this.gameManager);
+    }
   }
 }

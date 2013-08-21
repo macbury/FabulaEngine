@@ -11,19 +11,32 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
 
+import com.macbury.fabula.editor.brushes.AutoTileBrush;
 import com.macbury.fabula.terrain.AutoTiles;
 import javax.swing.JScrollPane;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.util.Set;
 
-public class AutoTileDebugFrame extends JFrame {
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+
+public class AutoTileDebugFrame extends JFrame implements WindowListener, ActionListener {
   private JPanel contentPane;
   public DefaultTableModel model;
   private JScrollPane scrollPane;
   private JTable table;
+  private AutoTileBrush brush;
   
   /**
    * Create the frame.
    */
   public AutoTileDebugFrame() {
+    addWindowListener(this);
     setAlwaysOnTop(true);
     setTitle("Auto Tile Hash Table");
     setType(Type.UTILITY);
@@ -53,11 +66,13 @@ public class AutoTileDebugFrame extends JFrame {
     contentPane.add(scrollPane, BorderLayout.CENTER);
     
     table = new JTable();
+    table.setShowGrid(false);
     table.setFillsViewportHeight(true);
     table.setBorder(new EmptyBorder(0, 0, 0, 0));
     scrollPane.setViewportView(table);
     
     JButton btnSave = new JButton("Save");
+    btnSave.addActionListener(this);
     contentPane.add(btnSave, BorderLayout.SOUTH);
   }
 
@@ -76,12 +91,76 @@ public class AutoTileDebugFrame extends JFrame {
         }
       };
     
-    for (String key : AutoTiles.getCornerMap().keySet()) {
+    Set<String> keys = AutoTiles.getCornerMap().keySet();
+    
+    for (String key : keys) {
       String value = AutoTiles.getCornerMap().get(key).toString();
       model.addRow(new Object[] { key, value });
     }  
     
+    setTitle("Combinations: "+keys.size());
+    
     table.setModel(model);
+  }
+
+  public void setBrush(AutoTileBrush brush) {
+    this.brush = brush;
+  }
+
+  @Override
+  public void windowActivated(WindowEvent arg0) {
+    if (brush != null) {
+      brush.rebuildCombinations();
+      updateRows();
+    }
+  }
+
+  @Override
+  public void windowClosed(WindowEvent arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void windowClosing(WindowEvent arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void windowDeactivated(WindowEvent arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void windowDeiconified(WindowEvent arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void windowIconified(WindowEvent arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void windowOpened(WindowEvent arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void actionPerformed(ActionEvent e) {
+    if (brush != null) {
+      try {
+        brush.rebuildAndSave();
+      } catch (IOException e1) {
+        // TODO Auto-generated catch block
+        e1.printStackTrace();
+      }
+    }
   }
   
 }
