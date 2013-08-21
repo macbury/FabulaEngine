@@ -90,4 +90,11 @@ public class GameRunner {
     processBuilder.directory(new File(this.workingDirectory));
     return processBuilder.start();
   }
+  
+  public GameRunner() {
+    this.addClasspathEntry(System.getProperty("java.class.path"));
+    this.setWorkingDirectory(".");
+    this.setMainClass("com.macbury.fabula.DesktopGame");
+    this.addArgument("--play");
+  }
 }

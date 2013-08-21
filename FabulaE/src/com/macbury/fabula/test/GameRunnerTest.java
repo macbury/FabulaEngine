@@ -10,10 +10,6 @@ public class GameRunnerTest {
   
   public static void main(String[] args) {
     GameRunner gameRunner = new GameRunner();
-    gameRunner.addClasspathEntry(System.getProperty("java.class.path"));
-    gameRunner.setWorkingDirectory(".");
-    gameRunner.setMainClass("com.macbury.fabula.DesktopGame");
-    gameRunner.addArgument("--play");
     System.out.println("Starting...");
     try {
       Process process = gameRunner.startProcess();
@@ -25,7 +21,7 @@ public class GameRunnerTest {
         if (line == null) {
           break;
         } else {
-          System.out.println("ERR:"+line);
+          System.out.println(line);
         }
       }
       
