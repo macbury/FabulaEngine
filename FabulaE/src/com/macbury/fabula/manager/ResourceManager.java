@@ -2,6 +2,8 @@ package com.macbury.fabula.manager;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +21,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -118,10 +121,19 @@ public class ResourceManager {
     String atlas = resourceElement.getAttribute("atlas");
     String path  = "data/textures/"+atlas + ".atlas";
     Gdx.app.log(TAG, "Loading tileset atlas: " + id + " from " + path);
-    TextureAtlas textureAtlas = new TextureAtlas( Gdx.files.internal( path ) );
-    atlasMap.put(id, textureAtlas);
-    Tileset tileset = new Tileset(textureAtlas, id);
     
+    FileHandle file = Gdx.files.internal(path);
+    TextureAtlas textureAtlas = null;
+    if (file.file().exists()) {
+      textureAtlas = new TextureAtlas(file);
+    } else {
+      textureAtlas = new TextureAtlas();
+    }
+    
+    atlasMap.put(id, textureAtlas);
+    
+    Tileset tileset = new Tileset(textureAtlas, id);
+    tileset.setAtlasName(atlas);
     NodeList autoTileResources = resourceElement.getElementsByTagName("autotile");
     
     for (int i = 0; i < autoTileResources.getLength(); i++) {
@@ -227,6 +239,10 @@ public class ResourceManager {
 
   public Tileset getTileset(String key) {
     return tilesets.get(key);
+  }
+
+  public Collection<Tileset> allTilesets() {
+    return tilesets.values();
   }
 
 }

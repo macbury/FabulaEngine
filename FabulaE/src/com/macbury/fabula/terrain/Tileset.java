@@ -12,6 +12,7 @@ public class Tileset {
   private HashMap<String, AutoTiles> autotiles;
   private ArrayList<String> orderedAutotiles;
   private AutoTile defaultAutoTile;
+  private String atlasName;
   
   public Tileset(TextureAtlas atlas, String name) {
     this.name         = name;
@@ -27,7 +28,6 @@ public class Tileset {
     }
     this.autotiles.put(name, autoTiles);
     this.orderedAutotiles.add(name);
-    //Gdx.app.log("Test", name);
   }
   
   public AutoTiles getAutoTiles(String key) {
@@ -64,7 +64,23 @@ public class Tileset {
     return defaultAutoTile;
   }
 
-  public Collection<AutoTiles> getAutoTiles() {
-    return autotiles.values();
+  public ArrayList<AutoTiles> getAutoTiles() {
+    return new ArrayList<>(autotiles.values());
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setAtlasName(String atlas) {
+    this.atlasName = atlas;
+  }
+  
+  public String getAtlasName() {
+    return atlasName;
   }
 }

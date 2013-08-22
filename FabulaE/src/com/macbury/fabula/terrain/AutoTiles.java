@@ -203,12 +203,14 @@ public class AutoTiles {
     this.debugTexture = null;
     this.list         = new Array<AutoTile>();
     
-    for (int i = 0; i < TILE_TYPES.length; i++) {
-      TextureRegion region     = tileParts.get(i);
-      AutoTile      autoTile   = new AutoTile(region, TILE_TYPES[i]);
-      autoTile.setIndex(i);
-      autoTile.setAutoTiles(this);
-      list.add(autoTile);
+    if (tileParts.size == TILE_TYPES.length) {
+      for (int i = 0; i < TILE_TYPES.length; i++) {
+        TextureRegion region     = tileParts.get(i);
+        AutoTile      autoTile   = new AutoTile(region, TILE_TYPES[i]);
+        autoTile.setIndex(i);
+        autoTile.setAutoTiles(this);
+        list.add(autoTile);
+      }
     }
   }
   
@@ -318,8 +320,12 @@ public class AutoTiles {
   }
 
   public AutoTile getAutoTile(Types type) {
-    int id = Arrays.asList(TILE_TYPES).indexOf(type);
-    return list.get(id);
+    try {
+      int id = Arrays.asList(TILE_TYPES).indexOf(type);
+      return list.get(id);
+    } catch (IndexOutOfBoundsException e) {
+      return null;
+    }
   }
 
   public String getName() {
