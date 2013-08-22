@@ -92,7 +92,11 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.JSlider;
 import com.macbury.fabula.editor.brushes.AutoTileBrush.PaintMode;
+import com.macbury.fabula.editor.tiles.AutoTileDebugFrame;
+import com.macbury.fabula.editor.tiles.TilesetBuilderDialog;
+
 import javax.swing.JScrollPane;
+import java.awt.Toolkit;
 
 public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener {
   
@@ -117,8 +121,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private AutoTileDebugFrame autoTileDebugFrame;
   private RunningGameConsoleFrame runningGameConsoleFrame;
   private JMenuItem mntmRun;
+  private JMenuItem mntmRebuildTilesets;
   
   public WorldEditorFrame(GameManager game) {
+    setIconImage(Toolkit.getDefaultToolkit().getImage(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/gwn.ico")));
     setTitle("WorldEd - [No Name]");
     setDefaultCloseOperation(EXIT_ON_CLOSE);
     Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -158,6 +164,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mntmNewMenuItem_2.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
     mnFile.add(mntmNewMenuItem_2);
     
+    JMenuItem mntmSave = new JMenuItem("Save");
+    mntmSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
+    mnFile.add(mntmSave);
+    
     JSeparator separator = new JSeparator();
     mnFile.add(separator);
     
@@ -175,18 +185,16 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mntmRun.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0));
     mnGame.add(mntmRun);
     
-    JSeparator separator_1 = new JSeparator();
-    mnGame.add(separator_1);
-    
-    JMenuItem mntmNewMenuItem_1 = new JMenuItem("Rebuild tilesets");
-    mnGame.add(mntmNewMenuItem_1);
-    
     JMenu mnDeveloper = new JMenu("Developer");
     menuBar.add(mnDeveloper);
     
     this.mntmBuildTileMap = new JMenuItem("Auto Tile Hash Map");
     mntmBuildTileMap.addActionListener(this);
     mnDeveloper.add(mntmBuildTileMap);
+    
+    this.mntmRebuildTilesets = new JMenuItem("Rebuild tilesets");
+    mntmRebuildTilesets.addActionListener(this);
+    mnDeveloper.add(mntmRebuildTilesets);
     contentPane = new JPanel();
     contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
     contentPane.setLayout(new BorderLayout(0, 0));
@@ -199,12 +207,9 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     JSplitPane mapsTreeAndInspectorSplitPane = new JSplitPane();
     mapsTreeAndInspectorSplitPane.setContinuousLayout(true);
-    mapsTreeAndInspectorSplitPane.setResizeWeight(0.35);
+    mapsTreeAndInspectorSplitPane.setResizeWeight(0.1);
     mapsTreeAndInspectorSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
     inspectorAndOpenGlContainerSplitPane.setLeftComponent(mapsTreeAndInspectorSplitPane);
-    
-    JTree mapTree = new JTree();
-    mapsTreeAndInspectorSplitPane.setLeftComponent(mapTree);
     
     this.tabbedInspectorPane = new JTabbedPane(JTabbedPane.TOP);
     
@@ -360,6 +365,13 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     JPanel panel_3 = new JPanel();
     tabbedInspectorPane.addTab("Events", null, panel_3, null);
+    
+    JScrollPane scrollPane = new JScrollPane();
+    mapsTreeAndInspectorSplitPane.setLeftComponent(scrollPane);
+    
+    JTree tree = new JTree();
+    tree.setBorder(new EmptyBorder(0, 0, 0, 0));
+    scrollPane.setViewportView(tree);
     
     JPanel openGLContainerPane = new JPanel();
     openGLContainerPane.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -580,6 +592,11 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
 
     if (e.getSource() == mntmRun) {
       runningGameConsoleFrame.runGame(this.gameManager);
+    }
+    
+    if (e.getSource() == this.mntmRebuildTilesets) {
+      TilesetBuilderDialog dialog = new TilesetBuilderDialog();
+      dialog.setVisible(true);
     }
   }
 }

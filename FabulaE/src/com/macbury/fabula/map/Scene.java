@@ -11,7 +11,7 @@ public class Scene {
   private Lights           lights;
   private DirectionalLight sunLight;
   private Terrain          terrain;
-  
+  private String           name;
   public Scene(int width, int height) {
     lights = new Lights();
     lights.ambientLight.set(1f, 1f, 1f, 1f);
@@ -37,5 +37,13 @@ public class Scene {
   
   public Lights getLights() {
     return this.lights;
+  }
+  
+  public boolean haveName() {
+    return name != null;
+  }
+  
+  public boolean save() {
+    return true;
   }
 }

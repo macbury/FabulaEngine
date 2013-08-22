@@ -2,7 +2,7 @@ package com.macbury.fabula.terrain;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class SimpleTile {
+public abstract class SimpleTile {
   protected TextureRegion textureRegion;
   protected Tileset tileset;
   protected int index;
