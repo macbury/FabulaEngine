@@ -92,6 +92,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.JSlider;
 import com.macbury.fabula.editor.brushes.AutoTileBrush.PaintMode;
+import com.macbury.fabula.editor.code.AssetEditorDialog;
 import com.macbury.fabula.editor.tiles.AutoTileDebugFrame;
 import com.macbury.fabula.editor.tiles.TilesetBuilderDialog;
 
@@ -122,6 +123,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private RunningGameConsoleFrame runningGameConsoleFrame;
   private JMenuItem mntmRun;
   private JMenuItem mntmRebuildTilesets;
+  private JMenuItem mntmEditAssetsgame;
   
   public WorldEditorFrame(GameManager game) {
     setIconImage(Toolkit.getDefaultToolkit().getImage(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/gwn.ico")));
@@ -195,6 +197,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     this.mntmRebuildTilesets = new JMenuItem("Rebuild tilesets");
     mntmRebuildTilesets.addActionListener(this);
     mnDeveloper.add(mntmRebuildTilesets);
+    
+    this.mntmEditAssetsgame = new JMenuItem("Edit Assets.game");
+    mntmEditAssetsgame.addActionListener(this);
+    mnDeveloper.add(mntmEditAssetsgame);
     contentPane = new JPanel();
     contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
     contentPane.setLayout(new BorderLayout(0, 0));
@@ -486,6 +492,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private void updateInfoForAutotileBrush() {
     AutoTileBrush atBrush     = this.gameManager.getWorldEditScreen().getAutoTileBrush();
     atBrush.setPaintMode((PaintMode) this.paintModeComboBox.getSelectedItem());
+    atBrush.buildAllPreviewsUnlessBuilded();
     this.autoTileListRenderer = new IconListRenderer(atBrush.getAutoTileIcons());
     autoTileList.setCellRenderer(autoTileListRenderer);
 
@@ -592,6 +599,11 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
 
     if (e.getSource() == mntmRun) {
       runningGameConsoleFrame.runGame(this.gameManager);
+    }
+    
+    if (e.getSource() == mntmEditAssetsgame) {
+      AssetEditorDialog editor = new AssetEditorDialog();
+      editor.setVisible(true);
     }
     
     if (e.getSource() == this.mntmRebuildTilesets) {

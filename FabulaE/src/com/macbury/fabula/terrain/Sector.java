@@ -47,17 +47,22 @@ public class Sector {
     short rowEnd    = (short) (ROW_COUNT + topLeftCorner.z);
     short columnEnd = (short) (COLUMN_COUNT+topLeftCorner.x);
     
+    TileTransformer transformer = new TileTransformer();
+    
     triangleGrid.begin();
       for (int z = (int) topLeftCorner.z; z < rowEnd; z++) {
         for (int x = (int) topLeftCorner.x; x < columnEnd; x++) {
           Tile tile = terrain.getTile(x, z);
+          transformer.setTile(tile);
+          tile.calculateHeight();
           height    = Math.max(tile.getY(), height);
-          TextureRegion textureRegion = tile.getTextureRegion();
+          TextureRegion uvMap = tile.getTextureRegion();
+          
           if (tile.getType() == Tile.Type.CornerTopRight || tile.getType() == Tile.Type.CornerBottomLeft) {
             /* Top left Vertex */
             n1 = triangleGrid.addVertex(x, tile.getY1(), z);
             triangleGrid.addColorToVertex(255, 255, 255, 255);
-            triangleGrid.addUVMap(textureRegion.getU(), textureRegion.getV());
+            triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
             triangleGrid.addNormal();
             if (terrain.isDebuging()) {
               triangleGrid.addTilePos(tile.getX(), tile.getZ());
@@ -66,7 +71,7 @@ public class Sector {
             /* Bottom left Vertex */
             n2 = triangleGrid.addVertex(x, tile.getY2(), z+1f);
             triangleGrid.addColorToVertex(255, 255, 255, 255);
-            triangleGrid.addUVMap(textureRegion.getU(), textureRegion.getV2());
+            triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
             triangleGrid.addNormal();
             if (terrain.isDebuging()) {
               triangleGrid.addTilePos(tile.getX(), tile.getZ());
@@ -75,7 +80,7 @@ public class Sector {
             /* Top Right Vertex */
             n3 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
             triangleGrid.addColorToVertex(255, 255, 255, 255);
-            triangleGrid.addUVMap(textureRegion.getU2(), textureRegion.getV());
+            triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV());
             triangleGrid.addNormal();
             if (terrain.isDebuging()) {
               triangleGrid.addTilePos(tile.getX(), tile.getZ());
@@ -86,7 +91,7 @@ public class Sector {
             /* Bottom right Vertex */
             n1 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
             triangleGrid.addColorToVertex(255, 255, 255, 255);
-            triangleGrid.addUVMap(textureRegion.getU2(), textureRegion.getV2());
+            triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV2());
             triangleGrid.addNormal();
             if (terrain.isDebuging()) {
               triangleGrid.addTilePos(tile.getX(), tile.getZ());
@@ -97,7 +102,7 @@ public class Sector {
             /* Top Right Vertex */
             n1 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
             triangleGrid.addColorToVertex(255, 255, 255, 255);
-            triangleGrid.addUVMap(textureRegion.getU2(), textureRegion.getV());
+            triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV());
             triangleGrid.addNormal();
             if (terrain.isDebuging()) {
               triangleGrid.addTilePos(tile.getX(), tile.getZ());
@@ -106,7 +111,7 @@ public class Sector {
             /* Top left Vertex */
             n2 = triangleGrid.addVertex(x, tile.getY1(), z);
             triangleGrid.addColorToVertex(255, 255, 255, 255);
-            triangleGrid.addUVMap(textureRegion.getU(), textureRegion.getV());
+            triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
             triangleGrid.addNormal();
             if (terrain.isDebuging()) {
               triangleGrid.addTilePos(tile.getX(), tile.getZ());
@@ -115,7 +120,7 @@ public class Sector {
             /* Bottom right Vertex */
             n3 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
             triangleGrid.addColorToVertex(255, 255, 255, 255);
-            triangleGrid.addUVMap(textureRegion.getU2(), textureRegion.getV2());
+            triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV2());
             triangleGrid.addNormal();
             if (terrain.isDebuging()) {
               triangleGrid.addTilePos(tile.getX(), tile.getZ());
@@ -126,7 +131,7 @@ public class Sector {
             /* Bottom left Vertex */
             n1 = triangleGrid.addVertex(x, tile.getY2(), z+1f);
             triangleGrid.addColorToVertex(255, 255, 255, 255);
-            triangleGrid.addUVMap(textureRegion.getU(), textureRegion.getV2());
+            triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
             triangleGrid.addNormal();
             if (terrain.isDebuging()) {
               triangleGrid.addTilePos(tile.getX(), tile.getZ());

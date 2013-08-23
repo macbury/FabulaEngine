@@ -17,7 +17,7 @@ uniform vec4      u_ambient_color;
 
 void main() {
   vec3 normalized_light_direction = normalize(u_light_direction);
-  float contribution   = max(dot(v_normal,normalized_light_direction),0.8);
+  float contribution   = max(dot(v_normal,normalized_light_direction),0.0);
   v_color              = (u_light_color * contribution) * v_color;
   vec4 current_texture = v_color * texture2D(u_texture0, v_textCords);
   

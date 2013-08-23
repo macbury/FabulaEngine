@@ -42,7 +42,12 @@ public class TerrainBrush extends Brush {
 
   @Override
   public String getStatusBarInfo() {
-    return "";
+    Tile tile = getTile();
+    if (tile != null) {
+      return "Slope: "  + tile.getSlopeDebugInfo();
+    } else {
+      return "";
+    }
   }
   
 }

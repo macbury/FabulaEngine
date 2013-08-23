@@ -45,6 +45,7 @@ public class AutoTileBrush extends Brush {
   private AutoTiles currentAutoTiles;
   private PaintMode currentPaintMode = PaintMode.AutoTile;
   private AutoTile currentAutoTile;
+  private boolean needToBuildPreviews;
   
   public static enum PaintMode {
     AutoTile, ExpandedTile
@@ -61,9 +62,10 @@ public class AutoTileBrush extends Brush {
   
   public void buildAllPreviews() {
     Tileset tileset = terrain.getTileset();
-    buildPreviews(tileset.getIcons());
+    Array<AutoTile> icons = tileset.getIcons();
+    buildPreviews(icons);
     
-    for (AutoTile at : tileset.getIcons()) {
+    for (AutoTile at : icons) {
       this.autoTileNames.add(at.getName());
     }
     
@@ -85,7 +87,7 @@ public class AutoTileBrush extends Brush {
       
       if (!file.exists()) {
         AutoTilePreviewRenderer renderer = new AutoTilePreviewRenderer(at);
-        Pixmap iconPixmap   = renderer.render();
+        Pixmap iconPixmap                = renderer.render();
         
         FileHandle image    = Gdx.files.absolute(filePath);
         PixmapIO.writePNG(image, iconPixmap);
@@ -182,7 +184,7 @@ public class AutoTileBrush extends Brush {
       tile.setAutoTile(getCurrentAutoTiles().getAutoTile(type));
     } else {
       if (debug) {
-        Gdx.app.log(TAG, "Mask: " + tid + " = " + mask);
+       // Gdx.app.log(TAG, "Mask: " + tid + " = " + mask);
       }
       //tile.setAutoTile(defaultAutoTile);
     }
@@ -373,6 +375,14 @@ public class AutoTileBrush extends Brush {
       out.newLine();
     }
     out.close();
+  }
+
+
+  public void buildAllPreviewsUnlessBuilded() {
+    if (!this.needToBuildPreviews) {
+      this.needToBuildPreviews = true;
+      buildAllPreviews();
+    }
   }
   
 }

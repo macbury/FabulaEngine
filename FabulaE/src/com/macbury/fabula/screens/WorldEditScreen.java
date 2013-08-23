@@ -76,7 +76,6 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     
     terrainBrush  = new TerrainBrush(terrain);
     autoTileBrush = new AutoTileBrush(terrain);
-    autoTileBrush.buildAllPreviews();
     setCurrentBrush(terrainBrush);
     
     this.camController = new EditorCamController(camera);

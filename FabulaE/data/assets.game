@@ -34,5 +34,9 @@
     <autotile name="sand_simple" />
     <autotile name="snow_rock_road" />
     <autotile name="snow_simple" />
+    <autotile name="ground_hill" />
+    <autotile name="rock_hill" />
+    <autotile name="ground_hill_side" />
+    <autotile name="rock_hill_side" />
   </resource>
 </resources>
