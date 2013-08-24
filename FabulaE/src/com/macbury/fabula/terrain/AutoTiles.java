@@ -37,6 +37,7 @@ public class AutoTiles {
   private String name;
   private int id;
   private boolean simple = false; 
+  private boolean slope = false; 
   
   public static enum Types {
     Start, InnerReapeating, CornerTopLeft, CornerTopRight, CornerBottomLeft, CornerBottomRight, EdgeLeft, EdgeRight, EdgeTop, EdgeBottom, 
@@ -334,5 +335,13 @@ public class AutoTiles {
 
   public boolean isSimple() {
     return simple;
+  }
+
+  public boolean isSlope() {
+    return slope;
+  }
+
+  public void setSlope(boolean slope) {
+    this.slope = slope;
   }
 }

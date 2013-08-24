@@ -73,7 +73,7 @@ public abstract class Brush {
     }
   }
 
-  private Tile getTile() {
+  protected Tile getTile() {
     return terrain.getTile((int)getPosition().x, (int)getPosition().y);
   }
 }

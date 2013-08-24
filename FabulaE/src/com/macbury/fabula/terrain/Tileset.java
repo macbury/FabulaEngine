@@ -21,8 +21,9 @@ public class Tileset {
     this.orderedAutotiles = new ArrayList<String>();
   }
   
-  public void buildAutotiles(String name) {
+  public void buildAutotiles(String name, boolean slope) {
     AutoTiles autoTiles = new AutoTiles(this, name);
+    autoTiles.setSlope(slope);
     if (this.orderedAutotiles.size() == 0) {
       this.defaultAutoTile = autoTiles.getAutoTile(AutoTiles.Types.InnerReapeating);
     }

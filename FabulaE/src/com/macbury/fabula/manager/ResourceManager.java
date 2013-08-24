@@ -23,6 +23,7 @@ import com.badlogic.gdx.assets.loaders.TextureLoader.TextureParameter;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -130,6 +131,10 @@ public class ResourceManager {
       textureAtlas = new TextureAtlas();
     }
     
+    for (Texture text : textureAtlas.getTextures()) {
+      text.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+    }
+    
     atlasMap.put(id, textureAtlas);
     
     Tileset tileset = new Tileset(textureAtlas, id);
@@ -138,8 +143,9 @@ public class ResourceManager {
     
     for (int i = 0; i < autoTileResources.getLength(); i++) {
       Element autoTileResource = (Element) autoTileResources.item(i); 
+      boolean slope            = autoTileResource.hasAttribute("slope");
       String name              = autoTileResource.getAttribute("name");
-      tileset.buildAutotiles(name);
+      tileset.buildAutotiles(name, slope);
     }
     
     tilesets.put(id, tileset);
