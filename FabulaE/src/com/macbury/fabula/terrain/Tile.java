@@ -52,6 +52,7 @@ public class Tile {
 
   public void setY(int i) {
     this.position.y = this.y1 = this.y2 = this.y3 = this.y4 = i;
+    calculateHeight();
   }
   
   public float getY1() {
@@ -71,8 +72,13 @@ public class Tile {
   }
   
   public void calculateHeight() {
-    int slopeMask = computeSlope();
-    switch (slopeMask) {
+    this.position.y = (y1 + y2 + y3 + y4 + this.position.y) / 5;
+    
+    maskSlope();
+  }
+  
+  private void maskSlope() {
+    switch (computeSlope()) {
       case 5:
         this.slope = TypeSlope.Down;
       break;
@@ -81,6 +87,9 @@ public class Tile {
       break;
       case 12:
         this.slope = TypeSlope.Left;
+      break;
+      case 7:
+        this.slope = TypeSlope.CornerBottomRight;
       break;
       case 3:
         this.slope = TypeSlope.Right;
@@ -101,9 +110,8 @@ public class Tile {
         this.slope = TypeSlope.None;
       break;
     }
-    this.position.y = (y1 + y2 + y3 + y4 + this.position.y) / 5;
   }
-  
+
   public void setY1(float y1) {
     this.y1 = y1;
     calculateHeight();
@@ -172,17 +180,21 @@ public class Tile {
     return this.slope;
   }
   
-  public float slopeAngle (float y) {
-    float angle = (float)Math.atan2(y, 0) * MathUtils.radiansToDegrees;
+  public float slopeAngle (float ny) {
+    float angle = (float)Math.atan2(ny, 0) * MathUtils.radiansToDegrees;
     if (angle < 0) angle += 360;
     return angle;
   }
   
-  public boolean isSlope(float y) {
-    float angle = slopeAngle(y);
-    return angle == 90 || angle == 270 ;
+  public boolean isSlope(float ny) {
+    float diff = Math.abs(minY() - ny);
+    return diff >= 0.1f;
   }
   
+  private float minY() {
+    return Math.min(y1, Math.min(y2, Math.min(y3,y4)));
+  }
+
   public int computeSlope() {
     byte slopeMask   = 0;
     

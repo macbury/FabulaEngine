@@ -59,6 +59,18 @@ public class Sector {
                 createCornerTopLeftMeshTile(tile);
               break;
               
+              case CornerTopRight:
+                createCornerTopRightMeshTile(tile);
+              break;
+              
+              case CornerBottomLeft:
+                createCornerBottomLeftMeshTile(tile);
+              break;
+              
+              case CornerBottomRight:
+                createCornerBottomRightMeshTile(tile);
+              break;
+              
               case Up:
                 createTopMeshTile(tile);
               break;
@@ -81,7 +93,6 @@ public class Sector {
             }
           } else {
             createBottomMeshTile(tile);
-            //createCornerTopLeftMeshTile(tile);
           }/*
           if (tile.getType() == Tile.Type.CornerTopRight || tile.getType() == Tile.Type.CornerBottomLeft) {
             createCornerTop(tile);
@@ -99,6 +110,153 @@ public class Sector {
     triangleGrid.end();
     
     this.boundingBox = new BoundingBox(this.topLeftCorner, this.bottomRightCorner.cpy().add(0, height, 0));
+  }
+
+  private void createCornerBottomRightMeshTile(Tile tile) {
+    TextureRegion uvMap = tile.getTextureRegion();
+    float x  = tile.getX();
+    float z  = tile.getZ();
+    short n1 = 0;
+    short n2 = 0;
+    short n3 = 0;
+    //bottom
+    /* Top Right Vertex */
+    n1 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
+    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
+    triangleGrid.addNormal();
+    if (terrain.isDebuging()) {
+      triangleGrid.addTilePos(tile.getX(), tile.getZ());
+    }
+    
+    /* Top left Vertex */
+    n2 = triangleGrid.addVertex(x, tile.getY1(), z);
+    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
+    triangleGrid.addNormal();
+    if (terrain.isDebuging()) {
+      triangleGrid.addTilePos(tile.getX(), tile.getZ());
+    }
+    
+    /* Bottom right Vertex */
+    n3 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
+    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV2());
+    triangleGrid.addNormal();
+    if (terrain.isDebuging()) {
+      triangleGrid.addTilePos(tile.getX(), tile.getZ());
+    }
+    
+    triangleGrid.addIndices(n1,n2,n3);
+    
+    /* Bottom left Vertex */
+    n1 = triangleGrid.addVertex(x, tile.getY2(), z+1f);
+    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
+    triangleGrid.addNormal();
+    if (terrain.isDebuging()) {
+      triangleGrid.addTilePos(tile.getX(), tile.getZ());
+    }
+    
+    triangleGrid.addIndices(n3,n2,n1);
+  }
+
+  private void createCornerBottomLeftMeshTile(Tile tile) {
+    TextureRegion uvMap = tile.getTextureRegion();
+    float x  = tile.getX();
+    float z  = tile.getZ();
+    short n1 = 0;
+    short n2 = 0;
+    short n3 = 0;
+    
+    /* bottom right Vertex */
+    n1 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
+    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
+    triangleGrid.addNormal();
+    if (terrain.isDebuging()) {
+      triangleGrid.addTilePos(tile.getX(), tile.getZ());
+    }
+    
+    /* top right Vertex */
+    n2 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
+    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
+    triangleGrid.addNormal();
+    if (terrain.isDebuging()) {
+      triangleGrid.addTilePos(tile.getX(), tile.getZ());
+    }
+    
+    /* bottom left Vertex */
+    n3 = triangleGrid.addVertex(x, tile.getY2(), z+1f);
+    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV2());
+    triangleGrid.addNormal();
+    if (terrain.isDebuging()) {
+      triangleGrid.addTilePos(tile.getX(), tile.getZ());
+    }
+    
+    triangleGrid.addIndices(n1,n2,n3);
+    
+    /* Bottom left Vertex */
+    n1 = triangleGrid.addVertex(x, tile.getY1(), z);
+    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
+    triangleGrid.addNormal();
+    if (terrain.isDebuging()) {
+      triangleGrid.addTilePos(tile.getX(), tile.getZ());
+    }
+    
+    triangleGrid.addIndices(n3,n2,n1);
+  }
+
+  private void createCornerTopRightMeshTile(Tile tile) {
+    TextureRegion uvMap = tile.getTextureRegion();
+    float x  = tile.getX();
+    float z  = tile.getZ();
+    short n1 = 0;
+    short n2 = 0;
+    short n3 = 0;
+    
+    /* bottom right Vertex */
+    n1 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
+    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
+    triangleGrid.addNormal();
+    if (terrain.isDebuging()) {
+      triangleGrid.addTilePos(tile.getX(), tile.getZ());
+    }
+    
+    /* top right Vertex */
+    n2 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
+    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV2());
+    triangleGrid.addNormal();
+    if (terrain.isDebuging()) {
+      triangleGrid.addTilePos(tile.getX(), tile.getZ());
+    }
+    
+    /* bottom left Vertex */
+    n3 = triangleGrid.addVertex(x, tile.getY2(), z+1f);
+    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
+    triangleGrid.addNormal();
+    if (terrain.isDebuging()) {
+      triangleGrid.addTilePos(tile.getX(), tile.getZ());
+    }
+    
+    triangleGrid.addIndices(n1,n2,n3);
+    
+    /* Bottom left Vertex */
+    n1 = triangleGrid.addVertex(x, tile.getY1(), z);
+    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
+    triangleGrid.addNormal();
+    if (terrain.isDebuging()) {
+      triangleGrid.addTilePos(tile.getX(), tile.getZ());
+    }
+    
+    triangleGrid.addIndices(n3,n2,n1);
   }
 
   private void createCornerTopLeftMeshTile(Tile tile) {
