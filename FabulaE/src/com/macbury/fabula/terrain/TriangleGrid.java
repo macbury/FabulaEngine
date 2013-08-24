@@ -82,7 +82,6 @@ public class TriangleGrid {
       int index2 = indices[i * 3 + 1];
       int index3 = indices[i * 3 + 2];
       
-      
       Vector3 side1   = this.vertexsList.get(index1).position.cpy().sub(this.vertexsList.get(index3).position);
       Vector3 side2   = this.vertexsList.get(index1).position.cpy().sub(this.vertexsList.get(index2).position);
       Vector3 normal  = side1.crs(side2);

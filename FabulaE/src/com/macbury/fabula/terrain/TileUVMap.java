@@ -1,5 +1,6 @@
 package com.macbury.fabula.terrain;
 
+import org.lwjgl.util.vector.Matrix2f;
 import org.lwjgl.util.vector.Matrix4f;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -29,12 +30,12 @@ public class TileUVMap {
         u  = mat[2];
         v  = mat[3];
       break;
-      case Left:
-        u2 = mat[3];
-        v2 = mat[2];
-        u  = mat[1];
-        v  = mat[0];
-      break;
+      /*case Left:
+        u  = -mat[0];
+        v  = mat[1];
+        u2 = -mat[2];
+        v2 = mat[3];
+      break;*/
     }
   }
   

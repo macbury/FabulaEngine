@@ -1,6 +1,8 @@
 package com.macbury.fabula.terrain;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.macbury.fabula.terrain.AutoTiles.Types;
 
@@ -71,28 +73,28 @@ public class Tile {
   public void calculateHeight() {
     int slopeMask = computeSlope();
     switch (slopeMask) {
-      case 323:
+      case 5:
         this.slope = TypeSlope.Down;
       break;
-      case 40:
+      case 10:
         this.slope = TypeSlope.Up;
       break;
-      case 6:
+      case 12:
         this.slope = TypeSlope.Left;
       break;
-      case 240:
+      case 3:
         this.slope = TypeSlope.Right;
       break;
-      case 0:
+      case 8:
         this.slope = TypeSlope.CornerTopLeft;
       break;
-      case 56:
+      case 2:
         this.slope = TypeSlope.CornerTopRight;
       break;
-      case 7:
+      case 4:
         this.slope = TypeSlope.CornerBottomLeft;
       break;
-      case 448:
+      case 1:
         this.slope = TypeSlope.CornerBottomRight;
       break;
       default:
@@ -146,6 +148,10 @@ public class Tile {
     return autoTile;
   }
 
+  public AutoTiles getAutoTiles() {
+    return autoTile.getAutoTiles();
+  }
+  
   public Types getAutoType() {
     return autoTile.getType();
   }
@@ -166,49 +172,53 @@ public class Tile {
     return this.slope;
   }
   
+  public float slopeAngle (float y) {
+    float angle = (float)Math.atan2(y, 0) * MathUtils.radiansToDegrees;
+    if (angle < 0) angle += 360;
+    return angle;
+  }
+  
+  public boolean isSlope(float y) {
+    float angle = slopeAngle(y);
+    return angle == 90 || angle == 270 ;
+  }
+  
   public int computeSlope() {
-    int slopeMask   = 0;
+    byte slopeMask   = 0;
     
-    if (y1 > y2) {
-      slopeMask |= 256;
+    if (isSlope(y1)) {
+      slopeMask |= 1;
     }
     
-    if (y1 > y3) {
-      slopeMask |= 128;
-    }
-    
-    if (y1 > y4) {
-      slopeMask |= 64;
-    }
-    
-    if (y2 > y3) {
-      slopeMask |= 32;
-    }
-    
-    if (y2 > y4) {
-      slopeMask |= 16;
-    }
-    
-    if (y2 > y1) {
-      slopeMask |= 8;
-    }
-    
-    if (y3 > y1) {
-      slopeMask |= 4;
-    }
-    
-    if (y3 > y2) {
+    if (isSlope(y2)) {
       slopeMask |= 2;
     }
     
-    if (y3 > y4) {
-      slopeMask |= 1;
+    if (isSlope(y3)) {
+      slopeMask |= 4;
+    }
+    
+    if (isSlope(y4)) {
+      slopeMask |= 8;
     }
     
     return slopeMask;
   }
   
+  /*
+   * TopLeft:     0, 0,  0, 90
+Top:       0, 90, 0, 90
+RopRight:    0, 90, 0, 0
+Right:       90,90, 0, 0
+BottomRight: 90, 0, 0, 0
+Bottom:      90, 0,90, 0
+BottomLeft:  0,  0,90, 0
+Left:        0,  0,90, 90
+
+UpTerrain: 0 or all 90
+   */
+  
   public String getSlopeDebugInfo() {
-    return this.slope.toString() + " Y1 = "+this.y1 + " Y2 = "+ y2 + " Y3 = " + y3 + " Y4 = " + y4 + " Slope: " + this.slope + " - " + computeSlope();
+    return this.slope.toString() + " Y1 = "+this.y1 + " Y2 = "+ y2 + " Y3 = " + y3 + " Y4 = " + y4 + " Slope: " + computeSlope() + " == " + this.slope;
   }
 }
