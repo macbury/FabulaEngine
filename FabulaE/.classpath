@@ -28,5 +28,6 @@
 			<attribute name="javadoc_location" value="http://im4java.sourceforge.net/api/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="jars/js.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

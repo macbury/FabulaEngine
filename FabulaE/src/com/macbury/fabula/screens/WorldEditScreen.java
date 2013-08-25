@@ -66,7 +66,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     this.camera = new TopDownCamera();
     Gdx.app.log(TAG, "Initialized screen");
     
-    this.scene   = new Scene(50, 50);
+    this.scene   = new Scene(150, 150);
     this.terrain = this.scene.getTerrain();
     terrain.setDebugListener(this);
     terrain.fillEmptyTilesWithDebugTile();

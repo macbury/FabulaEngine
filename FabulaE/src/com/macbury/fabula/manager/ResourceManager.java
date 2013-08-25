@@ -31,6 +31,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeBitm
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.macbury.fabula.map.SkyBox;
 import com.macbury.fabula.terrain.Tileset;
 
 public class ResourceManager {
@@ -44,6 +45,7 @@ public class ResourceManager {
   private Map<String, String> music;
   private Map<String, Tileset> tilesets;
   private Map<String, ShaderProgram> shaders;
+  private Map<String, SkyBox> skyBoxes;
   private boolean loadedXML = false;
   
   public static ResourceManager shared() {
@@ -59,6 +61,7 @@ public class ResourceManager {
     this.shaders      = new HashMap<String, ShaderProgram>();
     this.atlasMap     = new HashMap<String, TextureAtlas>();
     this.tilesets     = new HashMap<String, Tileset>();
+    this.skyBoxes     = new HashMap<String, SkyBox>();
   }
   
   public void loadSynch() throws Exception {
@@ -110,11 +113,38 @@ public class ResourceManager {
           addElementAsShader(resourceElement);
         } else if (type.equals("tileset")) {
           addElementAsTileset(resourceElement);
+        } else if (type.equals("skybox")) {
+          addElementAsSkyBox(resourceElement);
         }
       }
     }
     
     loadedXML = true;
+  }
+
+  private void addElementAsSkyBox(Element resourceElement) {
+    String id    = resourceElement.getAttribute("id");
+    String path  = resourceElement.getTextContent();
+    path        = "data/textures/skybox/"+path;
+    
+    Gdx.app.log(TAG, "Loading SkyBox: " + id + " from " + path);
+    
+    SkyBox skyBox = new SkyBox();
+    skyBox.setName(id);
+    
+    skyBox.setTextureXNEG(getSkyBoxTexture(id, path, "_xneg"));
+    skyBox.setTextureXPOS(getSkyBoxTexture(id, path, "_xpos"));
+    skyBox.setTextureYNEG(getSkyBoxTexture(id, path, "_yneg"));
+    skyBox.setTextureYPOS(getSkyBoxTexture(id, path, "_ypos"));
+    skyBox.setTextureZNEG(getSkyBoxTexture(id, path, "_zneg"));
+    skyBox.setTextureZPOS(getSkyBoxTexture(id, path, "_zpos"));
+    this.skyBoxes.put(id, skyBox);
+  }
+  
+  private Texture getSkyBoxTexture(String id, String path, String type) {
+    Texture texture = new Texture(Gdx.files.internal(path+type+".png"));
+    textures.put("TEXTURE_"+id+type.toUpperCase(), texture);
+    return texture;
   }
 
   private void addElementAsTileset(Element resourceElement) {
@@ -249,6 +279,10 @@ public class ResourceManager {
 
   public Collection<Tileset> allTilesets() {
     return tilesets.values();
+  }
+
+  public SkyBox getSkyBox(String string) {
+    return skyBoxes.get(string);
   }
 
 }

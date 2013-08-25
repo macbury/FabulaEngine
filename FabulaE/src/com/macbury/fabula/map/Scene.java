@@ -5,14 +5,17 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.lights.Lights;
 import com.badlogic.gdx.math.Vector3;
+import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.terrain.Terrain;
 
 public class Scene {
   private Lights           lights;
   private DirectionalLight sunLight;
   private Terrain          terrain;
+  private SkyBox           skyBox;
   private String           name;
   public Scene(int width, int height) {
+    skyBox = ResourceManager.shared().getSkyBox("SKYBOX_DAY");
     lights = new Lights();
     lights.ambientLight.set(1f, 1f, 1f, 1f);
     sunLight = new DirectionalLight();
@@ -28,6 +31,7 @@ public class Scene {
   }
   
   public void render(Camera camera) {
+    skyBox.render(camera);
     this.terrain.render(camera, this.lights);
   }
   

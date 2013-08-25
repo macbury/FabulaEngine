@@ -12,7 +12,8 @@ public class TerrainBrush extends Brush {
   
   public TerrainBrush(Terrain terrain) {
     super(terrain);
-    type = TerrainBrushType.Up;
+    type = TerrainBrushType.Set;
+    setPower(1.0f);
   }
 
   @Override

@@ -12,7 +12,7 @@ public class Tile {
   }
   
   public enum TypeSlope {
-    None, Down, Up, Left, Right, CornerBottomLeft, CornerBottomRight, CornerTopLeft, CornerTopRight
+    None, Down, Up, Left, Right, CornerBottomLeft, CornerBottomRight, CornerTopLeft, CornerTopRight, EdgeBottomRight, EdgeBottomLeft, EdgeTopLeft, EdgeTopRight
   }
   
   private TextureRegion textureRegion;
@@ -79,29 +79,38 @@ public class Tile {
   
   private void maskSlope() {
     switch (computeSlope()) {
-      case 5:
-        this.slope = TypeSlope.Down;
+      case 14:
+        this.slope = TypeSlope.EdgeTopRight;
       break;
-      case 10:
-        this.slope = TypeSlope.Up;
+      case 13:
+        this.slope = TypeSlope.EdgeBottomLeft;
       break;
       case 12:
         this.slope = TypeSlope.Left;
       break;
-      case 7:
-        this.slope = TypeSlope.CornerBottomRight;
+      case 11:
+        this.slope = TypeSlope.EdgeTopLeft;
       break;
-      case 3:
-        this.slope = TypeSlope.Right;
+      case 10:
+        this.slope = TypeSlope.Up;
       break;
       case 8:
         this.slope = TypeSlope.CornerTopLeft;
       break;
-      case 2:
-        this.slope = TypeSlope.CornerTopRight;
+      case 7:
+        this.slope = TypeSlope.EdgeBottomRight;
+      break;
+      case 5:
+        this.slope = TypeSlope.Down;
       break;
       case 4:
         this.slope = TypeSlope.CornerBottomLeft;
+      break;
+      case 3:
+        this.slope = TypeSlope.Right;
+      break;
+      case 2:
+        this.slope = TypeSlope.CornerTopRight;
       break;
       case 1:
         this.slope = TypeSlope.CornerBottomRight;
