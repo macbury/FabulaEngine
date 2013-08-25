@@ -57,12 +57,30 @@ public abstract class Brush {
   public void applyBrush() {
     brushTiles.clear();
     
-    for (int x = (int) (this.position.x - size); x < this.position.x + size + 1; x++) {
-      for (int y = (int) (this.position.y - size); y < this.position.y + size + 1; y++) {
-        Tile tile = this.terrain.getTile(x,y);
-        if (tile != null) {
-          this.brushTiles.add(tile);
-          this.terrain.addSectorToRebuildFromTile(tile);
+    if (brushType == BrushType.Pencil) {
+      for (int x = (int) (this.position.x - size); x < this.position.x + size + 1; x++) {
+        for (int y = (int) (this.position.y - size); y < this.position.y + size + 1; y++) {
+          Tile tile = this.terrain.getTile(x,y);
+          if (tile != null) {
+            this.brushTiles.add(tile);
+            this.terrain.addSectorToRebuildFromTile(tile);
+          }
+        }
+      }
+    } else {
+      int sx = (int) Math.min(this.startPosition.x, this.position.x);
+      int sy = (int) Math.min(this.startPosition.y, this.position.y);
+      
+      int ex = (int) Math.max(this.startPosition.x, this.position.x);
+      int ey = (int) Math.max(this.startPosition.y, this.position.y);
+      
+      for (int x = sx; x <= ex; x++) {
+        for (int y = sy; y <= ey; y++) {
+          Tile tile = this.terrain.getTile(x,y);
+          if (tile != null) {
+            this.brushTiles.add(tile);
+            this.terrain.addSectorToRebuildFromTile(tile);
+          }
         }
       }
     }

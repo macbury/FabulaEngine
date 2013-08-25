@@ -32,6 +32,7 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.macbury.fabula.editor.WorldEditorFrame;
 import com.macbury.fabula.editor.brushes.AutoTileBrush;
 import com.macbury.fabula.editor.brushes.Brush;
+import com.macbury.fabula.editor.brushes.Brush.BrushType;
 import com.macbury.fabula.editor.brushes.TerrainBrush;
 import com.macbury.fabula.editor.tiles.AutoTileDebugFrame;
 import com.macbury.fabula.manager.GameManager;
@@ -183,7 +184,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
       Vector3 pos = getPositionForMouse(x, y);
       
       if (pos != null) {
-        currentBrush.setStartPosition(pos.x, pos.y);
+        currentBrush.setStartPosition(pos.x, pos.z);
       }
       
       this.brushTimer.start();
@@ -205,6 +206,9 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   @Override
   public boolean touchUp(int x, int y, int pointer, int button) {
     if (button == Buttons.LEFT) {
+      Vector3 pos = getPositionForMouse(x, y);
+      currentBrush.setPosition(pos.x, pos.z);
+      currentBrush.applyBrush();
       currentBrush.setStartPosition(null);
       this.brushTimer.stop();
       return true;
@@ -214,7 +218,9 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
 
   @Override
   public void onTimerTick(ActionTimer timer) {
-    currentBrush.applyBrush();
+    if (currentBrush.getBrushType() == BrushType.Pencil) {
+      currentBrush.applyBrush();
+    }
   }
 
   @Override

@@ -41,7 +41,7 @@ PathCrossCornerRightBottom
 F5FF000
 PathHorizontal
 FF0F0FF3
-PathCrossLeftBottom
+EdgeRight
 FFCF0FF0
 EdgeRight
 FF0FF
@@ -93,7 +93,7 @@ PathHorizontal
 CFC00FF3
 PathVertical
 FFFFFA00
-InnerReapeating
+EdgeBottom
 FFFFF0FF
 InnerEdgeBottomLeft
 50F000
@@ -123,7 +123,7 @@ PathVertical
 F0A00
 PathCornerBottomRight
 F0FF0
-PathCornerTopLeft
+CornerTopRight
 FF0F3FF
 EdgeLeft
 5FF00F
@@ -378,12 +378,12 @@ PathCrossRightTopBottom
 Start
 FFFF000
 PathCrossCornerLeftBottom
-3FF
-PathVerticalTop
 FFF0F0FF
 InnerReapeating
 A00FF0F0
 PathCrossLeftBottomRight
+3FF
+PathVerticalTop
 CFF05000
 PathCornerBottomLeft
 CCD0F000
