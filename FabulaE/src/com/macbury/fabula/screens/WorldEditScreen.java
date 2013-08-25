@@ -162,13 +162,13 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   Vector3 mouseTilePosition = new Vector3();
   @Override
   public boolean mouseMoved(int x, int y) {
-    Ray ray     = camera.getPickRay(Gdx.input.getX(), Gdx.input.getY());
+    Ray ray     = camera.getPickRay(x, y);
     Vector3 pos = terrain.getSnappedPositionForRay(ray, mouseTilePosition);
     
     if (pos != null) {
       currentBrush.setPosition(pos.x, pos.z);
     }
-    return true;
+    return false;
   }
 
   @Override
@@ -180,6 +180,12 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   @Override
   public boolean touchDown(int x, int y, int pointer, int button) {
     if (button == Buttons.LEFT) {
+      Vector3 pos = getPositionForMouse(x, y);
+      
+      if (pos != null) {
+        currentBrush.setStartPosition(pos.x, pos.y);
+      }
+      
       this.brushTimer.start();
       return true;
     }
@@ -187,14 +193,19 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   }
 
   @Override
-  public boolean touchDragged(int arg0, int arg1, int arg2) {
-    //Gdx.app.log(TAG, "Dragging");
+  public boolean touchDragged(int x, int y, int pointer) {
+    Vector3 pos = getPositionForMouse(x, y);
+    
+    if (pos != null) {
+      currentBrush.setPosition(pos.x, pos.z);
+    }
     return false;
   }
 
   @Override
   public boolean touchUp(int x, int y, int pointer, int button) {
     if (button == Buttons.LEFT) {
+      currentBrush.setStartPosition(null);
       this.brushTimer.stop();
       return true;
     }
@@ -231,6 +242,11 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
 
   public Scene getScene() {
     return this.scene;
+  }
+  
+  public Vector3 getPositionForMouse(float x, float y) {
+    Ray ray     = camera.getPickRay(x, y);
+    return terrain.getSnappedPositionForRay(ray, mouseTilePosition);
   }
 
 }

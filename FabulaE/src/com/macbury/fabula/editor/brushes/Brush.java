@@ -7,9 +7,14 @@ import com.macbury.fabula.terrain.Terrain;
 import com.macbury.fabula.terrain.Tile;
 
 public abstract class Brush {
-  protected int size         = 4;
-  protected float power      = 0.1f;
-  protected Vector2 position = new Vector2(0, 0);
+  public enum BrushType {
+    Pencil, Rectangle
+  }
+  protected BrushType brushType     = BrushType.Pencil;
+  protected int size                = 4;
+  protected float power             = 0.1f;
+  protected Vector2 position        = new Vector2(0, 0);
+  protected Vector2 startPosition   = new Vector2(0, 0);
   protected Terrain terrain;
   protected ArrayList<Tile>  brushTiles;
   
@@ -36,6 +41,15 @@ public abstract class Brush {
   public Vector2 getPosition() {
     return position;
   }
+  
+  public void setStartPosition(Vector2 sp) {
+    this.startPosition = sp;
+  }
+  
+  public void setStartPosition(float x, float y) {
+    this.startPosition = new Vector2(x, y);
+  }
+  
   public void setPosition(Vector2 position) {
     this.position = position;
   }
@@ -75,5 +89,13 @@ public abstract class Brush {
 
   protected Tile getTile() {
     return terrain.getTile((int)getPosition().x, (int)getPosition().y);
+  }
+
+  public BrushType getBrushType() {
+    return brushType;
+  }
+
+  public void setBrushType(BrushType brushType) {
+    this.brushType = brushType;
   }
 }
