@@ -37,7 +37,8 @@
     <autotile name="snow_simple" />
     <autotile name="ground_hill" />
     <autotile name="rock_hill" />
+    <autotile name="grass_hill" />
     <autotile name="ground_hill_side" slope="true" />
-    <autotile name="rock_hill_side" slope="true" />
+    <autotile name="grass_hill_side" slope="true" />
   </resource>
 </resources>
