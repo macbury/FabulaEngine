@@ -15,10 +15,11 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
+import com.badlogic.gdx.utils.Disposable;
 import com.macbury.fabula.manager.ResourceManager;
 import com.thesecretpie.shader.ShaderManager;
 
-public class Terrain {
+public class Terrain implements Disposable {
   private Sector[][] sectors;
   private Tile[][] tiles;
 
@@ -316,5 +317,15 @@ public class Terrain {
 
   public int getRows() {
     return rows;
+  }
+
+  @Override
+  public void dispose() {
+    for (int x = 0; x < horizontalSectorCount; x++) {
+      for (int z = 0; z < veriticalSectorCount; z++) {
+        Sector sector = this.sectors[x][z]; 
+        sector.dispose();
+      }
+    }
   }
 }

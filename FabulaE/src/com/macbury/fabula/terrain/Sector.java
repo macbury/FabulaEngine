@@ -14,8 +14,9 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 
-public class Sector {
+public class Sector implements Disposable {
   public final static int ROW_COUNT               = 10;
   public final static int COLUMN_COUNT            = 10;
   public final static int VERTEX_PER_BOX_COUNT    = 4;
@@ -39,7 +40,6 @@ public class Sector {
 
   public void build() {
     height = 0;
- 
     
     short rowEnd    = (short) (ROW_COUNT + topLeftCorner.z);
     short columnEnd = (short) (COLUMN_COUNT+topLeftCorner.x);
@@ -109,18 +109,7 @@ public class Sector {
             }
           } else {
             createBottomMeshTile(tile);
-          }/*
-          if (tile.getType() == Tile.Type.CornerTopRight || tile.getType() == Tile.Type.CornerBottomLeft) {
-            createCornerTop(tile);
-          } else if (true) {
-            createBottomMeshTile(tile);
-          } else if (false) {
-            createTopMeshTile(tile);
-          } else if (false) {
-            createRightMeshTile(tile);
-          } else {
-            createLeftMeshTile(tile);
-          }*/
+          }
         }
       }
     triangleGrid.end();
@@ -780,5 +769,10 @@ public class Sector {
 
   public Mesh getMesh() {
     return this.triangleGrid.getMesh();
+  }
+
+  @Override
+  public void dispose() {
+    this.triangleGrid.dispose();
   }
 }

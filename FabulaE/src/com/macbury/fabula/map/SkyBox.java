@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g3d.Renderable;
+import com.macbury.fabula.manager.ResourceManager;
+import com.thesecretpie.shader.ShaderManager;
 
 public class SkyBox {
   private String name;
@@ -20,16 +22,16 @@ public class SkyBox {
   private Texture textureZPOS;
   private Mesh quad;
   private Renderable renderable;
+  private ShaderManager sm;
   
   public SkyBox() {
     quad = new Mesh(true, 4, 0, new VertexAttribute(Usage.Position, 3, "a_position"), new VertexAttribute(Usage.TextureCoordinates, 2, "a_texCoords"));
     quad.setVertices(new float[] {
-        -5f, -5f, 0, 0, 1,      // bottom left
-        5f, -5f, 0, 1, 1,       // bottom right
-        5f, 5f, 0, 1, 0,        // top right
-        -5f, 5f, 0, 0, 0});  
-    
-    this.renderable = new Renderable();
+        -5f, -5f, 0, 0, 1,
+        5f, -5f, 0, 1, 1,
+        5f, 5f, 0, 1, 0,
+        -5f, 5f, 0, 0, 0});
+    this.sm = ResourceManager.shared().getShaderManager();
   }
   
   public void setName(String id) {
@@ -61,13 +63,13 @@ public class SkyBox {
   }
   
   public void render(Camera camera) {
-    /*GL20 gl = Gdx.gl20;
+    GL20 gl = Gdx.gl20;
     
     gl.glDisable(GL20.GL_DEPTH_TEST);
     gl.glEnable(GL20.GL_TEXTURE_2D);
     
-    renderable.
-    
-    gl.glDisable(GL20.GL_TEXTURE_2D);*/
+    sm.begin("empty");
+      quad.render(sm.getCurrent(), gl.GL_TRIANGLE_FAN);
+    sm.end();
   }
 }

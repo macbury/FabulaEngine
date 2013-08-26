@@ -1,14 +1,16 @@
 package com.macbury.fabula.test;
 
-import org.lwjgl.opengl.GL20;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.manager.ResourceManager;
+import com.macbury.fabula.map.SkyBox;
 import com.macbury.fabula.screens.BaseScreen;
 import com.thesecretpie.shader.ShaderManager;
 
@@ -22,12 +24,19 @@ public class ShaderTestScreen extends BaseScreen {
   Matrix4 combined = new Matrix4();
   Vector3 axis = new Vector3(1, 0, 1).nor();
   float angle = 45;
+  private SkyBox skybox;
+  private PerspectiveCamera camera;
   
   public ShaderTestScreen(GameManager manager) {
     super(manager);
     
     this.sm = ResourceManager.shared().getShaderManager();
     cube    = Shapes.genCube();
+    this.skybox = ResourceManager.shared().getSkyBox("SKYBOX_DAY");
+    this.camera = new PerspectiveCamera();
+    this.camera.position.set(0, 0, -10.0f);
+    this.camera.lookAt(0, 0, 0);
+    //this.camera.update(true);
   }
 
   @Override
@@ -49,26 +58,10 @@ public class ShaderTestScreen extends BaseScreen {
   
   @Override
   public void render(float arg0) {
-    
-    angle += Gdx.graphics.getDeltaTime() * 40.0f;
-    float aspect = Gdx.graphics.getWidth() / (float)Gdx.graphics.getHeight();
-    projection.setToProjection(1.0f, 20.0f, 60.0f, aspect);
-    view.idt().trn(0, 0, -2.0f);
-    model.setToRotation(axis, angle);
-    combined.set(projection).mul(view).mul(model);
-
-    Gdx.gl20.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-    Gdx.gl20.glClear(Gdx.gl20.GL_COLOR_BUFFER_BIT);
-    
-    sm.beginFB("bloom_fb");
-      sm.begin("empty");
-        sm.setUniformMatrix("u_worldView", combined);
-        cube.render(sm.getCurrent(), Gdx.gl20.GL_TRIANGLES);
-      sm.end();
-    sm.endFB();
-    
-    sm.begin("SHADER_BLOOM");
-    sm.renderFB("bloom_fb");
+    skybox.render(null);
+    sm.begin("empty");
+      //sm.setUniformMatrix("u_worldView", camera.combined);
+      //cube.render(sm.getCurrent(), GL20.GL_TRIANGLES);
     sm.end();
   }
   

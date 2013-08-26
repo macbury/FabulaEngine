@@ -6,11 +6,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.lights.Lights;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Disposable;
 import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.terrain.Terrain;
 import com.thesecretpie.shader.ShaderManager;
 
-public class Scene {
+public class Scene implements Disposable {
+  private static final String MAIN_FRAME_BUFFER = "MAIN_FRAME_BUFFER";
   private Lights           lights;
   private DirectionalLight sunLight;
   private Terrain          terrain;
@@ -31,6 +33,7 @@ public class Scene {
     this.terrain = new Terrain(width, height);
     
     this.sm = ResourceManager.shared().getShaderManager();
+    this.sm.createFB(MAIN_FRAME_BUFFER);
   }
   
   public Terrain getTerrain() {
@@ -38,19 +41,13 @@ public class Scene {
   }
   
   public void render(Camera camera) {
-    skyBox.render(camera);
-    if (sm.getFB("bloom_fb") == null) {
-      Gdx.app.log(TAG, "Creating frame buffer: "+ Gdx.graphics.getWidth() + "x"+ Gdx.graphics.getHeight());
-      this.sm.createFB("bloom_fb");
-      //this.sm.getScreenCamera().setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-    }
-    
-    sm.beginFB("bloom_fb");
+    sm.beginFB(MAIN_FRAME_BUFFER);
       this.terrain.render(camera, this.lights);
+      this.skyBox.render(camera);
     sm.endFB();
     
-    sm.begin("SHADER_BLOOM");
-      sm.renderFB("bloom_fb");
+    sm.begin("SHADER_DEFAULT");
+      sm.renderFB(MAIN_FRAME_BUFFER);
     sm.end();
   }
   
@@ -68,5 +65,11 @@ public class Scene {
   
   public boolean save() {
     return true;
+  }
+
+  @Override
+  public void dispose() {
+    this.terrain.dispose();
+    
   }
 }

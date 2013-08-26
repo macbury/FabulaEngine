@@ -67,8 +67,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
 
   @Override
   public void dispose() {
-    // TODO Auto-generated method stub
-    
+    this.terrain.dispose();
   }
   
   @Override

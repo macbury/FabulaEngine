@@ -11,8 +11,9 @@ import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder.VertexInfo;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Disposable;
 
-public class TriangleGrid {
+public class TriangleGrid implements Disposable {
   public static enum AttributeType {
     Position, Normal, Color, TextureCord, TilePosition
   }
@@ -219,6 +220,13 @@ public class TriangleGrid {
     return attributes.toArray(new VertexAttribute[attributes.size()]);
   }
 
-  
+  @Override
+  public void dispose() {
+    if (this.mesh != null) {
+      this.mesh.dispose();
+    }
+    this.mesh   = null;
+    vertexsList = null;
+  }
   
 }
