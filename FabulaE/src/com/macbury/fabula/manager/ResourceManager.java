@@ -33,6 +33,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.macbury.fabula.map.SkyBox;
 import com.macbury.fabula.terrain.Tileset;
+import com.thesecretpie.shader.ShaderManager;
 
 public class ResourceManager {
   private static final String TAG = "ResourceManager";
@@ -44,9 +45,10 @@ public class ResourceManager {
   private Map<String, Texture> textures;
   private Map<String, String> music;
   private Map<String, Tileset> tilesets;
-  private Map<String, ShaderProgram> shaders;
   private Map<String, SkyBox> skyBoxes;
   private boolean loadedXML = false;
+  private AssetManager assetManager;
+  private ShaderManager shaderManager;
   
   public static ResourceManager shared() {
     if (_shared == null) {
@@ -56,12 +58,15 @@ public class ResourceManager {
   }
   
   public ResourceManager() {
-    this.textures     = new HashMap<String, Texture>();
-    this.music        = new HashMap<String, String>();
-    this.shaders      = new HashMap<String, ShaderProgram>();
-    this.atlasMap     = new HashMap<String, TextureAtlas>();
-    this.tilesets     = new HashMap<String, Tileset>();
-    this.skyBoxes     = new HashMap<String, SkyBox>();
+    ShaderProgram.pedantic = false;
+    this.assetManager = new AssetManager();
+
+    this.textures      = new HashMap<String, Texture>();
+    this.music         = new HashMap<String, String>();
+    this.atlasMap      = new HashMap<String, TextureAtlas>();
+    this.tilesets      = new HashMap<String, Tileset>();
+    this.skyBoxes      = new HashMap<String, SkyBox>();
+    this.shaderManager = new ShaderManager("data/shaders", this.assetManager);
   }
   
   public void loadSynch() throws Exception {
@@ -183,17 +188,10 @@ public class ResourceManager {
 
   private void addElementAsShader(Element resourceElement) {
     String id   = resourceElement.getAttribute("id");
-    String path = resourceElement.getTextContent();
-    path        = "data/shaders/"+path;
+    String name = resourceElement.getTextContent();
+    String path = "data/shaders/"+name;
     Gdx.app.log(TAG, "Found shader: " + id + " from " + path);
-    
-    String vertexShader   = Gdx.files.internal(path + ".vert").readString();
-    String fragmentShader = Gdx.files.internal(path + ".frag").readString();
-    ShaderProgram shader  = new ShaderProgram(vertexShader, fragmentShader);
-    if (!shader.isCompiled())
-      throw new IllegalStateException(shader.getLog());
-    
-    shaders.put(id, shader);
+    shaderManager.add(id, name+".vert", name+".frag");
   }
 
   private void addElementAsMusic(Element resourceElement) {
@@ -202,7 +200,6 @@ public class ResourceManager {
     path        = "data/music/"+path;
     Gdx.app.log(TAG, "Found music: " + id + " from " + path);
     music.put(id, path);
-    //assetManager.load(path, Music.class);
   }
 
   private void addElementAsTexture(Element resourceElement) {
@@ -211,11 +208,7 @@ public class ResourceManager {
     path        = "data/textures/"+path;
     
     Gdx.app.log(TAG, "Found texture: " + id + " from " + path);
-    //TextureParameter param = new TextureParameter();
-    //param. 
-    //TODO Load texture parameters from xml 
     textures.put(id, new Texture(Gdx.files.internal(path)));
-    //assetManager.load(path, Texture.class);
   }
 
   private void addElementAsFont(Element resourceElement) {
@@ -270,7 +263,7 @@ public class ResourceManager {
   }
   
   public ShaderProgram getShaderProgram(String key) {
-    return shaders.get(key);
+    return null;
   }
 
   public Tileset getTileset(String key) {
@@ -283,6 +276,10 @@ public class ResourceManager {
 
   public SkyBox getSkyBox(String string) {
     return skyBoxes.get(string);
+  }
+
+  public ShaderManager getShaderManager() {
+    return this.shaderManager;
   }
 
 }

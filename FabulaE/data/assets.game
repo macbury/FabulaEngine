@@ -2,7 +2,7 @@
 <resources>
   <resource type="shader" id="SHADER_TERRAIN">mesh</resource>
   <resource type="shader" id="SHADER_TERRAIN_EDITOR">terrain-editor</resource>
-  <resource type="shader" id="SHADER_SIMPLE">simple</resource>
+  <resource type="shader" id="SHADER_BLOOM">bloom</resource>
   <resource type="skybox" id="SKYBOX_DAY">day</resource>
   
   <resource type="tileset" id="TEST_TILESET" atlas="test_tileset">

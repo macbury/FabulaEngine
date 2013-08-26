@@ -38,6 +38,7 @@ import com.macbury.fabula.editor.brushes.AutoTileBrush;
 import com.macbury.fabula.editor.brushes.TerrainBrush;
 import com.macbury.fabula.editor.brushes.TerrainBrush.TerrainBrushType;
 import com.macbury.fabula.manager.GameManager;
+import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.screens.WorldEditScreen;
 import com.macbury.fabula.terrain.AutoTile;
@@ -124,6 +125,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JMenuItem mntmRun;
   private JMenuItem mntmRebuildTilesets;
   private JMenuItem mntmEditAssetsgame;
+  private JMenuItem mntmReloadShaders;
   
   public WorldEditorFrame(GameManager game) {
     setIconImage(Toolkit.getDefaultToolkit().getImage(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/gwn.ico")));
@@ -201,6 +203,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     this.mntmEditAssetsgame = new JMenuItem("Edit Assets.game");
     mntmEditAssetsgame.addActionListener(this);
     mnDeveloper.add(mntmEditAssetsgame);
+    
+    this.mntmReloadShaders = new JMenuItem("Reload Shaders");
+    mntmReloadShaders.addActionListener(this);
+    mnDeveloper.add(mntmReloadShaders);
     contentPane = new JPanel();
     contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
     contentPane.setLayout(new BorderLayout(0, 0));
@@ -596,7 +602,11 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
       autoTileDebugFrame.updateRows();
       autoTileDebugFrame.setVisible(true);
     }
-
+    
+    if (e.getSource() == mntmReloadShaders) {
+      ResourceManager.shared().getShaderManager().reload();
+    }
+    
     if (e.getSource() == mntmRun) {
       runningGameConsoleFrame.runGame(this.gameManager);
     }

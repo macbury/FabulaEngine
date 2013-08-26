@@ -1,4 +1,4 @@
-package com.macbury.fabula.screens;
+package com.macbury.fabula.test;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.FPSLogger;
@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.manager.ResourceManager;
+import com.macbury.fabula.screens.BaseScreen;
 import com.macbury.fabula.utils.TopDownCamera;
 
 public class TerrainTestScreen extends BaseScreen {

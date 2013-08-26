@@ -3,6 +3,8 @@ package com.macbury.fabula.terrain;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
 
@@ -13,12 +15,14 @@ public class Tileset {
   private ArrayList<String> orderedAutotiles;
   private AutoTile defaultAutoTile;
   private String atlasName;
+  private Texture texture;
   
   public Tileset(TextureAtlas atlas, String name) {
     this.name         = name;
     this.textureAtlas = atlas;
     this.autotiles    = new HashMap<String, AutoTiles>();
     this.orderedAutotiles = new ArrayList<String>();
+    this.texture      = (Texture) this.textureAtlas.getTextures().toArray()[0];
   }
   
   public void buildAutotiles(String name, boolean slope) {
@@ -83,5 +87,9 @@ public class Tileset {
   
   public String getAtlasName() {
     return atlasName;
+  }
+
+  public Texture getTexture() {
+    return this.texture; 
   }
 }

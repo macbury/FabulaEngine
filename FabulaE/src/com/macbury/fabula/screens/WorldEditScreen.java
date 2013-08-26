@@ -59,10 +59,21 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   private Scene scene;
   private Terrain terrain;
   private boolean isPaused;
+  private boolean isDragging = false;
   
   public WorldEditScreen(GameManager manager) {
     super(manager);
+  }
+
+  @Override
+  public void dispose() {
+    // TODO Auto-generated method stub
     
+  }
+  
+  @Override
+  public void show() {
+    Gdx.app.log(TAG, "Showed screen");
     this.brushTimer = new ActionTimer(APPLY_BRUSH_EVERY, this);
     this.camera = new TopDownCamera();
     Gdx.app.log(TAG, "Initialized screen");
@@ -82,12 +93,6 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     this.camController = new EditorCamController(camera);
     InputMultiplexer inputMultiplexer = new InputMultiplexer(this, camController);
     Gdx.input.setInputProcessor(inputMultiplexer);
-  }
-
-  @Override
-  public void dispose() {
-    // TODO Auto-generated method stub
-    
   }
   
   @Override
@@ -122,7 +127,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
 
   @Override
   public void resize(int width, int height) {
-    
+    ResourceManager.shared().getShaderManager().resize(width, height, true);
     camera.viewportWidth = Gdx.graphics.getWidth();
     camera.viewportHeight = Gdx.graphics.getHeight();
     this.camera.update(true);
@@ -133,10 +138,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     this.isPaused = false;
   }
   
-  @Override
-  public void show() {
-    Gdx.app.log(TAG, "Showed screen");
-  }
+  
   
   public TopDownCamera getCamera() {
     return camera;
@@ -188,6 +190,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
       }
       
       this.brushTimer.start();
+      isDragging = true;
       return true;
     }
     return false;
@@ -195,20 +198,27 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
 
   @Override
   public boolean touchDragged(int x, int y, int pointer) {
-    Vector3 pos = getPositionForMouse(x, y);
-    
-    if (pos != null) {
-      currentBrush.setPosition(pos.x, pos.z);
+    if (isDragging) {
+      Vector3 pos = getPositionForMouse(x, y);
+      
+      if (pos != null) {
+        currentBrush.applyStartPositionIfNotSetted(pos);
+        currentBrush.setPosition(pos.x, pos.z);
+      }
     }
+    
     return false;
   }
 
   @Override
   public boolean touchUp(int x, int y, int pointer, int button) {
     if (button == Buttons.LEFT) {
+      isDragging  = false;
       Vector3 pos = getPositionForMouse(x, y);
-      currentBrush.setPosition(pos.x, pos.z);
-      currentBrush.applyBrush();
+      if (pos != null) {
+        currentBrush.setPosition(pos.x, pos.z);
+        currentBrush.applyBrush();
+      }
       currentBrush.setStartPosition(null);
       this.brushTimer.stop();
       return true;
@@ -227,7 +237,13 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   public void onDebugTerrainConfigureShader(ShaderProgram shader) {
     shader.setUniformf("u_brush_position", currentBrush.getPosition());
     shader.setUniformf("u_brush_size", currentBrush.getSize());
-    //shader.setUniformf("u_wireframe", 0.0f);
+    
+    if (currentBrush.getStartPosition() == null) {
+      shader.setUniformi("u_brush_type", 0);
+    } else {
+      shader.setUniformf("u_brush_start_position", currentBrush.getStartPosition());
+      shader.setUniformi("u_brush_type", currentBrush.getBrushShaderId());
+    }
   }
 
   public Brush getCurrentBrush() {

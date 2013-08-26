@@ -104,6 +104,15 @@ public class AutoTileBrush extends Brush {
     for (Tile tile : brushTiles) {
       if (currentPaintMode == PaintMode.AutoTile) {
         tile.setAutoTile(getCurrentAutoTiles().getAutoTile(AutoTiles.Types.InnerReapeating));
+      } else {
+        Gdx.app.log(TAG, getImportMapping());
+        tile.setAutoTile(currentAutoTile);
+        rebuildCombinations();
+      }
+    }
+    
+    if (currentPaintMode == PaintMode.AutoTile) {
+      for (Tile tile : this.borderBrushTiles) {
         applyAutoTileToTile(tile, true);
         
         int x = (int) tile.getX();
@@ -117,10 +126,6 @@ public class AutoTileBrush extends Brush {
         updateAutotile(tile, terrain.getTile(x+1, z-1));
         updateAutotile(tile, terrain.getTile(x, z+1));
         updateAutotile(tile, terrain.getTile(x+1, z+1));
-      } else {
-        Gdx.app.log(TAG, getImportMapping());
-        tile.setAutoTile(currentAutoTile);
-        rebuildCombinations();
       }
     }
   }

@@ -3,6 +3,7 @@ package com.macbury.fabula.screens;
 import com.badlogic.gdx.Gdx;
 import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.manager.ResourceManager;
+import com.macbury.fabula.test.AutoTileTestScreen;
 
 public class LoadingScreen extends BaseScreen {
   

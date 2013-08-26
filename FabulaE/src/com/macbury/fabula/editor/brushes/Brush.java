@@ -3,6 +3,7 @@ package com.macbury.fabula.editor.brushes;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.macbury.fabula.terrain.Terrain;
 import com.macbury.fabula.terrain.Tile;
 
@@ -14,13 +15,15 @@ public abstract class Brush {
   protected int size                = 4;
   protected float power             = 0.1f;
   protected Vector2 position        = new Vector2(0, 0);
-  protected Vector2 startPosition   = new Vector2(0, 0);
+  protected Vector2 startPosition;
   protected Terrain terrain;
   protected ArrayList<Tile>  brushTiles;
+  protected ArrayList<Tile>  borderBrushTiles;
   
   public Brush(Terrain terrain) {
-    this.terrain = terrain;
-    brushTiles = new ArrayList<Tile>();
+    this.terrain     = terrain;
+    brushTiles       = new ArrayList<Tile>();
+    borderBrushTiles = new ArrayList<Tile>();
     setSize(1);
   }
   
@@ -56,7 +59,7 @@ public abstract class Brush {
   
   public void applyBrush() {
     brushTiles.clear();
-    
+    borderBrushTiles.clear();
     if (brushType == BrushType.Pencil) {
       for (int x = (int) (this.position.x - size); x < this.position.x + size + 1; x++) {
         for (int y = (int) (this.position.y - size); y < this.position.y + size + 1; y++) {
@@ -78,6 +81,10 @@ public abstract class Brush {
         for (int y = sy; y <= ey; y++) {
           Tile tile = this.terrain.getTile(x,y);
           if (tile != null) {
+            if (x == sx || y == sy || x == ex || y == ey) {
+              borderBrushTiles.add(tile);
+            }
+            
             this.brushTiles.add(tile);
             this.terrain.addSectorToRebuildFromTile(tile);
           }
@@ -115,5 +122,19 @@ public abstract class Brush {
 
   public void setBrushType(BrushType brushType) {
     this.brushType = brushType;
+  }
+
+  public Vector2 getStartPosition() {
+    return startPosition;
+  }
+
+  public void applyStartPositionIfNotSetted(Vector3 pos) {
+    if (this.startPosition == null) {
+      this.startPosition = new Vector2(pos.x, pos.z);
+    }
+  }
+
+  public int getBrushShaderId() {
+    return this.brushType == BrushType.Pencil ? 0 : 1;
   }
 }

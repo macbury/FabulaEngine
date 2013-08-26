@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.macbury.fabula.manager.ResourceManager;
+import com.thesecretpie.shader.ShaderManager;
 
 public class Terrain {
   private Sector[][] sectors;
@@ -23,7 +24,6 @@ public class Terrain {
 
   private int columns;
   private int rows;
-  private ShaderProgram terrainShader;
   private int horizontalSectorCount;
   private int veriticalSectorCount;
   private int totalSectorCount;
@@ -100,43 +100,45 @@ public class Terrain {
   }
 
   public void render(Camera camera, Lights lights) {
-    GL20 gl = Gdx.graphics.getGL20();
+    ShaderManager sm = ResourceManager.shared().getShaderManager();
+    GL20 gl          = Gdx.graphics.getGL20();
+    
     gl.glEnable(GL10.GL_DEPTH_TEST);
     gl.glEnable(GL20.GL_TEXTURE_2D);
     gl.glEnable(GL10.GL_CULL_FACE);
-    gl.glActiveTexture(GL20.GL_TEXTURE0);
+    gl.glActiveTexture(GL20.GL_TEXTURE1);
     
-    visibleSectorCount = 0;
-    
-    terrainShader.begin();
-    terrainShader.setUniformMatrix("u_projectionViewMatrix", camera.combined);
-    terrainShader.setUniformi("u_texture0", 0);
-    terrainShader.setUniformf("u_ambient_color", lights.ambientLight);
-    terrainShader.setUniformf("u_light_color", lights.directionalLights.get(0).color);
-    terrainShader.setUniformf("u_light_direction", lights.directionalLights.get(0).direction);
-    if (debug) {
+    visibleSectorCount  = 0;
+    final int textureId = 1;
+    tileset.getTexture().bind(textureId);
+    sm.begin("SHADER_TERRAIN_EDITOR");
+      sm.setUniformMatrix("u_projectionViewMatrix", camera.combined);
+      sm.setUniformi("u_texture0", textureId);
+      sm.getCurrent().setUniformf("u_ambient_color", lights.ambientLight);
+      sm.getCurrent().setUniformf("u_light_color", lights.directionalLights.get(0).color);
+      sm.getCurrent().setUniformf("u_light_direction", lights.directionalLights.get(0).direction);
+  
       if (debugListener != null) {
-        debugListener.onDebugTerrainConfigureShader(terrainShader);
+        debugListener.onDebugTerrainConfigureShader(sm.getCurrent());
       }
-    }
-    
-    visibleSectors.clear();
-    
-    for (int x = 0; x < horizontalSectorCount; x++) {
-      for (int z = 0; z < veriticalSectorCount; z++) {
-        Sector sector = this.sectors[x][z]; 
-        if (sector.visibleInCamera(camera)) {
-          sector.render(terrainShader);
-          visibleSectors.add(sector);
-          visibleSectorCount++;
+      
+      visibleSectors.clear();
+      
+      for (int x = 0; x < horizontalSectorCount; x++) {
+        for (int z = 0; z < veriticalSectorCount; z++) {
+          Sector sector = this.sectors[x][z]; 
+          if (sector.visibleInCamera(camera)) {
+            sector.getMesh().render(sm.getCurrent(), GL20.GL_TRIANGLES); // GL20.GL_LINES wireframe
+            visibleSectors.add(sector);
+            visibleSectorCount++;
+          }
         }
       }
-    }
-    terrainShader.end();
+    sm.end();
     
     gl.glDisable(GL10.GL_CULL_FACE); // TODO: this must to be disabled to show sprite batch duh
     gl.glDisable(GL10.GL_DEPTH_TEST);
-    gl.glDisable(GL20.GL_TEXTURE_2D);
+   // gl.glDisable(GL20.GL_TEXTURE_2D);
   }
   
   public int getTotalSectorCount() {
@@ -293,7 +295,7 @@ public class Terrain {
   public void setDebugListener(TerrainDebugListener debugListener) {
     this.debugListener = debugListener;
     this.debug         = true;
-    terrainShader = ResourceManager.shared().getShaderProgram(debug ? "SHADER_TERRAIN_EDITOR" : "SHADER_TERRAIN");
+    //terrainShader = ResourceManager.shared().getShaderProgram(debug ? "SHADER_TERRAIN_EDITOR" : "SHADER_TERRAIN");
   }
 
   public interface TerrainDebugListener {

@@ -9,13 +9,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.graphics.GL10;
 import com.macbury.fabula.editor.WorldEditorFrame;
-import com.macbury.fabula.screens.AutoTileTestScreen;
-import com.macbury.fabula.screens.FrameBufferTest;
 import com.macbury.fabula.screens.GamePlayScreen;
 import com.macbury.fabula.screens.LoadingScreen;
-import com.macbury.fabula.screens.MeshScreen;
-import com.macbury.fabula.screens.TerrainTestScreen;
 import com.macbury.fabula.screens.WorldEditScreen;
+import com.macbury.fabula.test.AutoTileTestScreen;
+import com.macbury.fabula.test.FrameBufferTest;
+import com.macbury.fabula.test.MeshScreen;
+import com.macbury.fabula.test.ShaderTestScreen;
+import com.macbury.fabula.test.TerrainTestScreen;
 
 public class GameManager extends Game {
   enum Mode {
@@ -49,7 +50,7 @@ public class GameManager extends Game {
     }
     
     if (getMode() == Mode.Game) {
-      setScreen(new GamePlayScreen(this));
+      setScreen(new ShaderTestScreen(this));
     } else {
       setScreen(getWorldEditScreen());
     }
