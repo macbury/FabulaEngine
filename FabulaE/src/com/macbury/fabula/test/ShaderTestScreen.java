@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
+import com.macbury.fabula.manager.G;
 import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.map.SkyBox;
@@ -30,13 +31,10 @@ public class ShaderTestScreen extends BaseScreen {
   public ShaderTestScreen(GameManager manager) {
     super(manager);
     
-    this.sm = ResourceManager.shared().getShaderManager();
+    this.sm = G.shaders;
     cube    = Shapes.genCube();
     this.skybox = ResourceManager.shared().getSkyBox("SKYBOX_DAY");
     this.camera = new PerspectiveCamera();
-    this.camera.position.set(0, 0, -10.0f);
-    this.camera.lookAt(0, 0, 0);
-    //this.camera.update(true);
   }
 
   @Override
@@ -58,11 +56,8 @@ public class ShaderTestScreen extends BaseScreen {
   
   @Override
   public void render(float arg0) {
-    skybox.render(null);
-    sm.begin("empty");
-      //sm.setUniformMatrix("u_worldView", camera.combined);
-      //cube.render(sm.getCurrent(), GL20.GL_TRIANGLES);
-    sm.end();
+    this.camera.update();
+    skybox.render(this.camera);
   }
   
   @Override
@@ -78,7 +73,6 @@ public class ShaderTestScreen extends BaseScreen {
   
   @Override
   public void show() {
-    sm.createFB("bloom_fb");
   }
   
 }

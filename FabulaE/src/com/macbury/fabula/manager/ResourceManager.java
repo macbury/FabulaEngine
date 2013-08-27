@@ -47,8 +47,6 @@ public class ResourceManager {
   private Map<String, Tileset> tilesets;
   private Map<String, SkyBox> skyBoxes;
   private boolean loadedXML = false;
-  private AssetManager assetManager;
-  private ShaderManager shaderManager;
   
   public static ResourceManager shared() {
     if (_shared == null) {
@@ -58,19 +56,11 @@ public class ResourceManager {
   }
   
   public ResourceManager() {
-    ShaderProgram.pedantic = false;
-    this.assetManager = new AssetManager();
-
     this.textures      = new HashMap<String, Texture>();
     this.music         = new HashMap<String, String>();
     this.atlasMap      = new HashMap<String, TextureAtlas>();
     this.tilesets      = new HashMap<String, Tileset>();
     this.skyBoxes      = new HashMap<String, SkyBox>();
-    this.shaderManager = new ShaderManager("data/shaders", this.assetManager);
-  }
-  
-  public void loadSynch() throws Exception {
-    load();
   }
   
   public void load() throws Exception {
@@ -191,7 +181,7 @@ public class ResourceManager {
     String name = resourceElement.getTextContent();
     String path = "data/shaders/"+name;
     Gdx.app.log(TAG, "Found shader: " + id + " from " + path);
-    shaderManager.add(id, name+".vert", name+".frag");
+    G.game.getShaderManager().add(id, name+".vert", name+".frag");
   }
 
   private void addElementAsMusic(Element resourceElement) {
@@ -276,10 +266,6 @@ public class ResourceManager {
 
   public SkyBox getSkyBox(String string) {
     return skyBoxes.get(string);
-  }
-
-  public ShaderManager getShaderManager() {
-    return this.shaderManager;
   }
 
 }

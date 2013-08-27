@@ -18,6 +18,7 @@ import javax.swing.JProgressBar;
 import java.awt.Dialog.ModalityType;
 import javax.swing.DefaultComboBoxModel;
 
+import com.badlogic.gdx.Gdx;
 import com.macbury.fabula.editor.tiles.TilesetGenerator.TileGeneratorListener;
 import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.terrain.Tileset;
@@ -27,6 +28,7 @@ import javax.swing.JSeparator;
 import javax.swing.text.JTextComponent;
 
 public class TilesetBuilderDialog extends JDialog implements ActionListener, TileGeneratorListener {
+  private static final String TAG = "TilesetBuilderDialog";
   private JComboBox<String> tilesetComboBox;
   private JProgressBar progressBar;
   private JTextField autoTileTextField;
@@ -35,7 +37,6 @@ public class TilesetBuilderDialog extends JDialog implements ActionListener, Til
   private JButton btnSelectAutoTileDirectory;
   private JButton btnSelectTexturesDirectory;
   private JButton btnBuild;
-  private JTextComponent logPane;
   
   public TilesetBuilderDialog() {
     generator = new TilesetGenerator(this);
@@ -44,7 +45,7 @@ public class TilesetBuilderDialog extends JDialog implements ActionListener, Til
     setResizable(false);
     setType(Type.POPUP);
     setTitle("Tile Builder");
-    setBounds(100, 100, 753, 376);
+    setBounds(100, 100, 753, 202);
     getContentPane().setLayout(null);
     
     this.tilesetComboBox = new JComboBox<String>();
@@ -65,7 +66,7 @@ public class TilesetBuilderDialog extends JDialog implements ActionListener, Til
     
     this.btnBuild = new JButton("Build!");
     btnBuild.addActionListener(this);
-    btnBuild.setBounds(10, 313, 727, 23);
+    btnBuild.setBounds(10, 140, 727, 23);
     getContentPane().add(btnBuild);
     
     this.progressBar = new JProgressBar();
@@ -107,17 +108,8 @@ public class TilesetBuilderDialog extends JDialog implements ActionListener, Til
     getContentPane().add(lblProgress);
     
     JSeparator separator = new JSeparator();
-    separator.setBounds(10, 300, 727, 2);
+    separator.setBounds(10, 131, 727, 2);
     getContentPane().add(separator);
-    
-    JScrollPane scrollPane = new JScrollPane();
-    scrollPane.setBounds(10, 134, 727, 155);
-    getContentPane().add(scrollPane);
-    
-    this.logPane = new JTextPane();
-    logPane.setFont(new Font("Consolas", Font.PLAIN, 12));
-    logPane.setEditable(false);
-    scrollPane.setViewportView(logPane);
     
   }
 
@@ -166,7 +158,7 @@ public class TilesetBuilderDialog extends JDialog implements ActionListener, Til
 
   @Override
   public void onLog(String line) {
-    logPane.setText(logPane.getText() + line + "\n");
+    Gdx.app.log(TAG, line);
   }
 
   @Override

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.lights.Lights;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
+import com.macbury.fabula.manager.G;
 import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.terrain.Terrain;
 import com.thesecretpie.shader.ShaderManager;
@@ -32,7 +33,7 @@ public class Scene implements Disposable {
     
     this.terrain = new Terrain(width, height);
     
-    this.sm = ResourceManager.shared().getShaderManager();
+    this.sm = G.shaders;
     this.sm.createFB(MAIN_FRAME_BUFFER);
   }
   
@@ -43,10 +44,10 @@ public class Scene implements Disposable {
   public void render(Camera camera) {
     sm.beginFB(MAIN_FRAME_BUFFER);
       this.terrain.render(camera, this.lights);
-      this.skyBox.render(camera);
+      ///this.skyBox.render(camera);
     sm.endFB();
     
-    sm.begin("SHADER_DEFAULT");
+    sm.begin("SHADER_BLOOM");
       sm.renderFB(MAIN_FRAME_BUFFER);
     sm.end();
   }
@@ -70,6 +71,6 @@ public class Scene implements Disposable {
   @Override
   public void dispose() {
     this.terrain.dispose();
-    
+    this.skyBox.dispose();
   }
 }

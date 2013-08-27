@@ -2,8 +2,6 @@ package com.macbury.fabula.editor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.Frame;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -11,46 +9,30 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
-import java.awt.Component;
-import javax.swing.Box;
 import javax.swing.DefaultListModel;
-import javax.swing.Icon;
 import javax.swing.JColorChooser;
-import javax.swing.JToolBar;
 import javax.swing.JButton;
-import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
 import javax.swing.JTabbedPane;
-import javax.swing.JEditorPane;
 import javax.swing.JSeparator;
 
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.fife.ui.rtextarea.RTextScrollPane;
-
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
 import com.macbury.fabula.editor.brushes.AutoTileBrush;
 import com.macbury.fabula.editor.brushes.TerrainBrush;
 import com.macbury.fabula.editor.brushes.TerrainBrush.TerrainBrushType;
 import com.macbury.fabula.manager.GameManager;
-import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.screens.WorldEditScreen;
 import com.macbury.fabula.terrain.AutoTile;
 import com.macbury.fabula.terrain.AutoTiles;
 import com.macbury.fabula.terrain.Tileset;
 
-import java.awt.Canvas;
-import javax.swing.JRadioButton;
 import javax.swing.BoxLayout;
-import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
-import java.awt.Panel;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
@@ -60,27 +42,18 @@ import javax.swing.JComboBox;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JProgressBar;
-import java.awt.FlowLayout;
-import javax.swing.border.BevelBorder;
-import java.awt.GridLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+
+import java.io.OutputStream;
+import java.io.PrintStream;
+
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
-import javax.swing.JTable;
+
 import javax.swing.JList;
-import javax.swing.AbstractListModel;
-import javax.swing.plaf.metal.MetalIconFactory;
-import javax.swing.table.DefaultTableModel;
+
 import java.awt.SystemColor;
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
@@ -91,14 +64,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.JSlider;
+import javax.swing.text.BadLocationException;
+
 import com.macbury.fabula.editor.brushes.AutoTileBrush.PaintMode;
 import com.macbury.fabula.editor.code.AssetEditorDialog;
+import com.macbury.fabula.editor.shaders.ShaderEditorFrame;
 import com.macbury.fabula.editor.tiles.AutoTileDebugFrame;
 import com.macbury.fabula.editor.tiles.TilesetBuilderDialog;
 
 import javax.swing.JScrollPane;
 import java.awt.Toolkit;
+import javax.swing.JTextArea;
+import java.awt.Font;
 
 public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener {
   
@@ -121,13 +98,19 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JComboBox paintModeComboBox;
   private JMenuItem mntmBuildTileMap;
   private AutoTileDebugFrame autoTileDebugFrame;
+  private ShaderEditorFrame  shaderEditorFrame;
   private RunningGameConsoleFrame runningGameConsoleFrame;
   private JMenuItem mntmRun;
   private JMenuItem mntmRebuildTilesets;
   private JMenuItem mntmEditAssetsgame;
   private JMenuItem mntmReloadShaders;
+  private JTextArea logArea;
   
   public WorldEditorFrame(GameManager game) {
+    PrintStream origOut = System.out;
+    PrintStream interceptor = new LogInterceptor(origOut);
+    System.setOut(interceptor);
+    
     setIconImage(Toolkit.getDefaultToolkit().getImage(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/gwn.ico")));
     setTitle("WorldEd - [No Name]");
     setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -148,10 +131,11 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
       e.printStackTrace();
     }
     
-    this.autoTileDebugFrame = new AutoTileDebugFrame();
+    this.autoTileDebugFrame      = new AutoTileDebugFrame();
     this.runningGameConsoleFrame = new RunningGameConsoleFrame();
+    this.shaderEditorFrame       = new ShaderEditorFrame();
     //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setBounds(100, 100, 1280, 760);
+    setBounds(100, 100, 1331, 923);
     //setExtendedState(Frame.MAXIMIZED_BOTH); 
     
     JMenuBar menuBar = new JMenuBar();
@@ -204,7 +188,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mntmEditAssetsgame.addActionListener(this);
     mnDeveloper.add(mntmEditAssetsgame);
     
-    this.mntmReloadShaders = new JMenuItem("Reload Shaders");
+    this.mntmReloadShaders = new JMenuItem("Edit shaders");
     mntmReloadShaders.addActionListener(this);
     mnDeveloper.add(mntmReloadShaders);
     contentPane = new JPanel();
@@ -212,14 +196,53 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     contentPane.setLayout(new BorderLayout(0, 0));
     setContentPane(contentPane);
     
+    this.gameManager = game;
+    this.gameCanvas = new LwjglCanvas(game, true);
+    
+    addWindowListener(new ExitListener(gameCanvas));
+    
+    JSplitPane splitPane = new JSplitPane();
+    splitPane.setResizeWeight(0.7);
+    splitPane.setContinuousLayout(true);
+    splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+    contentPane.add(splitPane, BorderLayout.CENTER);
+    
+    JPanel panel_8 = new JPanel();
+    panel_8.setBorder(new EmptyBorder(0, 0, 0, 0));
+    splitPane.setRightComponent(panel_8);
+    panel_8.setLayout(new BorderLayout(0, 0));
+    
+    JScrollPane scrollPane_1 = new JScrollPane();
+    panel_8.add(scrollPane_1, BorderLayout.CENTER);
+    
+    this.logArea = new JTextArea();
+    logArea.setForeground(Color.GREEN);
+    logArea.setBackground(Color.BLACK);
+    logArea.setFont(new Font("Consolas", Font.PLAIN, 14));
+    logArea.setEditable(false);
+    logArea.setLineWrap(true);
+    scrollPane_1.setViewportView(logArea);
+    
+    JPanel panel_5 = new JPanel();
+    panel_8.add(panel_5, BorderLayout.SOUTH);
+    panel_5.setBorder(new EmptyBorder(5, 15, 5, 15));
+    panel_5.setLayout(new BorderLayout(0, 0));
+    
+    this.statusBarLabel = new JLabel("X: 0 Y:0 Z:0");
+    panel_5.add(statusBarLabel, BorderLayout.WEST);
+    
+    JPanel panel_9 = new JPanel();
+    panel_9.setBorder(new EmptyBorder(0, 0, 0, 0));
+    splitPane.setLeftComponent(panel_9);
+    panel_9.setLayout(new BorderLayout(0, 0));
+    
     JSplitPane inspectorAndOpenGlContainerSplitPane = new JSplitPane();
+    panel_9.add(inspectorAndOpenGlContainerSplitPane, BorderLayout.CENTER);
     inspectorAndOpenGlContainerSplitPane.setContinuousLayout(true);
     inspectorAndOpenGlContainerSplitPane.setResizeWeight(0.03);
-    contentPane.add(inspectorAndOpenGlContainerSplitPane, BorderLayout.CENTER);
     
     JSplitPane mapsTreeAndInspectorSplitPane = new JSplitPane();
     mapsTreeAndInspectorSplitPane.setContinuousLayout(true);
-    mapsTreeAndInspectorSplitPane.setResizeWeight(0.1);
     mapsTreeAndInspectorSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
     inspectorAndOpenGlContainerSplitPane.setLeftComponent(mapsTreeAndInspectorSplitPane);
     
@@ -379,6 +402,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     tabbedInspectorPane.addTab("Events", null, panel_3, null);
     
     JScrollPane scrollPane = new JScrollPane();
+    scrollPane.setViewportBorder(new EmptyBorder(0, 0, 0, 0));
     mapsTreeAndInspectorSplitPane.setLeftComponent(scrollPane);
     
     JTree tree = new JTree();
@@ -388,31 +412,13 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     JPanel openGLContainerPane = new JPanel();
     openGLContainerPane.setBorder(new EmptyBorder(0, 0, 0, 0));
     inspectorAndOpenGlContainerSplitPane.setRightComponent(openGLContainerPane);
-    
-    this.gameManager = game;
-    this.gameCanvas = new LwjglCanvas(game, true);
     openGLContainerPane.add(this.gameCanvas.getCanvas(), BorderLayout.CENTER);
     openGLContainerPane.setLayout(new BoxLayout(openGLContainerPane, BoxLayout.X_AXIS));
     
-    addWindowListener(new ExitListener(gameCanvas));
-    
-    JPanel panel_4 = new JPanel();
-    panel_4.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-    contentPane.add(panel_4, BorderLayout.SOUTH);
-    panel_4.setLayout(new BorderLayout(0, 0));
-    
-    JPanel panel_5 = new JPanel();
-    panel_5.setBorder(new EmptyBorder(5, 15, 5, 15));
-    panel_4.add(panel_5, BorderLayout.NORTH);
-    panel_5.setLayout(new BorderLayout(0, 0));
-    
-    this.statusBarLabel = new JLabel("X: 0 Y:0 Z:0");
-    panel_5.add(statusBarLabel, BorderLayout.WEST);
+    tabbedInspectorPane.addChangeListener(this);
     
     Thread statusbarThread = new Thread(new StatusBarInfoRunnable());
     statusbarThread.start();
-    
-    tabbedInspectorPane.addChangeListener(this);
     
   }
   
@@ -604,7 +610,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     }
     
     if (e.getSource() == mntmReloadShaders) {
-      ResourceManager.shared().getShaderManager().reload();
+      shaderEditorFrame.setVisible(true);
     }
     
     if (e.getSource() == mntmRun) {
@@ -619,6 +625,25 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     if (e.getSource() == this.mntmRebuildTilesets) {
       TilesetBuilderDialog dialog = new TilesetBuilderDialog();
       dialog.setVisible(true);
+    }
+  }
+  
+  private class LogInterceptor extends PrintStream {
+    public LogInterceptor(OutputStream out) {
+      super(out, true);
+    }
+    
+    @Override
+    public void print(String s) {
+      JTextArea area = WorldEditorFrame.this.logArea;
+      try {
+        area.getDocument().insertString(area.getDocument().getEndPosition().getOffset(),s+"\n", null);
+      } catch (BadLocationException e) {
+        e.printStackTrace();
+      }
+      
+      WorldEditorFrame.this.logArea.setCaretPosition(WorldEditorFrame.this.logArea.getDocument().getLength());
+      super.print(s);
     }
   }
 }

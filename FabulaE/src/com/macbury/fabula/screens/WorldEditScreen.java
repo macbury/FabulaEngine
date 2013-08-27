@@ -35,6 +35,7 @@ import com.macbury.fabula.editor.brushes.Brush;
 import com.macbury.fabula.editor.brushes.Brush.BrushType;
 import com.macbury.fabula.editor.brushes.TerrainBrush;
 import com.macbury.fabula.editor.tiles.AutoTileDebugFrame;
+import com.macbury.fabula.manager.G;
 import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.map.Scene;
@@ -126,7 +127,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
 
   @Override
   public void resize(int width, int height) {
-    ResourceManager.shared().getShaderManager().resize(width, height, true);
+    G.shaders.resize(width, height, true);
     camera.viewportWidth = Gdx.graphics.getWidth();
     camera.viewportHeight = Gdx.graphics.getHeight();
     this.camera.update(true);

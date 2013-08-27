@@ -6,28 +6,24 @@ import java.util.Arrays;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.macbury.fabula.editor.WorldEditorFrame;
-import com.macbury.fabula.screens.GamePlayScreen;
-import com.macbury.fabula.screens.LoadingScreen;
 import com.macbury.fabula.screens.WorldEditScreen;
-import com.macbury.fabula.test.AutoTileTestScreen;
-import com.macbury.fabula.test.FrameBufferTest;
-import com.macbury.fabula.test.MeshScreen;
 import com.macbury.fabula.test.ShaderTestScreen;
-import com.macbury.fabula.test.TerrainTestScreen;
+import com.thesecretpie.shader.ShaderManager;
 
 public class GameManager extends Game {
-  enum Mode {
-    Game, Editor
-  }
+  enum Mode { Game, Editor }
   private static final String TAG = "GameManager";
   private static final Object ARGUMENT_START_EDITOR = "--editor";
   private static GameManager _shared;
   private Mode mode;
   private WorldEditScreen worldEditScreen;
   private boolean loading = true;
+  private ShaderManager shaderManager;
   
   public static GameManager shared() {
     return _shared;
@@ -43,11 +39,18 @@ public class GameManager extends Game {
     Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
     Gdx.gl.glDepthFunc(GL10.GL_LESS);
     
+    ShaderProgram.pedantic = false;
+    this.shaderManager     = new ShaderManager("data/shaders", new AssetManager());
+    G.game      = this;
+    
     try {
       ResourceManager.shared().load();
     } catch (Exception e) {
       e.printStackTrace();
     }
+    
+    G.resources = ResourceManager.shared();
+    G.shaders   = shaderManager;
     
     if (getMode() == Mode.Game) {
       setScreen(new ShaderTestScreen(this));
@@ -80,23 +83,26 @@ public class GameManager extends Game {
     
     if (arguments.indexOf(ARGUMENT_START_EDITOR) > -1) {
       game.setMode(Mode.Editor);
-      
-      EventQueue.invokeLater(new Runnable() {
-        public void run() {
-          try {
-            WorldEditorFrame frame = new WorldEditorFrame(game);
-            frame.setVisible(true);
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-        }
-      });
+      startEditor(game);
     } else {
       game.setMode(Mode.Game);
       LwjglApplication application = new LwjglApplication(game, "FabulaEngine", 1366, 768, true);
     }
   }
 
+
+  private static void startEditor(final GameManager game) {
+    EventQueue.invokeLater(new Runnable() {
+      public void run() {
+        try {
+          WorldEditorFrame frame = new WorldEditorFrame(game);
+          frame.setVisible(true);
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+    });
+  }
 
   public Mode getMode() {
     return mode;
@@ -108,5 +114,9 @@ public class GameManager extends Game {
   
   public boolean loading() {
     return loading;
+  }
+
+  public ShaderManager getShaderManager() {
+    return shaderManager;
   }
 }

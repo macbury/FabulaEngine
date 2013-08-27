@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Disposable;
+import com.macbury.fabula.manager.G;
 import com.macbury.fabula.manager.ResourceManager;
 import com.thesecretpie.shader.ShaderManager;
 
@@ -101,7 +102,7 @@ public class Terrain implements Disposable {
   }
 
   public void render(Camera camera, Lights lights) {
-    ShaderManager sm = ResourceManager.shared().getShaderManager();
+    ShaderManager sm = G.shaders;
     GL20 gl          = Gdx.graphics.getGL20();
     
     gl.glEnable(GL10.GL_DEPTH_TEST);
