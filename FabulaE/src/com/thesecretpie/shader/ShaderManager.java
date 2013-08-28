@@ -197,16 +197,14 @@ public class ShaderManager {
 		if (fb == null) {
 			throw new IllegalArgumentException("FrameBuffer must not be null!");
 		}
-        fb.begin();
-        Gdx.graphics.getGL20().glViewport(0, 0, fb.getWidth(), fb.getHeight());
-        Gdx.graphics.getGL20().glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
-        Gdx.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT
-                | GL20.GL_DEPTH_BUFFER_BIT);
-        Gdx.graphics.getGL20().glEnable(GL20.GL_TEXTURE_2D);
-        //Gdx.graphics.getGL20().glEnable(GL10.GL_BLEND);
-        //Gdx.graphics.getGL20().glBlendFunc(GL10.GL_SRC_ALPHA,
-        //        GL10.GL_ONE_MINUS_SRC_ALPHA);
-    }
+    fb.begin();
+    Gdx.gl.glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+    Gdx.gl.glEnable(GL20.GL_TEXTURE_2D);
+    Gdx.gl.glEnable(GL10.GL_BLEND);
+    Gdx.gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ZERO);  
+    //Gdx.gl20.glBlendFuncSeparate(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA, GL10.GL_ONE, GL10.GL_ONE);
+  }
     
     /**
      * Call this to start rendering to given framebuffer.
@@ -268,8 +266,6 @@ public class ShaderManager {
     
     FileHandle image    = Gdx.files.absolute(filePath);
     PixmapIO.writePNG(image, picture);
-    
-    System.exit(0);
 	}
 	
   public byte[] readData(final int width, final int height) {

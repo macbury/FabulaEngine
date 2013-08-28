@@ -68,6 +68,7 @@ import javax.swing.text.BadLocationException;
 
 import com.macbury.fabula.editor.brushes.AutoTileBrush.PaintMode;
 import com.macbury.fabula.editor.code.AssetEditorDialog;
+import com.macbury.fabula.editor.gamerunner.RunningGameConsoleFrame;
 import com.macbury.fabula.editor.shaders.ShaderEditorFrame;
 import com.macbury.fabula.editor.tiles.AutoTileDebugFrame;
 import com.macbury.fabula.editor.tiles.TilesetBuilderDialog;
@@ -99,12 +100,14 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JMenuItem mntmBuildTileMap;
   private AutoTileDebugFrame autoTileDebugFrame;
   private ShaderEditorFrame  shaderEditorFrame;
-  private RunningGameConsoleFrame runningGameConsoleFrame;
   private JMenuItem mntmRun;
   private JMenuItem mntmRebuildTilesets;
   private JMenuItem mntmEditAssetsgame;
   private JMenuItem mntmReloadShaders;
   private JTextArea logArea;
+  private JMenuItem mntmDebugFrameBuffer;
+  private JMenuBar mainMenuBar;
+  private JSplitPane mainSplitPane;
   
   public WorldEditorFrame(GameManager game) {
     PrintStream origOut = System.out;
@@ -132,17 +135,16 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     }
     
     this.autoTileDebugFrame      = new AutoTileDebugFrame();
-    this.runningGameConsoleFrame = new RunningGameConsoleFrame();
     this.shaderEditorFrame       = new ShaderEditorFrame();
     //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setBounds(100, 100, 1331, 923);
     //setExtendedState(Frame.MAXIMIZED_BOTH); 
     
-    JMenuBar menuBar = new JMenuBar();
-    setJMenuBar(menuBar);
+    this.mainMenuBar = new JMenuBar();
+    setJMenuBar(mainMenuBar);
     
     JMenu mnFile = new JMenu("File");
-    menuBar.add(mnFile);
+    mainMenuBar.add(mnFile);
     
     JMenuItem mntmNewMenuItem = new JMenuItem("New");
     mntmNewMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
@@ -166,7 +168,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mnFile.add(menuBar_1);
     
     JMenu mnGame = new JMenu("Game");
-    menuBar.add(mnGame);
+    mainMenuBar.add(mnGame);
     
     this.mntmRun = new JMenuItem("Run");
     mntmRun.addActionListener(this);
@@ -174,7 +176,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mnGame.add(mntmRun);
     
     JMenu mnDeveloper = new JMenu("Developer");
-    menuBar.add(mnDeveloper);
+    mainMenuBar.add(mnDeveloper);
     
     this.mntmBuildTileMap = new JMenuItem("Auto Tile Hash Map");
     mntmBuildTileMap.addActionListener(this);
@@ -191,6 +193,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     this.mntmReloadShaders = new JMenuItem("Edit shaders");
     mntmReloadShaders.addActionListener(this);
     mnDeveloper.add(mntmReloadShaders);
+    
+    this.mntmDebugFrameBuffer = new JMenuItem("Debug frame buffer");
+    mntmDebugFrameBuffer.addActionListener(this);
+    mnDeveloper.add(mntmDebugFrameBuffer);
     contentPane = new JPanel();
     contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
     contentPane.setLayout(new BorderLayout(0, 0));
@@ -201,15 +207,15 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     addWindowListener(new ExitListener(gameCanvas));
     
-    JSplitPane splitPane = new JSplitPane();
-    splitPane.setResizeWeight(0.7);
-    splitPane.setContinuousLayout(true);
-    splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-    contentPane.add(splitPane, BorderLayout.CENTER);
+    this.mainSplitPane = new JSplitPane();
+    mainSplitPane.setResizeWeight(0.7);
+    mainSplitPane.setContinuousLayout(true);
+    mainSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+    contentPane.add(mainSplitPane, BorderLayout.CENTER);
     
     JPanel panel_8 = new JPanel();
     panel_8.setBorder(new EmptyBorder(0, 0, 0, 0));
-    splitPane.setRightComponent(panel_8);
+    mainSplitPane.setRightComponent(panel_8);
     panel_8.setLayout(new BorderLayout(0, 0));
     
     JScrollPane scrollPane_1 = new JScrollPane();
@@ -233,7 +239,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     JPanel panel_9 = new JPanel();
     panel_9.setBorder(new EmptyBorder(0, 0, 0, 0));
-    splitPane.setLeftComponent(panel_9);
+    mainSplitPane.setLeftComponent(panel_9);
     panel_9.setLayout(new BorderLayout(0, 0));
     
     JSplitPane inspectorAndOpenGlContainerSplitPane = new JSplitPane();
@@ -420,6 +426,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     Thread statusbarThread = new Thread(new StatusBarInfoRunnable());
     statusbarThread.start();
     
+    //mainSplitPane.setDividerLocation(0.0);
   }
   
   private class StatusBarInfoRunnable implements Runnable {
@@ -614,7 +621,8 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     }
     
     if (e.getSource() == mntmRun) {
-      runningGameConsoleFrame.runGame(this.gameManager);
+      RunningGameConsoleFrame runningGameConsoleFrame = new RunningGameConsoleFrame();
+      runningGameConsoleFrame.runGame(this, gameManager);
     }
     
     if (e.getSource() == mntmEditAssetsgame) {
@@ -626,8 +634,12 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
       TilesetBuilderDialog dialog = new TilesetBuilderDialog();
       dialog.setVisible(true);
     }
+    
+    if (e.getSource() == mntmDebugFrameBuffer) {
+      screen.getScene().debug();
+    }
   }
-  
+
   private class LogInterceptor extends PrintStream {
     public LogInterceptor(OutputStream out) {
       super(out, true);

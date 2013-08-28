@@ -1,4 +1,4 @@
-package com.macbury.fabula.editor;
+package com.macbury.fabula.editor.gamerunner;
 
 import java.awt.BorderLayout;
 import java.awt.Dialog;
@@ -14,7 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 
 import com.badlogic.gdx.Gdx;
-import com.macbury.fabula.editor.gamerunner.GameRunnable;
+import com.macbury.fabula.editor.WorldEditorFrame;
 import com.macbury.fabula.editor.gamerunner.GameRunnable.GameRunnableCallback;
 import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.utils.GameRunner;
@@ -31,54 +31,49 @@ import java.io.InputStreamReader;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import javax.swing.border.BevelBorder;
+import java.awt.FlowLayout;
+import javax.swing.JProgressBar;
+import javax.swing.SwingConstants;
 
 public class RunningGameConsoleFrame extends JDialog implements WindowListener, GameRunnableCallback, ActionListener {
   
-  private JPanel contentPane;
+  private static final String TAG = "Running Game";
   private GameManager gameManager;
   private GameRunnable gameRunnable;
   private Thread gameThread;
-  private JTextPane logView;
-  private JButton btnClear;
-  private JButton btnStop;
 
   /**
    * Create the frame.
    */
   public RunningGameConsoleFrame() {
+    setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+    setResizable(false);
     addWindowListener(this);
     setModalityType(ModalityType.APPLICATION_MODAL);
-    setTitle("Game console");
+    setTitle("Game");
     setType(Type.UTILITY);
-    setBounds(100, 100, 639, 551);
-    contentPane = new JPanel();
-    contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-    setContentPane(contentPane);
-    contentPane.setLayout(new BorderLayout(0, 0));
+    setBounds(100, 100, 308, 95);
+    getContentPane().setLayout(new BorderLayout(2, 2));
     
-    JToolBar toolBar = new JToolBar();
-    toolBar.setFloatable(false);
-    contentPane.add(toolBar, BorderLayout.NORTH);
+    JPanel panel = new JPanel();
+    panel.setBorder(new EmptyBorder(0, 0, 0, 0));
+    getContentPane().add(panel, BorderLayout.CENTER);
+    panel.setLayout(null);
     
-    this.btnClear = new JButton("Clear");
-    btnClear.addActionListener(this);
-    toolBar.add(btnClear);
+    JLabel lblNewLabel = new JLabel("Please Wait... Game is running!");
+    lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    lblNewLabel.setBounds(62, 11, 179, 14);
+    panel.add(lblNewLabel);
     
-    this.btnStop = new JButton("Stop");
-    btnStop.addActionListener(this);
-    toolBar.add(btnStop);
-    
-    JScrollPane scrollPane = new JScrollPane();
-    contentPane.add(scrollPane, BorderLayout.CENTER);
-    
-    this.logView = new JTextPane();
-    logView.setFont(new Font("Consolas", Font.PLAIN, 13));
-    logView.setEditable(false);
-    scrollPane.setViewportView(logView);
+    JProgressBar progressBar = new JProgressBar();
+    progressBar.setIndeterminate(true);
+    progressBar.setBounds(10, 36, 283, 14);
+    panel.add(progressBar);
   }
 
-  public void runGame(GameManager gameManager) {
-    this.logView.setText("");
+  public void runGame(WorldEditorFrame worldEditorFrame, GameManager gameManager) {
     this.gameManager = gameManager;
     gameManager.pause();
     
@@ -86,6 +81,7 @@ public class RunningGameConsoleFrame extends JDialog implements WindowListener, 
     this.gameThread   = new Thread(gameRunnable);
     this.gameThread.start();
     System.gc();
+    this.setLocationRelativeTo(worldEditorFrame);
     this.setVisible(true);
   }
 
@@ -95,20 +91,20 @@ public class RunningGameConsoleFrame extends JDialog implements WindowListener, 
 
   @Override
   public void windowClosed(WindowEvent arg0) {
+    log("Finishing game");
+    if (gameRunnable != null) {
+      gameRunnable.stop();
+    }
+    
+    this.gameThread = null;
+    this.gameRunnable = null;
+    gameManager.resume();
     
   }
 
-  private void finishGame() {
-    if (this.gameRunnable != null) {
-      this.gameRunnable.stop();
-    }
-    gameManager.resume();
-    System.gc();
-  }
 
   @Override
   public void windowClosing(WindowEvent arg0) {
-    finishGame();
   }
 
   @Override
@@ -129,36 +125,23 @@ public class RunningGameConsoleFrame extends JDialog implements WindowListener, 
 
   @Override
   public void onGameStart() {
-    log("Starting game");
   }
 
   @Override
   public void onGameEnd() {
-    log("Finishing game");
-    this.gameRunnable = null;
+    this.dispose();
   }
 
   @Override
   public void onLog(String line) {
-    log(line);
+    Gdx.app.log(TAG, line);
   }
 
   private void log(String line) {
-    logView.setText(logView.getText() + line + "\n");
+    Gdx.app.log(TAG, line);
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    if (e.getSource() == btnClear) {
-      logView.setText("");
-    }
-    
-    if (e.getSource() == btnStop) {
-      logView.setText("");
-      if (this.gameRunnable != null) {
-        this.gameRunnable.stop();
-      }
-    }
   }
-  
 }

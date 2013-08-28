@@ -133,6 +133,7 @@ public class Terrain implements Disposable {
             sector.getMesh().render(sm.getCurrent(), GL20.GL_TRIANGLES); // GL20.GL_LINES wireframe
             visibleSectors.add(sector);
             visibleSectorCount++;
+            
           }
         }
       }

@@ -30,21 +30,21 @@ public class GameRunnable implements Runnable {
       this.bufferReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
     } catch (IOException e) {
       e.printStackTrace();
-      running = false;
+      stop();
     }
     
     gameListener.onGameStart();
     
     while (running) {
       try {
-        Thread.sleep(100);
+        Thread.sleep(10);
       } catch (InterruptedException e1) {
         e1.printStackTrace();
-        running = false;
+        stop();
       }
       try {
         this.process.exitValue();
-        running = false;
+        stop();
       } catch (IllegalThreadStateException e) {
         
       }
@@ -55,7 +55,7 @@ public class GameRunnable implements Runnable {
         }
       } catch (IOException e) {
         e.printStackTrace();
-        running = false;
+        stop();
       }
     }
     
@@ -69,8 +69,10 @@ public class GameRunnable implements Runnable {
   }
 
   public void stop() {
+    if (running) {
+      this.process.destroy();
+      this.gameListener.onGameEnd();
+    }
     running = false;
-    this.process.destroy();
-    this.gameListener.onGameEnd();
   }
 }
