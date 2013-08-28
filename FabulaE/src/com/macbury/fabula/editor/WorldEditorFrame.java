@@ -78,6 +78,8 @@ import javax.swing.JScrollPane;
 import java.awt.Toolkit;
 import javax.swing.JTextArea;
 import java.awt.Font;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener {
   
@@ -110,6 +112,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private ChangeManager changeManager;
   private JMenuItem mntmUndo;
   private JMenuItem mntmRedo;
+  private JTree gameTree;
   public WorldEditorFrame(GameManager game) {
     PrintStream origOut = System.out;
     PrintStream interceptor = new LogInterceptor(origOut);
@@ -408,9 +411,28 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     scrollPane.setViewportBorder(new EmptyBorder(0, 0, 0, 0));
     mapsTreeAndInspectorSplitPane.setLeftComponent(scrollPane);
     
-    JTree tree = new JTree();
-    tree.setBorder(new EmptyBorder(0, 0, 0, 0));
-    scrollPane.setViewportView(tree);
+    this.gameTree = new JTree();
+    gameTree.setModel(new DefaultTreeModel(
+      new DefaultMutableTreeNode("Game") {
+        {
+          DefaultMutableTreeNode node_1;
+          node_1 = new DefaultMutableTreeNode("Shaders");
+            node_1.add(new DefaultMutableTreeNode("blue"));
+            node_1.add(new DefaultMutableTreeNode("violet"));
+            node_1.add(new DefaultMutableTreeNode("red"));
+            node_1.add(new DefaultMutableTreeNode("yellow"));
+          add(node_1);
+          node_1 = new DefaultMutableTreeNode("Maps");
+            node_1.add(new DefaultMutableTreeNode("basketball"));
+            node_1.add(new DefaultMutableTreeNode("soccer"));
+            node_1.add(new DefaultMutableTreeNode("football"));
+            node_1.add(new DefaultMutableTreeNode("hockey"));
+          add(node_1);
+        }
+      }
+    ));
+    gameTree.setBorder(new EmptyBorder(0, 0, 0, 0));
+    scrollPane.setViewportView(gameTree);
     
     JPanel openGLContainerPane = new JPanel();
     openGLContainerPane.setBorder(new EmptyBorder(0, 0, 0, 0));

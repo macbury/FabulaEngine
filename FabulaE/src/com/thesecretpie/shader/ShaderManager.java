@@ -113,7 +113,7 @@ public class ShaderManager {
 	 * @param fbHeight - desired height
 	 */
 	public void createFB(String fbIdn, Format format, int fbWidth, int fbHeight) {
-		createFB(fbIdn, format, fbWidth, fbHeight, false);
+		createFB(fbIdn, format, fbWidth, fbHeight, true);
 	}
 	
 	/**

@@ -50,7 +50,6 @@ public class Scene implements Disposable {
     Gdx.gl.glEnable(GL10.GL_BLEND);
     sm.beginFB(MAIN_FRAME_BUFFER);
       
-      
       this.terrain.render(camera, this.lights);
       if (debug) {
         sm.debugToDisk(MAIN_FRAME_BUFFER, "data/debug.png");
@@ -58,9 +57,7 @@ public class Scene implements Disposable {
     sm.endFB();
     
     
-    sm.begin("default");
-     // Gdx.gl.glDepthMask(false);
-      Gdx.gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ZERO);  
+    sm.begin("SHADER_BLOOM"); 
       sm.renderFB(MAIN_FRAME_BUFFER);
     sm.end();
     
