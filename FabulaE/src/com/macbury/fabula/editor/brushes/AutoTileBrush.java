@@ -18,6 +18,8 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import com.macbury.fabula.editor.undo_redo.Changeable;
+import com.macbury.fabula.editor.undo_redo.TileChanger;
 import com.macbury.fabula.terrain.AutoTile;
 import com.macbury.fabula.terrain.AutoTiles;
 import com.macbury.fabula.terrain.AutoTiles.Types;
@@ -101,6 +103,8 @@ public class AutoTileBrush extends Brush {
       return;
     }
     
+    TileChanger changer = saveStateToChanger();
+    
     for (Tile tile : brushTiles) {
       if (currentPaintMode == PaintMode.AutoTile) {
         tile.setAutoTile(getCurrentAutoTiles().getAutoTile(AutoTiles.Types.InnerReapeating));
@@ -128,8 +132,23 @@ public class AutoTileBrush extends Brush {
         updateAutotile(tile, terrain.getTile(x+1, z+1));
       }
     }
+    
+    if (changer.haveTiles()) {
+      changeManager.addChangeable(changer);
+    }
   }
   
+  private TileChanger saveStateToChanger() {
+    TileChanger changer = new TileChanger(terrain);
+    
+    for (Tile tile : brushTiles) {
+      changer.add(tile);
+    }
+    
+    return changer;
+  }
+
+
   public void rebuildCombinations() {
     Tile[][] tiles = terrain.getTiles();
     

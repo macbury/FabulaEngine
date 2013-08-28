@@ -1,9 +1,7 @@
 package com.macbury.fabula.editor.undo_redo;
 
 public class ChangeManager {
-  
   private Node currentIndex = null;
-  //the parent node far left node.
   private Node parentNode = new Node();
   private ChangeManagerListener listener;
 
@@ -30,10 +28,10 @@ public class ChangeManager {
    * @param changeable 
    */
   public void addChangeable(Changeable changeable){
-    Node node = new Node(changeable);
+    Node node          = new Node(changeable);
     currentIndex.right = node;
-    node.left = currentIndex;
-    currentIndex = node;
+    node.left          = currentIndex;
+    currentIndex       = node;
     this.listener.onChangeManagerChange(this);
   }
 
