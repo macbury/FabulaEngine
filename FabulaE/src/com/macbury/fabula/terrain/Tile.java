@@ -6,16 +6,12 @@ import com.badlogic.gdx.math.Vector3;
 import com.macbury.fabula.terrain.AutoTiles.Types;
 
 public class Tile implements Cloneable, Comparable<Tile> {
-  public enum Type {
-    Normal, CornerBottomLeft, CornerBottomRight, CornerTopLeft, CornerTopRight
-  }
-  
+
   public enum TypeSlope {
     None, Down, Up, Left, Right, CornerBottomLeft, CornerBottomRight, CornerTopLeft, CornerTopRight, EdgeBottomRight, EdgeBottomLeft, EdgeTopLeft, EdgeTopRight
   }
   
   public static int GID_COUNTER  = 0;
-  private Type type              = Type.Normal;
   private TypeSlope slope        = TypeSlope.None;
   private Vector3 position;
   float y1 = 0; // |1----3|
@@ -23,13 +19,23 @@ public class Tile implements Cloneable, Comparable<Tile> {
   float y3 = 0; // |      |
   float y4 = 0; // |2----4|
   
-  int gid = 0;
+  private int gid = 0;
   private AutoTile autoTile; 
   
   public Tile(float x, float y, float z) {
     gid      = GID_COUNTER++;
     position = new Vector3(x,y,z);
     setY(y);
+  }
+  
+  public Tile(Vector3 cpy) {
+    gid      = GID_COUNTER++;
+    position = cpy;
+    setY(cpy.y);
+  }
+
+  public void setPosition(Vector3 pos) {
+    this.position = pos;
   }
   
   public void setY(float ny) {
@@ -143,14 +149,7 @@ public class Tile implements Cloneable, Comparable<Tile> {
     calculateHeight();
   }
 
-  public Type getType() {
-    return type;
-  }
-
-  public void setType(Type type) {
-    this.type = type;
-  }
-
+ 
   public float getX() {
     return position.x;
   }
@@ -247,17 +246,16 @@ public class Tile implements Cloneable, Comparable<Tile> {
   
   @Override
   public Tile clone() {
-    Tile tile = new Tile(new Float(this.position.x), new Float(this.position.y), new Float(this.position.z));
-    tile.setRawY(new Float(getY()));
+    Tile tile = new Tile(this.position.cpy());
     tile.setY1(new Float(getY1()));
     tile.setY2(new Float(getY2()));
     tile.setY3(new Float(getY3()));
     tile.setY4(new Float(getY4()));
     
-    tile.setAutoTile(getAutoTile());
+    tile.setAutoTile(this.getAutoTile());
     tile.setSlope(this.getSlope());
     
-    tile.setGid(tile.getGid());
+    tile.setGid(this.getGid());
     return tile;
   }
 
@@ -266,5 +264,22 @@ public class Tile implements Cloneable, Comparable<Tile> {
     return o.getGid() - this.getGid();
   }
 
-  
+  @Override
+  public String toString() {
+    return "Tile: " + this.position.toString();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    Tile tile = (Tile) obj;
+    return tile.getGid() == this.getGid();
+  }
+
+  public void setX(int x) {
+    this.position.x = x;
+  }
+
+  public void setZ(int z) {
+    this.position.z = z;
+  }
 }

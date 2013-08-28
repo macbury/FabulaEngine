@@ -119,7 +119,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     //modelBatch.render(cursorInstance);
     //modelBatch.end();
     if (getCurrentBrush() != null) {
-      debugInfo = "X: "+ getCurrentBrush().getPosition().x + " Y " + getCurrentBrush().getY() + " Z: " +  getCurrentBrush().getPosition().y + " ";
+      debugInfo = "X: "+ getCurrentBrush().getPosition().x + " Y " + getCurrentBrush().getY() + " Z: " +  getCurrentBrush().getPosition().y + " " + getCurrentBrush().getStatusBarInfo() + " ";
     } else {
       debugInfo = "";
     }
@@ -139,8 +139,6 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   public void resume() {
     this.isPaused = false;
   }
-  
-  
   
   public TopDownCamera getCamera() {
     return camera;

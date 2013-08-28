@@ -98,9 +98,15 @@ public class Terrain implements Disposable {
   }
   
   public void setTile(int x, int z, Tile tile) {
+    tile.setX(x);
+    tile.setZ(z);
     this.tiles[x][z] = tile;
   }
-
+  
+  public void setTile(float x, float z, Tile tile) {
+    setTile((int)x, (int)z, tile);
+  }
+  
   public void render(Camera camera, Lights lights) {
     ShaderManager sm = G.shaders;
     GL20 gl          = Gdx.graphics.getGL20();
@@ -264,4 +270,13 @@ public class Terrain implements Disposable {
       }
     }
   }
+
+  public Tile getTileByTilePosition(Tile t) {
+    return getTile(t.getX(), t.getZ());
+  }
+
+  private Tile getTile(float x, float z) {
+    return getTile((int)x, (int)z);
+  }
+  
 }
