@@ -23,7 +23,6 @@ import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
 import com.macbury.fabula.editor.brushes.AutoTileBrush;
 import com.macbury.fabula.editor.brushes.TerrainBrush;
-import com.macbury.fabula.editor.brushes.TerrainBrush.TerrainBrushType;
 import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.screens.WorldEditScreen;
@@ -72,13 +71,15 @@ import com.macbury.fabula.editor.gamerunner.RunningGameConsoleFrame;
 import com.macbury.fabula.editor.shaders.ShaderEditorFrame;
 import com.macbury.fabula.editor.tiles.AutoTileDebugFrame;
 import com.macbury.fabula.editor.tiles.TilesetBuilderDialog;
+import com.macbury.fabula.editor.undo_redo.ChangeManager;
+import com.macbury.fabula.editor.undo_redo.ChangeManagerListener;
 
 import javax.swing.JScrollPane;
 import java.awt.Toolkit;
 import javax.swing.JTextArea;
 import java.awt.Font;
 
-public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener {
+public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener {
   
   protected static final String TAG = "WorldEditorFrame";
   private JPanel contentPane;
@@ -86,9 +87,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   public JLabel statusBarLabel;
   private GameManager gameManager;
   private JTabbedPane tabbedInspectorPane;
-  private JSpinner terrainBrushSizeSpinner;
   private JSpinner terrainBrushAmountSpinner;
-  private JComboBox terrainChangeModeComboBox;
   private JList autoTileList;
   private IconListRenderer autoTileListRenderer;
   private JTextField txtffffff;
@@ -108,7 +107,9 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JMenuItem mntmDebugFrameBuffer;
   private JMenuBar mainMenuBar;
   private JSplitPane mainSplitPane;
-  
+  private ChangeManager changeManager;
+  private JMenuItem mntmUndo;
+  private JMenuItem mntmRedo;
   public WorldEditorFrame(GameManager game) {
     PrintStream origOut = System.out;
     PrintStream interceptor = new LogInterceptor(origOut);
@@ -166,6 +167,19 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     JMenuBar menuBar_1 = new JMenuBar();
     mnFile.add(menuBar_1);
+    
+    JMenu mnEdit = new JMenu("Edit");
+    mainMenuBar.add(mnEdit);
+    
+    this.mntmUndo = new JMenuItem("Undo");
+    mntmUndo.addActionListener(this);
+    mntmUndo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK));
+    mnEdit.add(mntmUndo);
+    
+    this.mntmRedo = new JMenuItem("Redo");
+    mntmRedo.addActionListener(this);
+    mntmRedo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.CTRL_MASK));
+    mnEdit.add(mntmRedo);
     
     JMenu mnGame = new JMenu("Game");
     mainMenuBar.add(mnGame);
@@ -353,30 +367,13 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
         FormFactory.RELATED_GAP_ROWSPEC,
         FormFactory.DEFAULT_ROWSPEC,}));
     
-    JLabel lblNewLabel = new JLabel("Type");
-    panel.add(lblNewLabel, "2, 2");
-    
-    this.terrainChangeModeComboBox = new JComboBox();
-    terrainChangeModeComboBox.addItemListener(this);
-    terrainChangeModeComboBox.setModel(new DefaultComboBoxModel(new String[] {"Up", "Down", "Set"}));
-    panel.add(terrainChangeModeComboBox, "6, 2, fill, default");
-    
     JLabel lblNewLabel_1 = new JLabel("Power");
-    panel.add(lblNewLabel_1, "2, 4");
+    panel.add(lblNewLabel_1, "2, 2");
     
     this.terrainBrushAmountSpinner = new JSpinner();
     terrainBrushAmountSpinner.addChangeListener(this);
-    terrainBrushAmountSpinner.setModel(new SpinnerNumberModel(new Float(0.1f), new Float(0.0f), null, new Float(0.1f)));
-    panel.add(terrainBrushAmountSpinner, "6, 4");
-    
-    JLabel lblNewLabel_2 = new JLabel("Size");
-    panel.add(lblNewLabel_2, "2, 6");
-    
-    this.terrainBrushSizeSpinner = new JSpinner();
-    terrainBrushSizeSpinner.addChangeListener(this);
-    
-    terrainBrushSizeSpinner.setModel(new SpinnerNumberModel(new Integer(1), new Integer(0), null, new Integer(1)));
-    panel.add(terrainBrushSizeSpinner, "6, 6");
+    terrainBrushAmountSpinner.setModel(new SpinnerNumberModel(new Float(0), null, null, new Float(1)));
+    panel.add(terrainBrushAmountSpinner, "6, 2");
     
     JPanel panel_1 = new JPanel();
     tabbedInspectorPane.addTab("Tiles", null, panel_1, null);
@@ -426,7 +423,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     Thread statusbarThread = new Thread(new StatusBarInfoRunnable());
     statusbarThread.start();
     
-    //mainSplitPane.setDividerLocation(0.0);
+    changeManager = new ChangeManager(this);
   }
   
   private class StatusBarInfoRunnable implements Runnable {
@@ -491,10 +488,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
       sun.direction.z = (float) lightPositionZSpinner.getValue();
     }
     
-    if (e.getSource() == terrainBrushSizeSpinner) {
-      this.gameManager.getWorldEditScreen().getTerrainBrush().setSize((int)terrainBrushSizeSpinner.getValue());
-    }
-    
     if (e.getSource() == terrainBrushAmountSpinner) {
       this.gameManager.getWorldEditScreen().getTerrainBrush().setPower((float)terrainBrushAmountSpinner.getValue());
     }
@@ -503,6 +496,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private void updateInfoForMapSettings() {
     Scene scene = this.gameManager.getWorldEditScreen().getScene();
     DirectionalLight sun = scene.getSunLight();
+    this.gameManager.getWorldEditScreen().setChangeManager(changeManager);
     this.lightPositionXSpinner.setValue(sun.direction.x);
     this.lightPositionYSpinner.setValue(sun.direction.y);
     this.lightPositionZSpinner.setValue(sun.direction.z);
@@ -531,56 +525,12 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   }
 
   private void updateInfoForTerrainBrush() {
-    terrainBrushSizeSpinner.setValue(this.gameManager.getWorldEditScreen().getTerrainBrush().getSize());
     terrainBrushAmountSpinner.setValue(this.gameManager.getWorldEditScreen().getTerrainBrush().getPower());
-    int terrainChangeModeIndex = 0;
-    
-    //if (this.gameManager.getWorldEditScreen().getTerrainBrush().getType() == TerrainBrushType.)
-    
-    switch (this.gameManager.getWorldEditScreen().getTerrainBrush().getType()) {
-      case Up:
-        terrainChangeModeIndex = 0;
-      break;
-      
-      case Down:
-        terrainChangeModeIndex = 1;
-      break;
-      
-      case Set:
-        terrainChangeModeIndex = 2;
-      break;
-      
-      default:
-        terrainChangeModeIndex = 0;
-      break;
-    }
-      
-    terrainChangeModeComboBox.setSelectedIndex(terrainChangeModeIndex);
   }
 
   @Override
   public void itemStateChanged(ItemEvent e) {
     System.gc();
-    if (e.getSource() == terrainChangeModeComboBox) {
-      TerrainBrush terrainBrush = this.gameManager.getWorldEditScreen().getTerrainBrush();
-      switch (terrainChangeModeComboBox.getSelectedIndex()) {
-        case 0:
-          terrainBrush.setType(TerrainBrushType.Up);
-        break;
-        
-        case 1:
-          terrainBrush.setType(TerrainBrushType.Down);
-        break;
-        
-        case 2:
-          terrainBrush.setType(TerrainBrushType.Set);
-        break;
-        
-        default:
-          terrainBrush.setType(TerrainBrushType.Up);
-        break;
-      }
-    }
     
     if (e.getSource() == paintModeComboBox) {
       updateInfoForAutotileBrush();
@@ -638,6 +588,14 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     if (e.getSource() == mntmDebugFrameBuffer) {
       screen.getScene().debug();
     }
+    
+    if (e.getSource() == mntmUndo) {
+      changeManager.undo();
+    }
+    
+    if (e.getSource() == mntmRedo) {
+      changeManager.redo();
+    }
   }
 
   private class LogInterceptor extends PrintStream {
@@ -657,5 +615,11 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
       WorldEditorFrame.this.logArea.setCaretPosition(WorldEditorFrame.this.logArea.getDocument().getLength());
       super.print(s);
     }
+  }
+
+  @Override
+  public void onChangeManagerChange(ChangeManager changeManager) {
+    this.mntmUndo.setEnabled(changeManager.canUndo());
+    this.mntmRedo.setEnabled(changeManager.canRedo());
   }
 }

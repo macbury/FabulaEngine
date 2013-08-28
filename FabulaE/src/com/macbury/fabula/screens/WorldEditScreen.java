@@ -35,6 +35,7 @@ import com.macbury.fabula.editor.brushes.Brush;
 import com.macbury.fabula.editor.brushes.Brush.BrushType;
 import com.macbury.fabula.editor.brushes.TerrainBrush;
 import com.macbury.fabula.editor.tiles.AutoTileDebugFrame;
+import com.macbury.fabula.editor.undo_redo.ChangeManager;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.manager.ResourceManager;
@@ -88,7 +89,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     
     terrainBrush  = new TerrainBrush(terrain);
     autoTileBrush = new AutoTileBrush(terrain);
-    setCurrentBrush(terrainBrush);
+    //setCurrentBrush(terrainBrush);
     
     this.camController = new EditorCamController(camera);
     InputMultiplexer inputMultiplexer = new InputMultiplexer(this, camController);
@@ -97,8 +98,6 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   
   @Override
   public void hide() {
-    // TODO Auto-generated method stub
-    
   }
   
   @Override
@@ -119,9 +118,12 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     //modelBatch.begin(camera);
     //modelBatch.render(cursorInstance);
     //modelBatch.end();
-    
-    debugInfo = "X: "+ getCurrentBrush().getPosition().x + " Y " + getCurrentBrush().getY() + " Z: " +  getCurrentBrush().getPosition().y +
-        " FPS: "+ Gdx.graphics.getFramesPerSecond() + " Java Heap: " + (Gdx.app.getJavaHeap() / 1024) + " KB" + " Native Heap: " + (Gdx.app.getNativeHeap() / 1024) + " " + currentBrush.getStatusBarInfo();
+    if (getCurrentBrush() != null) {
+      debugInfo = "X: "+ getCurrentBrush().getPosition().x + " Y " + getCurrentBrush().getY() + " Z: " +  getCurrentBrush().getPosition().y + " ";
+    } else {
+      debugInfo = "";
+    }
+    debugInfo += "FPS: "+ Gdx.graphics.getFramesPerSecond() + " Java Heap: " + (Gdx.app.getJavaHeap() / 1024) + " KB" + " Native Heap: " + (Gdx.app.getNativeHeap() / 1024);
     
   }
 
@@ -163,12 +165,13 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   }
   
   Vector3 mouseTilePosition = new Vector3();
+  private ChangeManager changeManager;
   @Override
   public boolean mouseMoved(int x, int y) {
     Ray ray     = camera.getPickRay(x, y);
     Vector3 pos = terrain.getSnappedPositionForRay(ray, mouseTilePosition);
     
-    if (pos != null) {
+    if (pos != null && currentBrush != null) {
       currentBrush.setPosition(pos.x, pos.z);
     }
     return false;
@@ -182,7 +185,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
 
   @Override
   public boolean touchDown(int x, int y, int pointer, int button) {
-    if (button == Buttons.LEFT) {
+    if (button == Buttons.LEFT && currentBrush != null) {
       Vector3 pos = getPositionForMouse(x, y);
       
       if (pos != null) {
@@ -198,7 +201,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
 
   @Override
   public boolean touchDragged(int x, int y, int pointer) {
-    if (isDragging) {
+    if (isDragging && currentBrush != null) {
       Vector3 pos = getPositionForMouse(x, y);
       
       if (pos != null) {
@@ -212,7 +215,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
 
   @Override
   public boolean touchUp(int x, int y, int pointer, int button) {
-    if (button == Buttons.LEFT) {
+    if (button == Buttons.LEFT && currentBrush != null) {
       isDragging  = false;
       Vector3 pos = getPositionForMouse(x, y);
       if (pos != null) {
@@ -228,21 +231,23 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
 
   @Override
   public void onTimerTick(ActionTimer timer) {
-    if (currentBrush.getBrushType() == BrushType.Pencil) {
+    if (currentBrush != null && currentBrush.getBrushType() == BrushType.Pencil) {
       currentBrush.applyBrush();
     }
   }
 
   @Override
   public void onDebugTerrainConfigureShader(ShaderProgram shader) {
-    shader.setUniformf("u_brush_position", currentBrush.getPosition());
-    shader.setUniformf("u_brush_size", currentBrush.getSize());
-    
-    if (currentBrush.getStartPosition() == null) {
-      shader.setUniformi("u_brush_type", 0);
-    } else {
-      shader.setUniformf("u_brush_start_position", currentBrush.getStartPosition());
-      shader.setUniformi("u_brush_type", currentBrush.getBrushShaderId());
+    if (currentBrush != null) {
+      shader.setUniformf("u_brush_position", currentBrush.getPosition());
+      shader.setUniformf("u_brush_size", currentBrush.getSize());
+      
+      if (currentBrush.getStartPosition() == null) {
+        shader.setUniformi("u_brush_type", 0);
+      } else {
+        shader.setUniformf("u_brush_start_position", currentBrush.getStartPosition());
+        shader.setUniformi("u_brush_type", currentBrush.getBrushShaderId());
+      }
     }
   }
 
@@ -252,6 +257,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
 
   public void setCurrentBrush(Brush currentBrush) {
     this.currentBrush = currentBrush;
+    this.currentBrush.setChangeManager(this.changeManager);
   }
 
   public TerrainBrush getTerrainBrush() {
@@ -269,6 +275,10 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   public Vector3 getPositionForMouse(float x, float y) {
     Ray ray     = camera.getPickRay(x, y);
     return terrain.getSnappedPositionForRay(ray, mouseTilePosition);
+  }
+
+  public void setChangeManager(ChangeManager changeManager) {
+    this.changeManager = changeManager;
   }
 
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.macbury.fabula.editor.undo_redo.ChangeManager;
+import com.macbury.fabula.editor.undo_redo.Changeable;
 import com.macbury.fabula.terrain.Terrain;
 import com.macbury.fabula.terrain.Tile;
 
@@ -17,8 +19,10 @@ public abstract class Brush {
   protected Vector2 position        = new Vector2(0, 0);
   protected Vector2 startPosition;
   protected Terrain terrain;
+  
   protected ArrayList<Tile>  brushTiles;
   protected ArrayList<Tile>  borderBrushTiles;
+  protected ChangeManager changeManager;
   
   public Brush(Terrain terrain) {
     this.terrain     = terrain;
@@ -97,7 +101,7 @@ public abstract class Brush {
   }
   
   public abstract void onApply();
-
+  
   public void setPosition(float x, float z) {
     position.x = x;
     position.y = z;
@@ -137,4 +141,10 @@ public abstract class Brush {
   public int getBrushShaderId() {
     return this.brushType == BrushType.Pencil ? 0 : 1;
   }
+
+  public void setChangeManager(ChangeManager changeManager) {
+    this.changeManager = changeManager;
+  }
+  
+  
 }

@@ -2,11 +2,10 @@ package com.macbury.fabula.terrain;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.macbury.fabula.terrain.AutoTiles.Types;
 
-public class Tile {
+public class Tile implements Cloneable, Comparable<Tile> {
   public enum Type {
     Normal, CornerBottomLeft, CornerBottomRight, CornerTopLeft, CornerTopRight
   }
@@ -15,7 +14,6 @@ public class Tile {
     None, Down, Up, Left, Right, CornerBottomLeft, CornerBottomRight, CornerTopLeft, CornerTopRight, EdgeBottomRight, EdgeBottomLeft, EdgeTopLeft, EdgeTopRight
   }
   
-  private TextureRegion textureRegion;
   public static int GID_COUNTER  = 0;
   private Type type              = Type.Normal;
   private TypeSlope slope        = TypeSlope.None;
@@ -53,6 +51,10 @@ public class Tile {
   public void setY(int i) {
     this.position.y = this.y1 = this.y2 = this.y3 = this.y4 = i;
     calculateHeight();
+  }
+  
+  public void setRawY(float f) {
+    this.position.y = f;
   }
   
   public float getY1() {
@@ -169,6 +171,7 @@ public class Tile {
     return autoTile.getAutoTiles();
   }
   
+ 
   public Types getAutoType() {
     return autoTile.getType();
   }
@@ -204,6 +207,10 @@ public class Tile {
     return Math.min(y1, Math.min(y2, Math.min(y3,y4)));
   }
 
+  public void setSlope(TypeSlope slope2) {
+    this.slope = slope2;
+  }
+  
   public int computeSlope() {
     byte slopeMask   = 0;
     
@@ -226,20 +233,38 @@ public class Tile {
     return slopeMask;
   }
   
-  /*
-   * TopLeft:     0, 0,  0, 90
-Top:       0, 90, 0, 90
-RopRight:    0, 90, 0, 0
-Right:       90,90, 0, 0
-BottomRight: 90, 0, 0, 0
-Bottom:      90, 0,90, 0
-BottomLeft:  0,  0,90, 0
-Left:        0,  0,90, 90
-
-UpTerrain: 0 or all 90
-   */
-  
   public String getSlopeDebugInfo() {
     return this.slope.toString() + " Y1 = "+this.y1 + " Y2 = "+ y2 + " Y3 = " + y3 + " Y4 = " + y4 + " Slope: " + computeSlope() + " == " + this.slope;
   }
+  
+  public int getGid() {
+    return this.gid;
+  }
+  
+  public void setGid(int gid2) {
+    this.gid = gid2;
+  }
+  
+  @Override
+  public Tile clone() {
+    Tile tile = new Tile(new Float(this.position.x), new Float(this.position.y), new Float(this.position.z));
+    tile.setRawY(new Float(getY()));
+    tile.setY1(new Float(getY1()));
+    tile.setY2(new Float(getY2()));
+    tile.setY3(new Float(getY3()));
+    tile.setY4(new Float(getY4()));
+    
+    tile.setAutoTile(getAutoTile());
+    tile.setSlope(this.getSlope());
+    
+    tile.setGid(tile.getGid());
+    return tile;
+  }
+
+  @Override
+  public int compareTo(Tile o) {
+    return o.getGid() - this.getGid();
+  }
+
+  
 }
