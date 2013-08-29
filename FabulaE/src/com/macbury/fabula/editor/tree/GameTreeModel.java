@@ -21,7 +21,7 @@ public class GameTreeModel implements TreeModel {
     this.rootNode = new GameFolderNode("Game");
     this.rootNode.add(new GamePlayerStartPositionNode());
     this.rootNode.add(new GameShadersFolderNode());
-    this.rootNode.add(new BaseGameFolderNode("Objects"));
+    this.rootNode.add(new GameObjectsFolderNode());
     this.rootNode.add(new GameMapsFolderNode());
   }
   
@@ -102,6 +102,13 @@ public class GameTreeModel implements TreeModel {
   public class GameMapsFolderNode extends BaseGameFolderNode {
     public GameMapsFolderNode() {
       super("Maps");
+      add(new GameMapNode("MAP001"));
+    }
+  }
+  
+  public class GameMapNode extends BaseGameFolderNode {
+    public GameMapNode(String name) {
+      super(name);
     }
   }
   
@@ -114,6 +121,19 @@ public class GameTreeModel implements TreeModel {
   public class GamePlayerStartPositionNode extends BaseGameFolderNode {
     public GamePlayerStartPositionNode() {
       super("Player start position");
+    }
+  }
+  
+  public class GameObjectsFolderNode extends BaseGameFolderNode {
+    public GameObjectsFolderNode() {
+      super("Objects");
+      add(new GameObjectNode("House"));
+    }
+  }
+  
+  public class GameObjectNode extends BaseGameFolderNode {
+    public GameObjectNode(String name) {
+      super(name);
     }
   }
 }

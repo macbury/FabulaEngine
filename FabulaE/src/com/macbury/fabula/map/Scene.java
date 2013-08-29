@@ -24,6 +24,7 @@ public class Scene implements Disposable {
   private ShaderManager sm;
   private String TAG = "Scene";
   private boolean debug;
+  private String finalShader;
   
   public Scene(int width, int height) {
     skyBox = ResourceManager.shared().getSkyBox("SKYBOX_DAY");
@@ -35,6 +36,7 @@ public class Scene implements Disposable {
     
     this.terrain = new Terrain(width, height);
     
+    this.finalShader = "default";
     this.sm = G.shaders;
     this.sm.createFB(MAIN_FRAME_BUFFER);
   }
@@ -57,7 +59,7 @@ public class Scene implements Disposable {
     sm.endFB();
     
     
-    sm.begin("SHADER_BLOOM"); 
+    sm.begin(finalShader); 
       sm.renderFB(MAIN_FRAME_BUFFER);
     sm.end();
     
@@ -88,5 +90,13 @@ public class Scene implements Disposable {
   public void dispose() {
     this.terrain.dispose();
     this.skyBox.dispose();
+  }
+
+  public String getFinalShader() {
+    return finalShader;
+  }
+
+  public void setFinalShader(String finalShader) {
+    this.finalShader = finalShader;
   }
 }

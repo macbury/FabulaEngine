@@ -25,10 +25,14 @@ import javax.swing.JSeparator;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap.Keys;
 import com.macbury.fabula.editor.brushes.AutoTileBrush;
 import com.macbury.fabula.editor.brushes.TerrainBrush;
 import com.macbury.fabula.manager.EditorGameManager;
+import com.macbury.fabula.manager.G;
 import com.macbury.fabula.manager.GameManager;
+import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.screens.WorldEditScreen;
 import com.macbury.fabula.terrain.AutoTile;
@@ -53,6 +57,14 @@ import javax.swing.event.ChangeEvent;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseListener;
@@ -77,6 +89,7 @@ import com.macbury.fabula.editor.gamerunner.RunningGameConsoleFrame;
 import com.macbury.fabula.editor.shaders.ShaderEditorFrame;
 import com.macbury.fabula.editor.tiles.AutoTileDebugFrame;
 import com.macbury.fabula.editor.tiles.TilesetBuilderDialog;
+import com.macbury.fabula.editor.tree.GameTransferableHandler;
 import com.macbury.fabula.editor.tree.GameTreeCellRenderer;
 import com.macbury.fabula.editor.tree.GameTreeModel;
 import com.macbury.fabula.editor.tree.GameTreeModel.GameShaderNode;
@@ -98,7 +111,7 @@ import javax.swing.event.TreeSelectionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener, MouseListener {
+public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener, MouseListener, DropTargetListener {
   
   protected static final String TAG = "WorldEditorFrame";
   private JPanel contentPane;
@@ -109,8 +122,8 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JSpinner terrainBrushAmountSpinner;
   private JList autoTileList;
   private IconListRenderer autoTileListRenderer;
-  private JTextField txtffffff;
-  private JTextField txtffffff_1;
+  private JTextField txtAmbientColor;
+  private JTextField txtDirectionalLightColor;
   private JSpinner lightPositionZSpinner;
   private JSpinner lightPositionYSpinner;
   private JSpinner lightPositionXSpinner;
@@ -120,7 +133,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private ShaderEditorFrame  shaderEditorFrame;
   private JMenuItem mntmRun;
   private JMenuItem mntmRebuildTilesets;
-  private JMenuItem mntmEditAssetsgame;
   private JMenuItem mntmReloadShaders;
   private JTextArea logArea;
   private JMenuItem mntmDebugFrameBuffer;
@@ -130,6 +142,9 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JMenuItem mntmUndo;
   private JMenuItem mntmRedo;
   private JTree gameTree;
+  private JComboBox shadersComboBox;
+  private JButton btnPickAmbientColor;
+  private JButton btnPickDirectionalLightColor;
   public WorldEditorFrame(EditorGameManager game) {
     PrintStream origOut = System.out;
     PrintStream interceptor = new LogInterceptor(origOut);
@@ -219,10 +234,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     this.mntmRebuildTilesets = new JMenuItem("Rebuild tilesets");
     mntmRebuildTilesets.addActionListener(this);
     mnDeveloper.add(mntmRebuildTilesets);
-    
-    this.mntmEditAssetsgame = new JMenuItem("Edit Assets.game");
-    mntmEditAssetsgame.addActionListener(this);
-    mnDeveloper.add(mntmEditAssetsgame);
     
     this.mntmReloadShaders = new JMenuItem("Edit shaders");
     mntmReloadShaders.addActionListener(this);
@@ -314,37 +325,34 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
         FormFactory.RELATED_GAP_ROWSPEC,
         FormFactory.DEFAULT_ROWSPEC,
         FormFactory.RELATED_GAP_ROWSPEC,
+        FormFactory.DEFAULT_ROWSPEC,
+        FormFactory.RELATED_GAP_ROWSPEC,
         FormFactory.DEFAULT_ROWSPEC,}));
     
     JLabel lblNewLabel_3 = new JLabel("Ambient Color:");
     panel_6.add(lblNewLabel_3, "2, 2, right, default");
     
-    txtffffff = new JTextField();
-    txtffffff.setText("#ffffff");
-    txtffffff.setHorizontalAlignment(SwingConstants.LEFT);
-    panel_6.add(txtffffff, "4, 2, fill, default");
-    txtffffff.setColumns(10);
+    txtAmbientColor = new JTextField();
+    txtAmbientColor.setText("#ffffff");
+    txtAmbientColor.setHorizontalAlignment(SwingConstants.LEFT);
+    panel_6.add(txtAmbientColor, "4, 2, fill, default");
+    txtAmbientColor.setColumns(10);
     
-    JButton btnNewButton = new JButton("Pick Color");
-    btnNewButton.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent arg0) {
-        JColorChooser.showDialog(
-            WorldEditorFrame.this,
-            "Choose Background Color", Color.BLUE);
-      }
-    });
-    panel_6.add(btnNewButton, "6, 2, center, default");
+    this.btnPickAmbientColor = new JButton("Pick Color");
+    btnPickAmbientColor.addActionListener(this);
+    panel_6.add(btnPickAmbientColor, "6, 2, center, default");
     
     JLabel lblDirectionalLightColor = new JLabel("Directional light color");
     panel_6.add(lblDirectionalLightColor, "2, 4, right, default");
     
-    txtffffff_1 = new JTextField();
-    txtffffff_1.setText("#ffffff");
-    panel_6.add(txtffffff_1, "4, 4, fill, default");
-    txtffffff_1.setColumns(10);
+    txtDirectionalLightColor = new JTextField();
+    txtDirectionalLightColor.setText("#ffffff");
+    panel_6.add(txtDirectionalLightColor, "4, 4, fill, default");
+    txtDirectionalLightColor.setColumns(10);
     
-    JButton btnPickColor = new JButton("Pick Color");
-    panel_6.add(btnPickColor, "6, 4");
+    this.btnPickDirectionalLightColor = new JButton("Pick Color");
+    btnPickDirectionalLightColor.addActionListener(this);
+    panel_6.add(btnPickDirectionalLightColor, "6, 4");
     
     JLabel lblLightPosition = new JLabel("Light position X:");
     panel_6.add(lblLightPosition, "2, 6");
@@ -369,6 +377,13 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     lightPositionZSpinner.addChangeListener(this);
     lightPositionZSpinner.setModel(new SpinnerNumberModel(new Float(0), new Float(-1000), new Float(1000), new Float(0.010f)));
     panel_6.add(lightPositionZSpinner, "4, 10");
+    
+    JLabel lblPostProcessing = new JLabel("Post processing");
+    panel_6.add(lblPostProcessing, "2, 12, right, default");
+    
+    this.shadersComboBox = new JComboBox();
+    shadersComboBox.addActionListener(this);
+    panel_6.add(shadersComboBox, "4, 12, fill, default");
     
     JPanel panel = new JPanel();
     panel.setBackground(SystemColor.window);
@@ -423,6 +438,40 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     JPanel panel_4 = new JPanel();
     tabbedInspectorPane.addTab("Liquid", null, panel_4, null);
     
+    JPanel panel_2 = new JPanel();
+    tabbedInspectorPane.addTab("Object", null, panel_2, null);
+    panel_2.setLayout(new FormLayout(new ColumnSpec[] {
+        ColumnSpec.decode("15px"),
+        FormFactory.RELATED_GAP_COLSPEC,
+        ColumnSpec.decode("max(19dlu;default)"),
+        ColumnSpec.decode("default:grow"),
+        ColumnSpec.decode("15px"),},
+      new RowSpec[] {
+        FormFactory.RELATED_GAP_ROWSPEC,
+        FormFactory.DEFAULT_ROWSPEC,
+        FormFactory.RELATED_GAP_ROWSPEC,
+        FormFactory.DEFAULT_ROWSPEC,
+        FormFactory.RELATED_GAP_ROWSPEC,
+        FormFactory.DEFAULT_ROWSPEC,}));
+    
+    JLabel lblNewLabel = new JLabel("X");
+    panel_2.add(lblNewLabel, "3, 2, center, default");
+    
+    JSpinner spinner = new JSpinner();
+    panel_2.add(spinner, "4, 2");
+    
+    JLabel lblNewLabel_2 = new JLabel("Y");
+    panel_2.add(lblNewLabel_2, "3, 4, center, default");
+    
+    JSpinner spinner_1 = new JSpinner();
+    panel_2.add(spinner_1, "4, 4");
+    
+    JLabel lblNewLabel_4 = new JLabel("Z");
+    panel_2.add(lblNewLabel_4, "3, 6, center, default");
+    
+    JSpinner spinner_2 = new JSpinner();
+    panel_2.add(spinner_2, "4, 6");
+    
     JPanel panel_3 = new JPanel();
     tabbedInspectorPane.addTab("Events", null, panel_3, null);
     
@@ -431,6 +480,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mapsTreeAndInspectorSplitPane.setLeftComponent(scrollPane);
     
     this.gameTree = new JTree();
+    gameTree.setTransferHandler(new GameTransferableHandler());
     gameTree.setDragEnabled(true);
     gameTree.setCellRenderer(new GameTreeCellRenderer());
     gameTree.addMouseListener(this);
@@ -446,6 +496,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     openGLContainerPane.add(this.gameCanvas.getCanvas(), BorderLayout.CENTER);
     openGLContainerPane.setLayout(new BoxLayout(openGLContainerPane, BoxLayout.X_AXIS));
     
+    DropTarget dt = new DropTarget(this.gameCanvas.getCanvas(), this);
     tabbedInspectorPane.addChangeListener(this);
     
     Thread statusbarThread = new Thread(new StatusBarInfoRunnable());
@@ -529,6 +580,9 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     this.lightPositionXSpinner.setValue(sun.direction.x);
     this.lightPositionYSpinner.setValue(sun.direction.y);
     this.lightPositionZSpinner.setValue(sun.direction.z);
+    
+    Array<String> shadersName = G.shaders.getAllShaderNames().toArray();
+    shadersComboBox.setModel(new DefaultComboBoxModel(shadersName.toArray(String.class)));
   }
 
   private void updateInfoForAutotileBrush() {
@@ -588,6 +642,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   @Override
   public void actionPerformed(ActionEvent e) {
     WorldEditScreen screen = this.gameManager.getWorldEditScreen();
+    Scene scene            = screen.getScene();
     AutoTileBrush brush = screen.getAutoTileBrush();
     if (e.getSource() == mntmBuildTileMap) {
       autoTileDebugFrame.setBrush(brush);
@@ -598,11 +653,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     if (e.getSource() == mntmRun) {
       RunningGameConsoleFrame runningGameConsoleFrame = new RunningGameConsoleFrame();
       runningGameConsoleFrame.runGame(this, gameManager);
-    }
-    
-    if (e.getSource() == mntmEditAssetsgame) {
-      AssetEditorDialog editor = new AssetEditorDialog();
-      editor.setVisible(true);
     }
     
     if (e.getSource() == this.mntmRebuildTilesets) {
@@ -620,6 +670,24 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     if (e.getSource() == mntmRedo) {
       changeManager.redo();
+    }
+    
+    if (e.getSource() == btnPickAmbientColor) {
+      Color color = new Color(scene.getLights().ambientLight.r, scene.getLights().ambientLight.g, scene.getLights().ambientLight.b, scene.getLights().ambientLight.a);
+      color = JColorChooser.showDialog(this, "Ambient Color", color);
+      txtAmbientColor.setText("#"+Integer.toHexString(color.getRGB()).toUpperCase());
+      scene.getLights().ambientLight.set(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+    }
+    
+    if (e.getSource() == btnPickDirectionalLightColor) {
+      Color color = new Color(scene.getSunLight().color.r, scene.getSunLight().color.g, scene.getSunLight().color.b, scene.getSunLight().color.a);
+      color = JColorChooser.showDialog(this, "Directional light Color", color);
+      txtDirectionalLightColor.setText("#"+Integer.toHexString(color.getRGB()).toUpperCase());
+      scene.getSunLight().color.set(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+    }
+    
+    if (e.getSource() == shadersComboBox) {
+      screen.getScene().setFinalShader((String)shadersComboBox.getSelectedItem());
     }
   }
 
@@ -678,12 +746,54 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
           shaderEditorFrame.setVisible(true);
         }
         
+        if (gameTree.getModel().getRoot() == node) {
+          AssetEditorDialog editor = new AssetEditorDialog();
+          editor.setVisible(true);
+        }
       }
     }
   }
 
   @Override
   public void mouseReleased(MouseEvent arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void dragEnter(DropTargetDragEvent arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void dragExit(DropTargetEvent arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void dragOver(DropTargetDragEvent arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void drop(DropTargetDropEvent dtde) {
+    Transferable tr = dtde.getTransferable();
+    dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+    dtde.dropComplete(true);
+    
+    for (DataFlavor df : tr.getTransferDataFlavors()) {
+      
+      Gdx.app.log(TAG, df.getMimeType()) ;
+    }
+    Gdx.app.log(TAG, "Dropped something!");
+    
+  }
+
+  @Override
+  public void dropActionChanged(DropTargetDragEvent arg0) {
     // TODO Auto-generated method stub
     
   }
