@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.BorderFactory;
+import javax.swing.DropMode;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuBar;
@@ -480,8 +481,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mapsTreeAndInspectorSplitPane.setLeftComponent(scrollPane);
     
     this.gameTree = new JTree();
-    gameTree.setTransferHandler(new GameTransferableHandler());
+    
     gameTree.setDragEnabled(true);
+    gameTree.setTransferHandler(new GameTransferableHandler());
+    
     gameTree.setCellRenderer(new GameTreeCellRenderer());
     gameTree.addMouseListener(this);
     gameTree.setShowsRootHandles(true);
