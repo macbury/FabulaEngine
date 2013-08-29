@@ -1,5 +1,8 @@
 package com.thesecretpie.shader;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.nio.ByteBuffer;
 
 import com.badlogic.gdx.Application.ApplicationType;
@@ -1044,4 +1047,33 @@ public class ShaderManager {
     this.screenCamera = screenCamera;
   }
 	
+  public Keys<String> getAllShaderNames() {
+    return shaders.keys();
+  }
+
+  public void update(String shaderKey, String fragmentSource, String vertexSource) {
+    String paths      = shaderPaths.get(shaderKey);
+    int ind           = paths.indexOf(";");
+    String vertPath   = paths.substring(0, ind);
+    String fragPath   = paths.substring(ind + 1,paths.length());
+    File vertexFile   = Gdx.files.internal(shaderDir + "/" + vertPath).file().getAbsoluteFile();
+    File fragmentFile = Gdx.files.internal(shaderDir + "/" + fragPath).file().getAbsoluteFile();
+    
+    saveShaderTo(vertexFile, vertexSource);
+    saveShaderTo(fragmentFile, fragmentSource);
+    
+    this.reload();
+  }
+
+  private void saveShaderTo(File file, String source) {
+    try{
+      FileWriter fstream = new FileWriter(file);
+      BufferedWriter out = new BufferedWriter(fstream);
+      out.write(source);
+      out.close();
+    }catch (Exception e){
+      Gdx.app.log("Shader Manager", e.getMessage());
+    }
+  }
+  
 }

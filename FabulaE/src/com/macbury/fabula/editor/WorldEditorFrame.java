@@ -6,6 +6,9 @@ import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
@@ -19,10 +22,12 @@ import javax.swing.JTree;
 import javax.swing.JTabbedPane;
 import javax.swing.JSeparator;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
 import com.macbury.fabula.editor.brushes.AutoTileBrush;
 import com.macbury.fabula.editor.brushes.TerrainBrush;
+import com.macbury.fabula.manager.EditorGameManager;
 import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.screens.WorldEditScreen;
@@ -50,6 +55,7 @@ import java.io.PrintStream;
 
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JList;
 
@@ -71,6 +77,9 @@ import com.macbury.fabula.editor.gamerunner.RunningGameConsoleFrame;
 import com.macbury.fabula.editor.shaders.ShaderEditorFrame;
 import com.macbury.fabula.editor.tiles.AutoTileDebugFrame;
 import com.macbury.fabula.editor.tiles.TilesetBuilderDialog;
+import com.macbury.fabula.editor.tree.GameTreeCellRenderer;
+import com.macbury.fabula.editor.tree.GameTreeModel;
+import com.macbury.fabula.editor.tree.GameTreeModel.GameShaderNode;
 import com.macbury.fabula.editor.undo_redo.ChangeManager;
 import com.macbury.fabula.editor.undo_redo.ChangeManagerListener;
 
@@ -78,16 +87,24 @@ import javax.swing.JScrollPane;
 import java.awt.Toolkit;
 import javax.swing.JTextArea;
 import java.awt.Font;
+
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.event.TreeSelectionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener {
+public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener, MouseListener {
   
   protected static final String TAG = "WorldEditorFrame";
   private JPanel contentPane;
   private LwjglCanvas gameCanvas;
   public JLabel statusBarLabel;
-  private GameManager gameManager;
+  private EditorGameManager gameManager;
   private JTabbedPane tabbedInspectorPane;
   private JSpinner terrainBrushAmountSpinner;
   private JList autoTileList;
@@ -113,7 +130,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JMenuItem mntmUndo;
   private JMenuItem mntmRedo;
   private JTree gameTree;
-  public WorldEditorFrame(GameManager game) {
+  public WorldEditorFrame(EditorGameManager game) {
     PrintStream origOut = System.out;
     PrintStream interceptor = new LogInterceptor(origOut);
     System.setOut(interceptor);
@@ -139,7 +156,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     }
     
     this.autoTileDebugFrame      = new AutoTileDebugFrame();
-    this.shaderEditorFrame       = new ShaderEditorFrame();
+    
     //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setBounds(100, 100, 1331, 923);
     //setExtendedState(Frame.MAXIMIZED_BOTH); 
@@ -225,6 +242,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     addWindowListener(new ExitListener(gameCanvas));
     
     this.mainSplitPane = new JSplitPane();
+    mainSplitPane.setBorder(BorderFactory.createEmptyBorder());
     mainSplitPane.setResizeWeight(0.7);
     mainSplitPane.setContinuousLayout(true);
     mainSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
@@ -265,6 +283,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     inspectorAndOpenGlContainerSplitPane.setResizeWeight(0.03);
     
     JSplitPane mapsTreeAndInspectorSplitPane = new JSplitPane();
+    mapsTreeAndInspectorSplitPane.setBorder(BorderFactory.createEmptyBorder());
     mapsTreeAndInspectorSplitPane.setContinuousLayout(true);
     mapsTreeAndInspectorSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
     inspectorAndOpenGlContainerSplitPane.setLeftComponent(mapsTreeAndInspectorSplitPane);
@@ -375,7 +394,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     this.terrainBrushAmountSpinner = new JSpinner();
     terrainBrushAmountSpinner.addChangeListener(this);
-    terrainBrushAmountSpinner.setModel(new SpinnerNumberModel(new Float(0), null, null, new Float(1)));
+    terrainBrushAmountSpinner.setModel(new SpinnerNumberModel(new Float(0), null, null, new Float(0.5f)));
     panel.add(terrainBrushAmountSpinner, "6, 2");
     
     JPanel panel_1 = new JPanel();
@@ -408,11 +427,14 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     tabbedInspectorPane.addTab("Events", null, panel_3, null);
     
     JScrollPane scrollPane = new JScrollPane();
-    scrollPane.setViewportBorder(new EmptyBorder(0, 0, 0, 0));
+    scrollPane.setViewportBorder(BorderFactory.createEmptyBorder());
     mapsTreeAndInspectorSplitPane.setLeftComponent(scrollPane);
     
     this.gameTree = new JTree();
-    gameTree.setModel(new GameTreeModel());
+    gameTree.addMouseListener(this);
+    gameTree.setShowsRootHandles(true);
+    gameTree.setSelectionRow(0);
+    this.gameTree.setBorder(BorderFactory.createEmptyBorder());
     gameTree.setBorder(new EmptyBorder(0, 0, 0, 0));
     scrollPane.setViewportView(gameTree);
     
@@ -441,6 +463,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
         }
       }
       
+      gameTree.setModel(new GameTreeModel());
       updateInfoForMapSettings();
       
       while (running) {
@@ -570,10 +593,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
       autoTileDebugFrame.setVisible(true);
     }
     
-    if (e.getSource() == mntmReloadShaders) {
-      shaderEditorFrame.setVisible(true);
-    }
-    
     if (e.getSource() == mntmRun) {
       RunningGameConsoleFrame runningGameConsoleFrame = new RunningGameConsoleFrame();
       runningGameConsoleFrame.runGame(this, gameManager);
@@ -625,5 +644,45 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   public void onChangeManagerChange(ChangeManager changeManager) {
     this.mntmUndo.setEnabled(changeManager.canUndo());
     this.mntmRedo.setEnabled(changeManager.canRedo());
+  }
+
+
+  @Override
+  public void mouseClicked(MouseEvent arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void mouseEntered(MouseEvent arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void mouseExited(MouseEvent arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void mousePressed(MouseEvent e) {
+    if (e.getSource() == gameTree && e.getClickCount() == 2) {
+      TreePath selPath = gameTree.getPathForLocation(e.getX(), e.getY());
+      if (selPath != null) {
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode)selPath.getLastPathComponent();
+        if (GameShaderNode.class.isInstance(node)) {
+          this.shaderEditorFrame       = new ShaderEditorFrame(node.getUserObject().toString());
+          shaderEditorFrame.setVisible(true);
+        }
+        
+      }
+    }
+  }
+
+  @Override
+  public void mouseReleased(MouseEvent arg0) {
+    // TODO Auto-generated method stub
+    
   }
 }

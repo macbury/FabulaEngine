@@ -64,7 +64,7 @@ public class ResourceManager {
   }
   
   public void load() throws Exception {
-    File rawXml = Gdx.files.internal("data/assets.game").file();
+    File rawXml = Gdx.files.internal("assets/assets.game").file();
     Gdx.app.log(TAG, "Loaded resources XML");
     DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
     DocumentBuilder docBuilder               = null;
@@ -120,7 +120,7 @@ public class ResourceManager {
   private void addElementAsSkyBox(Element resourceElement) {
     String id    = resourceElement.getAttribute("id");
     String path  = resourceElement.getTextContent();
-    path        = "data/textures/skybox/"+path;
+    path        = "assets/textures/skybox/"+path;
     
     Gdx.app.log(TAG, "Loading SkyBox: " + id + " from " + path);
     
@@ -145,7 +145,7 @@ public class ResourceManager {
   private void addElementAsTileset(Element resourceElement) {
     String id    = resourceElement.getAttribute("id");
     String atlas = resourceElement.getAttribute("atlas");
-    String path  = "data/textures/"+atlas + ".atlas";
+    String path  = "assets/textures/"+atlas + ".atlas";
     Gdx.app.log(TAG, "Loading tileset atlas: " + id + " from " + path);
     
     FileHandle file = Gdx.files.internal(path);
@@ -179,7 +179,7 @@ public class ResourceManager {
   private void addElementAsShader(Element resourceElement) {
     String id   = resourceElement.getAttribute("id");
     String name = resourceElement.getTextContent();
-    String path = "data/shaders/"+name;
+    String path = "assets/shaders/"+name;
     Gdx.app.log(TAG, "Found shader: " + id + " from " + path);
     G.game.getShaderManager().add(id, name+".vert", name+".frag");
   }
@@ -187,7 +187,7 @@ public class ResourceManager {
   private void addElementAsMusic(Element resourceElement) {
     String id   = resourceElement.getAttribute("id");
     String path = resourceElement.getTextContent();
-    path        = "data/music/"+path;
+    path        = "assets/music/"+path;
     Gdx.app.log(TAG, "Found music: " + id + " from " + path);
     music.put(id, path);
   }
@@ -195,7 +195,7 @@ public class ResourceManager {
   private void addElementAsTexture(Element resourceElement) {
     String id   = resourceElement.getAttribute("id");
     String path = resourceElement.getTextContent();
-    path        = "data/textures/"+path;
+    path        = "assets/textures/"+path;
     
     Gdx.app.log(TAG, "Found texture: " + id + " from " + path);
     textures.put(id, new Texture(Gdx.files.internal(path)));
@@ -226,7 +226,7 @@ public class ResourceManager {
   private void addElementAsAtlas(Element resourceElement) {
     String id   = resourceElement.getAttribute("id");
     String path = resourceElement.getTextContent();
-    path        = "data/textures/"+path + ".atlas";
+    path        = "assets/textures/"+path + ".atlas";
     Gdx.app.log(TAG, "Loading: " + id + " from " + path);
     atlasMap.put(id, new TextureAtlas( Gdx.files.internal( path ) ) );
   }

@@ -39,7 +39,7 @@ public class AssetEditorDialog extends JDialog {
     textArea.setAutoIndentEnabled(true);
     textArea.setTabsEmulated(true);
     
-    textArea.setText(Gdx.files.internal("data/assets.game").readString());
+    textArea.setText(Gdx.files.internal("assets/assets.game").readString());
     
     RTextScrollPane sp = new RTextScrollPane(textArea);
     contentPanel.add(sp, BorderLayout.CENTER);

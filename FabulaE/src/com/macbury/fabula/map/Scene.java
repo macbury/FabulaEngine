@@ -52,7 +52,7 @@ public class Scene implements Disposable {
       
       this.terrain.render(camera, this.lights);
       if (debug) {
-        sm.debugToDisk(MAIN_FRAME_BUFFER, "data/debug.png");
+        sm.debugToDisk(MAIN_FRAME_BUFFER, "assets/debug.png");
       }
     sm.endFB();
     

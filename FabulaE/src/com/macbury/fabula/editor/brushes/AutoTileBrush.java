@@ -359,7 +359,7 @@ public class AutoTileBrush extends Brush {
   }
 
   public static void loadCornerMap() throws IOException {
-    File file = Gdx.files.internal("data/tileset.combination").file();
+    File file = Gdx.files.internal("assets/tileset.combination").file();
     if (file != null && file.exists()) {
       FileReader fstream    = new FileReader(file);
       BufferedReader reader = new BufferedReader(fstream);
@@ -379,7 +379,7 @@ public class AutoTileBrush extends Brush {
   }
   
   public void rebuildAndSave() throws IOException {
-    FileWriter fstream = new FileWriter(Gdx.files.internal("data/tileset.combination").file(), false);
+    FileWriter fstream = new FileWriter(Gdx.files.internal("assets/tileset.combination").file(), false);
     BufferedWriter out = new BufferedWriter(fstream);
     
     for (String key : AutoTiles.getCornerMap().keySet()) {

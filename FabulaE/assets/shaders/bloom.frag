@@ -19,7 +19,7 @@ void main()
    }
        if (texture2D(u_texture, texcoord).r < 0.3)
     {
-       gl_FragColor = sum*sum*0.012 + texture2D(u_texture, texcoord);
+       gl_FragColor = sum*sum*0.002 + texture2D(u_texture, texcoord);
     }
     else
     {

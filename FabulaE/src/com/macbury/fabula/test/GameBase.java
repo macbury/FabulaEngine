@@ -1,4 +1,4 @@
-package com.macbury.fabula;
+package com.macbury.fabula.test;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
