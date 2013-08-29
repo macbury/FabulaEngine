@@ -13,11 +13,9 @@ import com.macbury.fabula.test.ShaderTestScreen;
 import com.thesecretpie.shader.ShaderManager;
 
 public class GameManager extends Game {
-  enum Mode { Game, Editor }
   protected static final String TAG = "GameManager";
   protected static final Object ARGUMENT_START_EDITOR = "--editor";
   protected static GameManager _shared;
-  protected Mode mode;
   
   protected boolean loading = true;
   protected ShaderManager shaderManager;
@@ -49,6 +47,9 @@ public class GameManager extends Game {
     G.resources = ResourceManager.shared();
     G.shaders   = shaderManager;
     
+    GameDatabase db = new GameDatabase();
+    db.save();
+    
     setScreen(getInitialScreen());
     loading = false;
   }
@@ -63,13 +64,6 @@ public class GameManager extends Game {
     super.render();
   }
 
-  public Mode getMode() {
-    return mode;
-  }
-
-  public void setMode(Mode mode) {
-    this.mode = mode;
-  }
   
   public boolean loading() {
     return loading;

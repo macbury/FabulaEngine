@@ -35,6 +35,7 @@ import com.macbury.fabula.editor.brushes.Brush;
 import com.macbury.fabula.editor.brushes.Brush.BrushType;
 import com.macbury.fabula.editor.brushes.TerrainBrush;
 import com.macbury.fabula.editor.tiles.AutoTileDebugFrame;
+import com.macbury.fabula.editor.tree.GameTreeModel.BaseGameFolderNode;
 import com.macbury.fabula.editor.undo_redo.ChangeManager;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.manager.GameManager;
@@ -280,6 +281,13 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
 
   public void setChangeManager(ChangeManager changeManager) {
     this.changeManager = changeManager;
+  }
+
+  public void onDrop(BaseGameFolderNode node) {
+    int x = Gdx.input.getX();
+    int z = Gdx.input.getY();
+    
+    Gdx.app.log(TAG, "Dropped: " + node.toString());
   }
 
 }

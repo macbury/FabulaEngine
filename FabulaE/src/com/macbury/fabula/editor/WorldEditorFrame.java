@@ -55,11 +55,13 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDragEvent;
@@ -91,8 +93,10 @@ import com.macbury.fabula.editor.shaders.ShaderEditorFrame;
 import com.macbury.fabula.editor.tiles.AutoTileDebugFrame;
 import com.macbury.fabula.editor.tiles.TilesetBuilderDialog;
 import com.macbury.fabula.editor.tree.GameTransferableHandler;
+import com.macbury.fabula.editor.tree.GameTransferableHandler.GameTransferable;
 import com.macbury.fabula.editor.tree.GameTreeCellRenderer;
 import com.macbury.fabula.editor.tree.GameTreeModel;
+import com.macbury.fabula.editor.tree.GameTreeModel.BaseGameFolderNode;
 import com.macbury.fabula.editor.tree.GameTreeModel.GameShaderNode;
 import com.macbury.fabula.editor.undo_redo.ChangeManager;
 import com.macbury.fabula.editor.undo_redo.ChangeManagerListener;
@@ -292,7 +296,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     JSplitPane inspectorAndOpenGlContainerSplitPane = new JSplitPane();
     panel_9.add(inspectorAndOpenGlContainerSplitPane, BorderLayout.CENTER);
     inspectorAndOpenGlContainerSplitPane.setContinuousLayout(true);
-    inspectorAndOpenGlContainerSplitPane.setResizeWeight(0.03);
+    inspectorAndOpenGlContainerSplitPane.setResizeWeight(0.06);
     
     JSplitPane mapsTreeAndInspectorSplitPane = new JSplitPane();
     mapsTreeAndInspectorSplitPane.setBorder(BorderFactory.createEmptyBorder());
@@ -339,7 +343,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     panel_6.add(txtAmbientColor, "4, 2, fill, default");
     txtAmbientColor.setColumns(10);
     
-    this.btnPickAmbientColor = new JButton("Pick Color");
+    this.btnPickAmbientColor = new JButton("...");
     btnPickAmbientColor.addActionListener(this);
     panel_6.add(btnPickAmbientColor, "6, 2, center, default");
     
@@ -351,7 +355,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     panel_6.add(txtDirectionalLightColor, "4, 4, fill, default");
     txtDirectionalLightColor.setColumns(10);
     
-    this.btnPickDirectionalLightColor = new JButton("Pick Color");
+    this.btnPickDirectionalLightColor = new JButton("...");
     btnPickDirectionalLightColor.addActionListener(this);
     panel_6.add(btnPickDirectionalLightColor, "6, 4");
     
@@ -784,15 +788,17 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   @Override
   public void drop(DropTargetDropEvent dtde) {
     Transferable tr = dtde.getTransferable();
-    dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
-    dtde.dropComplete(true);
-    
-    for (DataFlavor df : tr.getTransferDataFlavors()) {
+    try {
+      BaseGameFolderNode node = (BaseGameFolderNode)tr.getTransferData(GameTransferableHandler.GAME_TRANSFERABLE_FLAVOR);
       
-      Gdx.app.log(TAG, df.getMimeType()) ;
+      WorldEditScreen screen = this.gameManager.getWorldEditScreen();
+      screen.onDrop(node);
+      dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+      dtde.dropComplete(true);
+    } catch (UnsupportedFlavorException | IOException e) {
+      e.printStackTrace();
+      dtde.dropComplete(false);
     }
-    Gdx.app.log(TAG, "Dropped something!");
-    
   }
 
   @Override

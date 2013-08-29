@@ -70,5 +70,6 @@ public class GameTransferableHandler extends TransferHandler {
     public boolean isDataFlavorSupported(DataFlavor falvor) {
       return true;
     }
- }
+  }
+  
 }
