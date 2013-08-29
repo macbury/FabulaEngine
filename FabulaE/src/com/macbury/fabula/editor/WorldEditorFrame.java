@@ -420,8 +420,8 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     JPanel panel_7 = new JPanel();
     tabbedInspectorPane.addTab("Grass", null, panel_7, null);
     
-    JPanel panel_2 = new JPanel();
-    tabbedInspectorPane.addTab("Objects", null, panel_2, null);
+    JPanel panel_4 = new JPanel();
+    tabbedInspectorPane.addTab("Liquid", null, panel_4, null);
     
     JPanel panel_3 = new JPanel();
     tabbedInspectorPane.addTab("Events", null, panel_3, null);
@@ -431,6 +431,8 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mapsTreeAndInspectorSplitPane.setLeftComponent(scrollPane);
     
     this.gameTree = new JTree();
+    gameTree.setDragEnabled(true);
+    gameTree.setCellRenderer(new GameTreeCellRenderer());
     gameTree.addMouseListener(this);
     gameTree.setShowsRootHandles(true);
     gameTree.setSelectionRow(0);
