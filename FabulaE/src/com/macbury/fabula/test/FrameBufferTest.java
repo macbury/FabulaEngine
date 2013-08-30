@@ -17,7 +17,6 @@ import com.badlogic.gdx.graphics.g2d.Gdx2DPixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.macbury.fabula.manager.GameManager;
-import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.screens.BaseScreen;
 import com.macbury.fabula.utils.OffScreen2DRenderer;
 import com.macbury.fabula.utils.PNG;
@@ -30,7 +29,7 @@ public class FrameBufferTest extends BaseScreen {
   private Texture test;
   public FrameBufferTest(GameManager manager) {
     super(manager);
-    texture = new ResourceManager().shared().getTexture("TEXTURE_GRASS");
+    //texture = new ResourceManager().shared().getTexture("TEXTURE_GRASS");
     renderer = new TestRender(32, 32);
     spriteBatch = new SpriteBatch();
     

@@ -33,7 +33,6 @@ import com.macbury.fabula.editor.brushes.TerrainBrush;
 import com.macbury.fabula.manager.EditorGameManager;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.manager.GameManager;
-import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.screens.WorldEditScreen;
 import com.macbury.fabula.terrain.AutoTile;

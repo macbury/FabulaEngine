@@ -2,6 +2,7 @@ package com.macbury.fabula.db;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.management.RuntimeErrorException;
 
@@ -9,6 +10,7 @@ import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementArray;
 import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.ElementMap;
 import org.simpleframework.xml.Namespace;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.Serializer;
@@ -19,6 +21,7 @@ import org.simpleframework.xml.stream.Style;
 
 import com.badlogic.gdx.Gdx;
 import com.macbury.fabula.manager.G;
+import com.macbury.fabula.terrain.AutoTiles;
 import com.macbury.fabula.terrain.Tileset;
 
 @Root(name="game-features")
@@ -43,6 +46,9 @@ public class GameDatabase {
   
   @ElementList(required=false)
   private ArrayList<Tileset> tilesets;
+  
+  @ElementMap(name="autotile-combinations", entry="corner", key="combination", attribute=true, inline=true, required=false)
+  public static HashMap<String, AutoTiles.Types> CORNER_MAP;
   
   public GameDatabase() {
     Gdx.app.log(TAG, "Game database initialized");
@@ -96,10 +102,14 @@ public class GameDatabase {
   
   public Tileset getTileset(String name) {
     for (Tileset tileset : tilesets) {
-      if (tileset.getName() == name) {
+      if (tileset.getName().equals(name)) {
         return tileset;
       }
     }
     throw new RuntimeException("Could not find tileset with name: "+ name);
+  }
+
+  public ArrayList<Tileset> getTilesets() {
+    return this.tilesets;
   }
 }

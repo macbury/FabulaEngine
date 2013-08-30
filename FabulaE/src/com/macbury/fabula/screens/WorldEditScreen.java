@@ -39,7 +39,6 @@ import com.macbury.fabula.editor.tree.GameTreeModel.BaseGameFolderNode;
 import com.macbury.fabula.editor.undo_redo.ChangeManager;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.manager.GameManager;
-import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.terrain.Terrain;
 import com.macbury.fabula.terrain.Terrain.TerrainDebugListener;

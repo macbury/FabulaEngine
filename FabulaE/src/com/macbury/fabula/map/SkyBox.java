@@ -15,7 +15,6 @@ import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.Disposable;
-import com.macbury.fabula.manager.ResourceManager;
 import com.thesecretpie.shader.ShaderManager;
 
 public class SkyBox implements Disposable {

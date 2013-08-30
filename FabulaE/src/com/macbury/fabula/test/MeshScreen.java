@@ -18,7 +18,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeType.Library;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.macbury.fabula.manager.GameManager;
-import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.screens.BaseScreen;
 import com.macbury.fabula.terrain.Terrain;
 import com.macbury.fabula.terrain.TriangleGrid;
@@ -53,7 +52,7 @@ public class MeshScreen extends BaseScreen {
     CameraInputController cont = new CameraInputController(camera);
     Gdx.input.setInputProcessor(cont);
     
-    texture = ResourceManager.shared().getTexture("TEXTURE_DEBUG");
+    //texture = ResourceManager.shared().getTexture("TEXTURE_DEBUG");
     //texture.setFilter(Filter.NearestNeighbour, Filter.NearestNeighbour);
     textureRegion = new TextureRegion(texture, 64, 64, 64, 64);
     // U == X

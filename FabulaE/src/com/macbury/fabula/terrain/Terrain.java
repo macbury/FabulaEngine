@@ -17,7 +17,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Disposable;
 import com.macbury.fabula.manager.G;
-import com.macbury.fabula.manager.ResourceManager;
 import com.thesecretpie.shader.ShaderManager;
 
 public class Terrain implements Disposable {
@@ -57,7 +56,7 @@ public class Terrain implements Disposable {
     this.sectors        = new Sector[horizontalSectorCount][veriticalSectorCount];
     this.visibleSectors = new Stack<Sector>();
     
-    tileset = ResourceManager.shared().getTileset("OUTSIDE_TILESET");
+    tileset = G.db.getTileset("outside");
   }
 
   public void buildSectors() {
@@ -73,7 +72,6 @@ public class Terrain implements Disposable {
   }
   
   public void fillEmptyTilesWithDebugTile() {
-    Tileset tileset = ResourceManager.shared().getTileset("OUTSIDE_TILESET");
     for (int z = 0; z < rows; z++) {
       for (int x = 0; x < columns; x++) {
         if (!haveTile(x,z)) {
@@ -119,7 +117,7 @@ public class Terrain implements Disposable {
     visibleSectorCount  = 0;
     final int textureId = 1;
     tileset.getTexture().bind(textureId);
-    sm.begin("SHADER_TERRAIN_EDITOR");
+    sm.begin("terrain-editor");
       sm.setUniformMatrix("u_projectionViewMatrix", camera.combined);
       sm.setUniformi("u_texture0", textureId);
       sm.getCurrent().setUniformf("u_ambient_color", lights.ambientLight);

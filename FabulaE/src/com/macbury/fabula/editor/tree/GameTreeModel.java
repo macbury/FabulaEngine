@@ -10,7 +10,6 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import com.macbury.fabula.manager.G;
-import com.macbury.fabula.manager.ResourceManager;
 
 
 public class GameTreeModel implements TreeModel {

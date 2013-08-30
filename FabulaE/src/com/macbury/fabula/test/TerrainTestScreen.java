@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.macbury.fabula.manager.GameManager;
-import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.screens.BaseScreen;
 import com.macbury.fabula.utils.TopDownCamera;
 
@@ -44,7 +43,7 @@ public class TerrainTestScreen extends BaseScreen {
     if (!meshShader.isCompiled())
       throw new IllegalStateException(meshShader.getLog());
     
-    texture = ResourceManager.shared().getTexture("TEXTURE_DEBUG");
+    //texture = ResourceManager.shared().getTexture("TEXTURE_DEBUG");
     //texture.setFilter(Filter.NearestNeighbour, Filter.NearestNeighbour);
     textureRegion = new TextureRegion(texture, 32, 32, 32, 32);
   }

@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.manager.GameManager;
-import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.map.SkyBox;
 import com.macbury.fabula.screens.BaseScreen;
 import com.thesecretpie.shader.ShaderManager;
@@ -33,7 +32,7 @@ public class ShaderTestScreen extends BaseScreen {
     
     this.sm = G.shaders;
     cube    = Shapes.genCube();
-    this.skybox = ResourceManager.shared().getSkyBox("SKYBOX_DAY");
+   // this.skybox = ResourceManager.shared().getSkyBox("SKYBOX_DAY");
     this.camera = new PerspectiveCamera();
   }
 

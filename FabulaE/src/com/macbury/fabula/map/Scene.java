@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g3d.lights.Lights;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
 import com.macbury.fabula.manager.G;
-import com.macbury.fabula.manager.ResourceManager;
 import com.macbury.fabula.terrain.Terrain;
 import com.thesecretpie.shader.ShaderManager;
 
@@ -27,7 +26,7 @@ public class Scene implements Disposable {
   private String finalShader;
   
   public Scene(int width, int height) {
-    skyBox = ResourceManager.shared().getSkyBox("SKYBOX_DAY");
+    //skyBox = ResourceManager.shared().getSkyBox("SKYBOX_DAY");
     lights = new Lights();
     lights.ambientLight.set(1f, 1f, 1f, 0.5f);
     sunLight = new DirectionalLight();

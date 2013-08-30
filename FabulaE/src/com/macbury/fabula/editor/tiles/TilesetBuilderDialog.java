@@ -20,7 +20,7 @@ import javax.swing.DefaultComboBoxModel;
 
 import com.badlogic.gdx.Gdx;
 import com.macbury.fabula.editor.tiles.TilesetGenerator.TileGeneratorListener;
-import com.macbury.fabula.manager.ResourceManager;
+import com.macbury.fabula.manager.G;
 import com.macbury.fabula.terrain.Tileset;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -49,10 +49,11 @@ public class TilesetBuilderDialog extends JDialog implements ActionListener, Til
     getContentPane().setLayout(null);
     
     this.tilesetComboBox = new JComboBox<String>();
+    tilesetComboBox.setEditable(true);
     
     DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>();
     
-    for (Tileset tileset : ResourceManager.shared().allTilesets()) {
+    for (Tileset tileset : G.db.getTilesets()) {
       model.addElement(tileset.getName());
     }
     
@@ -137,7 +138,7 @@ public class TilesetBuilderDialog extends JDialog implements ActionListener, Til
     Thread thread = new Thread(new Runnable() {
       @Override
       public void run() {
-        Tileset tileset = ResourceManager.shared().getTileset((String)tilesetComboBox.getSelectedItem());
+        Tileset tileset = G.db.getTileset((String)tilesetComboBox.getSelectedItem());
         generator.build(tileset, autoTileTextField.getText(), texturesTextField.getText());
       }
     });

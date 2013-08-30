@@ -38,24 +38,11 @@ public class GameManager extends Game {
     ShaderProgram.pedantic = false;
     this.shaderManager     = new ShaderManager("assets/shaders", new AssetManager());
     G.game      = this;
-    
-    try {
-      ResourceManager.shared().load();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    
-    G.resources = ResourceManager.shared();
     G.shaders   = shaderManager;
     G.db        = null;
     if (GameDatabase.exists()) {
       Gdx.app.log(TAG, "Loading game features...");
       G.db = GameDatabase.load();
-    }
-    
-    if (G.db == null) {
-      Gdx.app.log(TAG, "Creating empty game features...");
-      G.db = new GameDatabase();
     }
     
     G.db.initialize();
