@@ -48,7 +48,6 @@ public class AutoTiles {
     PathCrossCornerRightTop, CornerInsideLeftRight, CornerInsideRightLeft
   };
   
-  public static HashMap<String, AutoTiles.Types> CORNER_MAP;
   
   // 0 = equals border
   // 1 = equals inner
@@ -214,27 +213,8 @@ public class AutoTiles {
       }
     }
   }
+
   
-  public static HashMap<String, AutoTiles.Types> getCornerMap() {
-    if (CORNER_MAP == null) {
-      buildCornerMap();
-    }
-    
-    return CORNER_MAP;
-  }
-  
-  private static void buildCornerMap() {
-    try {
-      AutoTileBrush.loadCornerMap();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    
-    if (CORNER_MAP == null) {
-      CORNER_MAP = new HashMap<String, AutoTiles.Types>();
-      CORNER_MAP.put("0", Types.Start);
-    }
-  }
 
   
   private TextureRegion generateTileForCombination(int i) {

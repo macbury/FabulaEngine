@@ -1,5 +1,6 @@
 package com.macbury.fabula.manager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -10,6 +11,8 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.macbury.fabula.db.GameDatabase;
+import com.macbury.fabula.editor.brushes.AutoTileBrush;
+import com.macbury.fabula.terrain.AutoTiles;
 import com.macbury.fabula.test.ShaderTestScreen;
 import com.thesecretpie.shader.ShaderManager;
 
@@ -44,9 +47,9 @@ public class GameManager extends Game {
       Gdx.app.log(TAG, "Loading game features...");
       G.db = GameDatabase.load();
     }
-    
+
     G.db.initialize();
-    
+    G.db.save();
     setScreen(getInitialScreen());
     loading = false;
   }

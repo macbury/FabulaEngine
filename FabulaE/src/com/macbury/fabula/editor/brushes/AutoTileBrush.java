@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.macbury.fabula.editor.undo_redo.Changeable;
 import com.macbury.fabula.editor.undo_redo.TileChanger;
+import com.macbury.fabula.manager.G;
 import com.macbury.fabula.terrain.AutoTile;
 import com.macbury.fabula.terrain.AutoTiles;
 import com.macbury.fabula.terrain.AutoTiles.Types;
@@ -157,7 +158,7 @@ public class AutoTileBrush extends Brush {
         Tile tile  = tiles[x][y];
         if (tile.getAutoTile().getAutoTiles() == currentAutoTiles) {
           String tid = Long.toHexString(computeAutoTileUID(tile)).toUpperCase();
-          AutoTiles.getCornerMap().put(tid, tile.getAutoType());
+          G.db.CORNER_MAP.put(tid, tile.getAutoType());
         }
       }
     }
@@ -189,7 +190,7 @@ public class AutoTileBrush extends Brush {
     AutoTile defaultAutoTile = getCurrentAutoTiles().getAutoTile(AutoTiles.Types.Start);
     
     try {
-      type = AutoTiles.getCornerMap().get(tid);
+      type = G.db.CORNER_MAP.get(tid);
     } catch (ArrayIndexOutOfBoundsException e) {
       
     }
@@ -356,39 +357,6 @@ public class AutoTileBrush extends Brush {
 
   public void setCurrentAutoTile(AutoTile at) {
     this.currentAutoTile = at;
-  }
-
-  public static void loadCornerMap() throws IOException {
-    File file = Gdx.files.internal("assets/tileset.combination").file();
-    if (file != null && file.exists()) {
-      FileReader fstream    = new FileReader(file);
-      BufferedReader reader = new BufferedReader(fstream);
-      
-      AutoTiles.CORNER_MAP = new HashMap<String, AutoTiles.Types>();
-      while (true) {
-        String key   = reader.readLine();
-        String value = reader.readLine();
-        if (key == null || value == null) {
-          break;
-        } else {
-          AutoTiles.CORNER_MAP.put(key, Types.valueOf(value));
-        }
-      }
-    }
-    
-  }
-  
-  public void rebuildAndSave() throws IOException {
-    FileWriter fstream = new FileWriter(Gdx.files.internal("assets/tileset.combination").file(), false);
-    BufferedWriter out = new BufferedWriter(fstream);
-    
-    for (String key : AutoTiles.getCornerMap().keySet()) {
-      out.write(key);
-      out.newLine();
-      out.write(AutoTiles.getCornerMap().get(key).toString());
-      out.newLine();
-    }
-    out.close();
   }
 
 

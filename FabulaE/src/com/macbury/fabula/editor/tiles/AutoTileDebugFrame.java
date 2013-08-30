@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
 
 import com.macbury.fabula.editor.brushes.AutoTileBrush;
+import com.macbury.fabula.manager.G;
 import com.macbury.fabula.terrain.AutoTiles;
 import javax.swing.JScrollPane;
 import java.awt.event.WindowAdapter;
@@ -91,10 +92,10 @@ public class AutoTileDebugFrame extends JFrame implements WindowListener, Action
         }
       };
     
-    Set<String> keys = AutoTiles.getCornerMap().keySet();
+    Set<String> keys = G.db.CORNER_MAP.keySet();
     
     for (String key : keys) {
-      String value = AutoTiles.getCornerMap().get(key).toString();
+      String value = G.db.CORNER_MAP.get(key).toString();
       model.addRow(new Object[] { key, value });
     }  
     
@@ -153,14 +154,7 @@ public class AutoTileDebugFrame extends JFrame implements WindowListener, Action
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    if (brush != null) {
-      try {
-        brush.rebuildAndSave();
-      } catch (IOException e1) {
-        // TODO Auto-generated catch block
-        e1.printStackTrace();
-      }
-    }
+    G.db.save();
   }
   
 }
