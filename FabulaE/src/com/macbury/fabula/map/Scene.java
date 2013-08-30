@@ -20,6 +20,7 @@ public class Scene implements Disposable {
   private Terrain          terrain;
   private SkyBox           skyBox;
   private String           name;
+  private String           uid;
   private ShaderManager sm;
   private String TAG = "Scene";
   private boolean debug;
@@ -34,7 +35,7 @@ public class Scene implements Disposable {
     lights.add(sunLight);
     
     this.terrain = new Terrain(width, height);
-    
+    this.terrain.setTileset("outside");
     this.finalShader = "default";
     this.sm = G.shaders;
     this.sm.createFB(MAIN_FRAME_BUFFER);

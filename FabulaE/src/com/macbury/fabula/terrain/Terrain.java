@@ -55,10 +55,12 @@ public class Terrain implements Disposable {
     
     this.sectors        = new Sector[horizontalSectorCount][veriticalSectorCount];
     this.visibleSectors = new Stack<Sector>();
-    
-    tileset = G.db.getTileset("outside");
   }
-
+  
+  public void setTileset(String name) {
+    tileset = G.db.getTileset(name);
+  }
+  
   public void buildSectors() {
     for (int x = 0; x < horizontalSectorCount; x++) {
       for (int z = 0; z < veriticalSectorCount; z++) {

@@ -137,7 +137,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private ShaderEditorFrame  shaderEditorFrame;
   private JMenuItem mntmRun;
   private JMenuItem mntmRebuildTilesets;
-  private JMenuItem mntmReloadShaders;
   private JTextArea logArea;
   private JMenuItem mntmDebugFrameBuffer;
   private JMenuBar mainMenuBar;
@@ -149,6 +148,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JComboBox shadersComboBox;
   private JButton btnPickAmbientColor;
   private JButton btnPickDirectionalLightColor;
+  private JTextField mapNameTextField;
   public WorldEditorFrame(EditorGameManager game) {
     PrintStream origOut = System.out;
     PrintStream interceptor = new LogInterceptor(origOut);
@@ -183,29 +183,13 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     this.mainMenuBar = new JMenuBar();
     setJMenuBar(mainMenuBar);
     
-    JMenu mnFile = new JMenu("File");
-    mainMenuBar.add(mnFile);
+    JMenu mnGame = new JMenu("Game");
+    mainMenuBar.add(mnGame);
     
-    JMenuItem mntmNewMenuItem = new JMenuItem("New");
-    mntmNewMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
-    mnFile.add(mntmNewMenuItem);
-    
-    JMenuItem mntmNewMenuItem_2 = new JMenuItem("Open");
-    mntmNewMenuItem_2.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
-    mnFile.add(mntmNewMenuItem_2);
-    
-    JMenuItem mntmSave = new JMenuItem("Save");
-    mntmSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
-    mnFile.add(mntmSave);
-    
-    JSeparator separator = new JSeparator();
-    mnFile.add(separator);
-    
-    JMenuItem mntmQuit = new JMenuItem("Quit");
-    mnFile.add(mntmQuit);
-    
-    JMenuBar menuBar_1 = new JMenuBar();
-    mnFile.add(menuBar_1);
+    this.mntmRun = new JMenuItem("Run");
+    mntmRun.addActionListener(this);
+    mntmRun.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0));
+    mnGame.add(mntmRun);
     
     JMenu mnEdit = new JMenu("Edit");
     mainMenuBar.add(mnEdit);
@@ -220,13 +204,23 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mntmRedo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.CTRL_MASK));
     mnEdit.add(mntmRedo);
     
-    JMenu mnGame = new JMenu("Game");
-    mainMenuBar.add(mnGame);
+    JSeparator separator = new JSeparator();
+    mnEdit.add(separator);
     
-    this.mntmRun = new JMenuItem("Run");
-    mntmRun.addActionListener(this);
-    mntmRun.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0));
-    mnGame.add(mntmRun);
+    JMenuItem mntmNewMenuItem = new JMenuItem("Cut");
+    mntmNewMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_MASK));
+    mntmNewMenuItem.setEnabled(false);
+    mnEdit.add(mntmNewMenuItem);
+    
+    JMenuItem mntmCopy = new JMenuItem("Copy");
+    mntmCopy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK));
+    mntmCopy.setEnabled(false);
+    mnEdit.add(mntmCopy);
+    
+    JMenuItem mntmPaste = new JMenuItem("Paste");
+    mntmPaste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_MASK));
+    mntmPaste.setEnabled(false);
+    mnEdit.add(mntmPaste);
     
     JMenu mnDeveloper = new JMenu("Developer");
     mainMenuBar.add(mnDeveloper);
@@ -238,10 +232,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     this.mntmRebuildTilesets = new JMenuItem("Rebuild tilesets");
     mntmRebuildTilesets.addActionListener(this);
     mnDeveloper.add(mntmRebuildTilesets);
-    
-    this.mntmReloadShaders = new JMenuItem("Edit shaders");
-    mntmReloadShaders.addActionListener(this);
-    mnDeveloper.add(mntmReloadShaders);
     
     this.mntmDebugFrameBuffer = new JMenuItem("Debug frame buffer");
     mntmDebugFrameBuffer.addActionListener(this);
@@ -331,63 +321,80 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
         FormFactory.RELATED_GAP_ROWSPEC,
         FormFactory.DEFAULT_ROWSPEC,
         FormFactory.RELATED_GAP_ROWSPEC,
+        FormFactory.DEFAULT_ROWSPEC,
+        FormFactory.RELATED_GAP_ROWSPEC,
+        FormFactory.DEFAULT_ROWSPEC,
+        FormFactory.RELATED_GAP_ROWSPEC,
         FormFactory.DEFAULT_ROWSPEC,}));
     
+    JLabel lblNewLabel_5 = new JLabel("Name");
+    panel_6.add(lblNewLabel_5, "2, 2, right, default");
+    
+    mapNameTextField = new JTextField();
+    panel_6.add(mapNameTextField, "4, 2, fill, default");
+    mapNameTextField.setColumns(10);
+    
+    JLabel lblNewLabel_6 = new JLabel("Tileset");
+    panel_6.add(lblNewLabel_6, "2, 4, right, default");
+    
+    JComboBox comboBox = new JComboBox();
+    panel_6.add(comboBox, "4, 4, fill, default");
+    
     JLabel lblNewLabel_3 = new JLabel("Ambient Color:");
-    panel_6.add(lblNewLabel_3, "2, 2, right, default");
+    panel_6.add(lblNewLabel_3, "2, 6, right, default");
     
     txtAmbientColor = new JTextField();
     txtAmbientColor.setText("#ffffff");
     txtAmbientColor.setHorizontalAlignment(SwingConstants.LEFT);
-    panel_6.add(txtAmbientColor, "4, 2, fill, default");
+    panel_6.add(txtAmbientColor, "4, 6, fill, default");
     txtAmbientColor.setColumns(10);
     
     this.btnPickAmbientColor = new JButton("...");
     btnPickAmbientColor.addActionListener(this);
-    panel_6.add(btnPickAmbientColor, "6, 2, center, default");
+    panel_6.add(btnPickAmbientColor, "6, 6, center, default");
     
     JLabel lblDirectionalLightColor = new JLabel("Directional light color");
-    panel_6.add(lblDirectionalLightColor, "2, 4, right, default");
+    panel_6.add(lblDirectionalLightColor, "2, 8, right, default");
     
     txtDirectionalLightColor = new JTextField();
     txtDirectionalLightColor.setText("#ffffff");
-    panel_6.add(txtDirectionalLightColor, "4, 4, fill, default");
+    panel_6.add(txtDirectionalLightColor, "4, 8, fill, default");
     txtDirectionalLightColor.setColumns(10);
     
     this.btnPickDirectionalLightColor = new JButton("...");
     btnPickDirectionalLightColor.addActionListener(this);
-    panel_6.add(btnPickDirectionalLightColor, "6, 4");
+    panel_6.add(btnPickDirectionalLightColor, "6, 8");
     
     JLabel lblLightPosition = new JLabel("Light position X:");
-    panel_6.add(lblLightPosition, "2, 6");
+    panel_6.add(lblLightPosition, "2, 10, right, default");
     
     this.lightPositionXSpinner = new JSpinner();
     lightPositionXSpinner.addChangeListener(this);
     lightPositionXSpinner.setModel(new SpinnerNumberModel(new Float(0), new Float(-1000), new Float(1000), new Float(0.010f)));
-    panel_6.add(lightPositionXSpinner, "4, 6");
+    panel_6.add(lightPositionXSpinner, "4, 10");
     
     JLabel lblLightPositionY = new JLabel("Light position Y:");
-    panel_6.add(lblLightPositionY, "2, 8");
+    panel_6.add(lblLightPositionY, "2, 12, right, default");
     
     this.lightPositionYSpinner = new JSpinner();
     lightPositionYSpinner.addChangeListener(this);
     lightPositionYSpinner.setModel(new SpinnerNumberModel(new Float(0), new Float(-1000), new Float(1000), new Float(0.010f)));
-    panel_6.add(lightPositionYSpinner, "4, 8");
+    panel_6.add(lightPositionYSpinner, "4, 12");
     
     JLabel lblLightPositionZ = new JLabel("Light position Z:");
-    panel_6.add(lblLightPositionZ, "2, 10");
+    panel_6.add(lblLightPositionZ, "2, 14, right, default");
     
     this.lightPositionZSpinner = new JSpinner();
     lightPositionZSpinner.addChangeListener(this);
     lightPositionZSpinner.setModel(new SpinnerNumberModel(new Float(0), new Float(-1000), new Float(1000), new Float(0.010f)));
-    panel_6.add(lightPositionZSpinner, "4, 10");
+    panel_6.add(lightPositionZSpinner, "4, 14");
     
     JLabel lblPostProcessing = new JLabel("Post processing");
-    panel_6.add(lblPostProcessing, "2, 12, right, default");
+    panel_6.add(lblPostProcessing, "2, 16, right, default");
     
     this.shadersComboBox = new JComboBox();
     shadersComboBox.addActionListener(this);
-    panel_6.add(shadersComboBox, "4, 12, fill, default");
+    panel_6.add(shadersComboBox, "4, 16, fill, default");
     
     JPanel panel = new JPanel();
     panel.setBackground(SystemColor.window);
@@ -767,25 +774,25 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   }
 
   @Override
-  public void dragEnter(DropTargetDragEvent arg0) {
-    // TODO Auto-generated method stub
-    
+  public void dragEnter(DropTargetDragEvent dtde) {
+    Gdx.app.log(TAG, "dragEnter<><><><><><><");
+    //TODO: set for world screen drag element
   }
 
   @Override
-  public void dragExit(DropTargetEvent arg0) {
-    // TODO Auto-generated method stub
-    
+  public void dragExit(DropTargetEvent dtde) {
+    Gdx.app.log(TAG, "dragExit");
+    //TODO: remove drag from world screen
   }
 
   @Override
   public void dragOver(DropTargetDragEvent arg0) {
-    // TODO Auto-generated method stub
-    
+    Gdx.app.log(TAG, "dragOver");
   }
 
   @Override
   public void drop(DropTargetDropEvent dtde) {
+    //TODO: apply element
     Transferable tr = dtde.getTransferable();
     try {
       BaseGameFolderNode node = (BaseGameFolderNode)tr.getTransferData(GameTransferableHandler.GAME_TRANSFERABLE_FLAVOR);
