@@ -1,3 +1,34 @@
-<game-features build="0">
+<game-features game:build="1" xmlns:game="http://macbury.pl/">
    <title>Brutal Crasher</title>
+   
+   <shaders length="2">
+     <name>terrain-editor</name>
+     <name>bloom</name>
+   </shaders>
+   
+   <tilesets>
+      <tileset name="outside" atlas="outside">
+         <auto-tiles length="19">
+            <auto-tile name="grass_simple" slope="false"/>
+            <auto-tile name="grass_sand_road" slope="false"/>
+            <auto-tile name="desert_rock_road" slope="false"/>
+            <auto-tile name="desert_simple"  slope="false"/>
+            <auto-tile name="grass_rock_road"  slope="false"/>
+            <auto-tile name="grass_simple"  slope="false"/>
+            <auto-tile name="rock_road"  slope="false"/>
+            <auto-tile name="rock_road_second"  slope="false"/>
+            <auto-tile name="sand_grass_road"  slope="false"/>
+            <auto-tile name="sand_rock_road"  slope="false"/>
+            <auto-tile name="sand_simple"  slope="false"/>
+            <auto-tile name="snow_rock_road"  slope="false"/>
+            <auto-tile name="snow_simple" slope="false" />
+            <auto-tile name="ground_hill"  slope="false"/>
+            <auto-tile name="rock_hill"  slope="false"/>
+            <auto-tile name="grass_hill"  slope="false"/>
+            <auto-tile name="ground_hill_side" slope="true" />
+            <auto-tile name="rock_hill_side" slope="true" />
+            <auto-tile name="grass_hill_side" slope="true" />
+         </auto-tiles>
+      </tileset>
+   </tilesets>
 </game-features>

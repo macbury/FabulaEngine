@@ -4,18 +4,47 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.ElementArray;
+import org.simpleframework.xml.Root;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
 
+@Root
 public class Tileset {
-  private TextureAtlas textureAtlas;
+  @Attribute
   private String name;
+  @Attribute(name="atlas")
+  private String atlasName;
+  
+  @ElementArray(name="auto-tiles", entry="auto-tile")
+  private AutoTileBuilderInfo[] autoTileBuilderInfos;
+  
+  private TextureAtlas textureAtlas;
   private HashMap<String, AutoTiles> autotiles;
   private ArrayList<String> orderedAutotiles;
   private AutoTile defaultAutoTile;
-  private String atlasName;
+  
   private Texture texture;
+  
+  public Tileset(@Attribute(name="name") String name, @Attribute(name="atlas") String atlasName, @ElementArray(name="auto-tiles") AutoTileBuilderInfo[] autoTileBuilderInfos) {
+    this.name                 = name;
+    this.atlasName            = atlasName;
+    this.autoTileBuilderInfos = autoTileBuilderInfos;
+    
+    this.autotiles            = new HashMap<String, AutoTiles>();
+    this.orderedAutotiles     = new ArrayList<String>();
+    
+    this.textureAtlas         = new TextureAtlas(Gdx.files.internal("assets/textures/"+atlasName+".atlas"));
+    this.texture              = (Texture) this.textureAtlas.getTextures().toArray()[0];
+    
+    for (AutoTileBuilderInfo autoTileBuilderInfo : autoTileBuilderInfos) {
+      buildAutotiles(autoTileBuilderInfo.name, autoTileBuilderInfo.slope);
+    }
+  }
   
   public Tileset(TextureAtlas atlas, String name) {
     this.name         = name;
@@ -91,5 +120,16 @@ public class Tileset {
 
   public Texture getTexture() {
     return this.texture; 
+  }
+  
+  @Root
+  public static class AutoTileBuilderInfo {
+    @Attribute
+    public String name;
+    
+    @Attribute
+    public boolean slope;
+    
+    public AutoTileBuilderInfo() {}
   }
 }

@@ -9,6 +9,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.macbury.fabula.db.GameDatabase;
 import com.macbury.fabula.test.ShaderTestScreen;
 import com.thesecretpie.shader.ShaderManager;
 
@@ -46,9 +47,18 @@ public class GameManager extends Game {
     
     G.resources = ResourceManager.shared();
     G.shaders   = shaderManager;
+    G.db        = null;
+    if (GameDatabase.exists()) {
+      Gdx.app.log(TAG, "Loading game features...");
+      G.db = GameDatabase.load();
+    }
     
-    GameDatabase db = new GameDatabase();
-    db.save();
+    if (G.db == null) {
+      Gdx.app.log(TAG, "Creating empty game features...");
+      G.db = new GameDatabase();
+    }
+    
+    G.db.initialize();
     
     setScreen(getInitialScreen());
     loading = false;
