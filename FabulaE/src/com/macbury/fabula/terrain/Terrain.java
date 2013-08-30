@@ -3,6 +3,9 @@ package com.macbury.fabula.terrain;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Root;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
@@ -19,12 +22,18 @@ import com.badlogic.gdx.utils.Disposable;
 import com.macbury.fabula.manager.G;
 import com.thesecretpie.shader.ShaderManager;
 
+@Root
 public class Terrain implements Disposable {
   private Sector[][] sectors;
   private Tile[][] tiles;
-
+  
+  @Attribute
   private int columns;
+  @Attribute
   private int rows;
+  @Attribute
+  private String tilesetName;
+  
   private int horizontalSectorCount;
   private int veriticalSectorCount;
   private int totalSectorCount;
@@ -39,6 +48,15 @@ public class Terrain implements Disposable {
   private TerrainDebugListener debugListener;
   
   public Terrain(int columns, int rows) {
+    initialize(columns, rows);
+  }
+
+  /*public Terrain(@Attribute int columns, @Attribute int rows, @Attribute String tilesetName) {
+    initialize(columns, rows);
+    setTileset(tilesetName);
+  }*/
+  
+  private void initialize(int columns, int rows) {
     Tile.GID_COUNTER  = 1;
     this.debug        = debug;
     this.columns      = columns;
@@ -58,7 +76,8 @@ public class Terrain implements Disposable {
   }
   
   public void setTileset(String name) {
-    tileset = G.db.getTileset(name);
+    tilesetName = name;
+    tileset     = G.db.getTileset(tilesetName);
   }
   
   public void buildSectors() {

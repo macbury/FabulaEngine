@@ -114,6 +114,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JProgressBar;
 
 public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener, MouseListener, DropTargetListener {
   
@@ -149,6 +150,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JButton btnPickAmbientColor;
   private JButton btnPickDirectionalLightColor;
   private JTextField mapNameTextField;
+  private JMenuItem mntmSaveGame;
   public WorldEditorFrame(EditorGameManager game) {
     PrintStream origOut = System.out;
     PrintStream interceptor = new LogInterceptor(origOut);
@@ -190,6 +192,14 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mntmRun.addActionListener(this);
     mntmRun.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0));
     mnGame.add(mntmRun);
+    
+    JSeparator separator_1 = new JSeparator();
+    mnGame.add(separator_1);
+    
+    this.mntmSaveGame = new JMenuItem("Save");
+    mntmSaveGame.addActionListener(this);
+    mntmSaveGame.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
+    mnGame.add(mntmSaveGame);
     
     JMenu mnEdit = new JMenu("Edit");
     mainMenuBar.add(mnEdit);
@@ -259,6 +269,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     panel_8.setLayout(new BorderLayout(0, 0));
     
     JScrollPane scrollPane_1 = new JScrollPane();
+    scrollPane_1.setBorder(BorderFactory.createEmptyBorder());
     panel_8.add(scrollPane_1, BorderLayout.CENTER);
     
     this.logArea = new JTextArea();
@@ -271,11 +282,15 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     JPanel panel_5 = new JPanel();
     panel_8.add(panel_5, BorderLayout.SOUTH);
-    panel_5.setBorder(new EmptyBorder(5, 15, 5, 15));
+    panel_5.setBorder(new EmptyBorder(10, 5, 5, 5));
     panel_5.setLayout(new BorderLayout(0, 0));
     
     this.statusBarLabel = new JLabel("X: 0 Y:0 Z:0");
     panel_5.add(statusBarLabel, BorderLayout.WEST);
+    
+    JProgressBar progressBar = new JProgressBar();
+    progressBar.setIndeterminate(true);
+    panel_5.add(progressBar, BorderLayout.EAST);
     
     JPanel panel_9 = new JPanel();
     panel_9.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -671,6 +686,11 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     if (e.getSource() == this.mntmRebuildTilesets) {
       TilesetBuilderDialog dialog = new TilesetBuilderDialog();
       dialog.setVisible(true);
+    }
+    
+    if (e.getSource() == mntmSaveGame) {
+      G.db.save();
+      scene.save();
     }
     
     if (e.getSource() == mntmDebugFrameBuffer) {

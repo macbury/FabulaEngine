@@ -1,4 +1,4 @@
-<game-features game:build="12" xmlns:game="http://macbury.pl/">
+<game-features game:build="23" xmlns:game="http://macbury.pl/">
    <title>Brutal Crasher</title>
    <shaders length="2">
       <shader>terrain-editor</shader>

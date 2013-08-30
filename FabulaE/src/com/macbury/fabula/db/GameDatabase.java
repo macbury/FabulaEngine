@@ -55,13 +55,9 @@ public class GameDatabase {
   }
   
   public void save() {
-    Style style           = new HyphenStyle();
-    Format format         = new Format(style);
-    Serializer serializer = new Persister(format);
     build++;
-    File result = Gdx.files.internal("assets/game.features").file();
     try {
-      serializer.write(this, result);
+      GameDatabase.save(this, "game.features");
     } catch (Exception e) {
       e.printStackTrace();
       throw new RuntimeErrorException(new Error(), "Game db broken!");
@@ -111,5 +107,17 @@ public class GameDatabase {
 
   public ArrayList<Tileset> getTilesets() {
     return this.tilesets;
+  }
+  
+  public int getMapUid() {
+    return 1;
+  }
+  
+  public static void save(Object object, String path) throws Exception {
+    Style style           = new HyphenStyle();
+    Format format         = new Format(style);
+    Serializer serializer = new Persister(format);
+    File result = Gdx.files.internal("assets/"+path).file();
+    serializer.write(object, result);
   }
 }

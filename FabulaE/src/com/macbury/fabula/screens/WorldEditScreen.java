@@ -82,7 +82,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     int width = 150;
     int height = 150;
     
-    this.scene   = new Scene(width, height);
+    this.scene   = new Scene("New Map", 1, width, height);
     this.terrain = this.scene.getTerrain();
     terrain.setDebugListener(this);
     terrain.fillEmptyTilesWithDebugTile();
