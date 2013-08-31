@@ -1,4 +1,4 @@
-<game-features game:build="28" xmlns:game="http://macbury.pl/">
+<game-features game:build="31" xmlns:game="http://macbury.pl/">
    <title>Brutal Crasher</title>
    <shaders length="2">
       <shader>terrain-editor</shader>
@@ -219,9 +219,9 @@
    <corner combination="A00FFBF7">PathCrossCornerRightTop</corner>
    <corner combination="F0F7">CornerTopLeft</corner>
    <corner combination="F00F0">PathCornerTopLeft</corner>
-   <corner combination="F00F3">PathCornerTopLeft</corner>
    <corner combination="F00F0FF0">CornerTopRight</corner>
    <corner combination="FF005">PathHorizontal</corner>
+   <corner combination="F00F3">PathCornerTopLeft</corner>
    <corner combination="F0F5">CornerTopLeft</corner>
    <corner combination="F0F3">CornerTopLeft</corner>
    <corner combination="F0FFF3F">InnerEdgeTopRight</corner>

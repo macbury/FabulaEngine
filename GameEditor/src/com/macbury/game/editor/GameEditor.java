@@ -1,6 +1,5 @@
 package com.macbury.game.editor;
 
-import com.macbury.fabula.WorldEd;
 import com.macbury.fabula.manager.EditorGameManager;
 
 
