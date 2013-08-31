@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.management.RuntimeErrorException;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
@@ -60,7 +59,6 @@ public class GameDatabase {
       GameDatabase.save(this, "game.features");
     } catch (Exception e) {
       e.printStackTrace();
-      throw new RuntimeErrorException(new Error(), "Game db broken!");
     }
   }
 

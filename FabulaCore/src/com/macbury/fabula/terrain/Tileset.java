@@ -99,7 +99,7 @@ public class Tileset {
   }
 
   public ArrayList<AutoTiles> getAutoTiles() {
-    return new ArrayList<>(autotiles.values());
+    return new ArrayList<AutoTiles>(autotiles.values());
   }
 
   public String getName() {

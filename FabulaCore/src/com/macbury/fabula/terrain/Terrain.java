@@ -40,7 +40,7 @@ public class Terrain implements Disposable {
   private int visibleSectorCount;
   
   private Stack<Sector> visibleSectors;
-  private ArrayList<Sector> rebuildSectorsArray = new ArrayList<>();
+  private ArrayList<Sector> rebuildSectorsArray = new ArrayList<Sector>();
   private Vector3 intersection = new Vector3();
   private boolean debug = false;
   
