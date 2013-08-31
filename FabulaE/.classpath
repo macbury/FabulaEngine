@@ -2,34 +2,34 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="jars/gdx-backend-lwjgl-natives.jar"/>
-	<classpathentry kind="lib" path="jars/gdx-backend-lwjgl.jar"/>
-	<classpathentry kind="lib" path="jars/gdx-natives.jar"/>
-	<classpathentry kind="lib" path="jars/gdx-openal.jar"/>
-	<classpathentry kind="lib" path="jars/gdx.jar">
+	<classpathentry exported="true" kind="lib" path="jars/gdx-backend-lwjgl-natives.jar"/>
+	<classpathentry exported="true" kind="lib" path="jars/gdx-backend-lwjgl.jar"/>
+	<classpathentry exported="true" kind="lib" path="jars/gdx-natives.jar"/>
+	<classpathentry exported="true" kind="lib" path="jars/gdx-openal.jar"/>
+	<classpathentry exported="true" kind="lib" path="jars/gdx.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://libgdx.badlogicgames.com/nightlies/docs/api/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="jars/gdx-freetype.jar"/>
-	<classpathentry kind="lib" path="jars/gdx-freetype-natives.jar"/>
-	<classpathentry kind="lib" path="jars/gdx-audio.jar"/>
-	<classpathentry kind="lib" path="jars/gdx-audio-natives.jar"/>
-	<classpathentry kind="lib" path="jars/autocomplete.jar"/>
-	<classpathentry kind="lib" path="jars/rsyntaxtextarea.jar">
+	<classpathentry exported="true" kind="lib" path="jars/gdx-freetype.jar"/>
+	<classpathentry exported="true" kind="lib" path="jars/gdx-freetype-natives.jar"/>
+	<classpathentry exported="true" kind="lib" path="jars/gdx-audio.jar"/>
+	<classpathentry exported="true" kind="lib" path="jars/gdx-audio-natives.jar"/>
+	<classpathentry exported="true" kind="lib" path="jars/autocomplete.jar"/>
+	<classpathentry exported="true" kind="lib" path="jars/rsyntaxtextarea.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://javadoc.fifesoft.com/rsyntaxtextarea/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="jars/forms-1.3.0.jar"/>
-	<classpathentry kind="lib" path="jars/gdx-texturepacker.jar"/>
-	<classpathentry kind="lib" path="jars/im4java-1.4.0.jar">
+	<classpathentry exported="true" kind="lib" path="jars/forms-1.3.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="jars/gdx-texturepacker.jar"/>
+	<classpathentry exported="true" kind="lib" path="jars/im4java-1.4.0.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://im4java.sourceforge.net/api/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="jars/js.jar"/>
-	<classpathentry kind="lib" path="jars/simple-xml-2.7.jar">
+	<classpathentry exported="true" kind="lib" path="jars/js.jar"/>
+	<classpathentry exported="true" kind="lib" path="jars/simple-xml-2.7.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://simple.sourceforge.net/download/stream/doc/javadoc/"/>
 		</attributes>
