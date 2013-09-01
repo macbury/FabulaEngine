@@ -130,7 +130,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private ChangeManager changeManager;
   private JMenuItem mntmUndo;
   private JMenuItem mntmRedo;
-  private JTree gameTree;
   private JComboBox shadersComboBox;
   private JButton btnPickAmbientColor;
   private JButton btnPickDirectionalLightColor;
@@ -300,17 +299,22 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     panel_9.add(inspectorAndOpenGlContainerSplitPane, BorderLayout.CENTER);
     inspectorAndOpenGlContainerSplitPane.setContinuousLayout(true);
     inspectorAndOpenGlContainerSplitPane.setResizeWeight(0.06);
+
     
-    JSplitPane mapsTreeAndInspectorSplitPane = new JSplitPane();
-    mapsTreeAndInspectorSplitPane.setBorder(BorderFactory.createEmptyBorder());
-    mapsTreeAndInspectorSplitPane.setContinuousLayout(true);
-    mapsTreeAndInspectorSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-    inspectorAndOpenGlContainerSplitPane.setLeftComponent(mapsTreeAndInspectorSplitPane);
+    JPanel openGLContainerPane = new JPanel();
+    openGLContainerPane.setBorder(new EmptyBorder(0, 0, 0, 0));
+    inspectorAndOpenGlContainerSplitPane.setRightComponent(openGLContainerPane);
+    openGLContainerPane.add(this.gameCanvas.getCanvas(), BorderLayout.CENTER);
+    openGLContainerPane.setLayout(new BoxLayout(openGLContainerPane, BoxLayout.X_AXIS));
+    
+    JPanel panel_11 = new JPanel();
+    inspectorAndOpenGlContainerSplitPane.setLeftComponent(panel_11);
+    panel_11.setLayout(new BorderLayout(0, 0));
     
     this.tabbedInspectorPane = new JTabbedPane(JTabbedPane.TOP);
+    panel_11.add(tabbedInspectorPane);
     
     tabbedInspectorPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-    mapsTreeAndInspectorSplitPane.setRightComponent(tabbedInspectorPane);
     
     JPanel panel_6 = new JPanel();
     panel_6.setBackground(Color.WHITE);
@@ -501,32 +505,9 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     JPanel panel_3 = new JPanel();
     tabbedInspectorPane.addTab("Events", null, panel_3, null);
-    
-    JScrollPane scrollPane = new JScrollPane();
-    scrollPane.setViewportBorder(BorderFactory.createEmptyBorder());
-    mapsTreeAndInspectorSplitPane.setLeftComponent(scrollPane);
-    
-    this.gameTree = new JTree();
-    
-    gameTree.setDragEnabled(true);
-    gameTree.setTransferHandler(new GameTransferableHandler());
-    
-    gameTree.setCellRenderer(new GameTreeCellRenderer());
-    gameTree.addMouseListener(this);
-    gameTree.setShowsRootHandles(true);
-    gameTree.setSelectionRow(0);
-    this.gameTree.setBorder(BorderFactory.createEmptyBorder());
-    gameTree.setBorder(new EmptyBorder(0, 0, 0, 0));
-    scrollPane.setViewportView(gameTree);
-    
-    JPanel openGLContainerPane = new JPanel();
-    openGLContainerPane.setBorder(new EmptyBorder(0, 0, 0, 0));
-    inspectorAndOpenGlContainerSplitPane.setRightComponent(openGLContainerPane);
-    openGLContainerPane.add(this.gameCanvas.getCanvas(), BorderLayout.CENTER);
-    openGLContainerPane.setLayout(new BoxLayout(openGLContainerPane, BoxLayout.X_AXIS));
+    tabbedInspectorPane.addChangeListener(this);
     
     DropTarget dt = new DropTarget(this.gameCanvas.getCanvas(), this);
-    tabbedInspectorPane.addChangeListener(this);
     
     Thread statusbarThread = new Thread(new StatusBarInfoRunnable());
     statusbarThread.start();
@@ -545,7 +526,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
         }
       }
       
-      gameTree.setModel(new GameTreeModel());
       updateInfoForMapSettings();
       
       while (running) {
@@ -793,7 +773,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
 
   @Override
   public void mousePressed(MouseEvent e) {
-    if (e.getSource() == gameTree && e.getClickCount() == 2) {
+    /*if (e.getSource() == gameTree && e.getClickCount() == 2) {
       TreePath selPath = gameTree.getPathForLocation(e.getX(), e.getY());
       if (selPath != null) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)selPath.getLastPathComponent();
@@ -807,7 +787,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
           editor.setVisible(true);
         }
       }
-    }
+    }*/
   }
 
   @Override

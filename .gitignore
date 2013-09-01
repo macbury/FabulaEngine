@@ -5,3 +5,7 @@ FabulaE/preprocessed/parts
 FabulaE/preprocessed/whole
 Thumbs.db
 .apk
+
+bin/
+.dex
+.class
