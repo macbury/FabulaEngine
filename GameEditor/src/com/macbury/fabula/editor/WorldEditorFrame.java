@@ -19,14 +19,17 @@ import java.awt.event.InputEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -92,8 +95,13 @@ import com.macbury.fabula.screens.WorldEditScreen;
 import com.macbury.fabula.terrain.AutoTile;
 import com.macbury.fabula.terrain.AutoTiles;
 import com.macbury.fabula.terrain.Tileset;
+import java.awt.event.InputMethodListener;
+import java.awt.event.InputMethodEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+import java.awt.event.KeyAdapter;
 
-public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener, MouseListener, DropTargetListener {
+public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener, MouseListener, DropTargetListener, KeyListener  {
   
   protected static final String TAG = "WorldEditorFrame";
   private JPanel contentPane;
@@ -128,13 +136,13 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JButton btnPickDirectionalLightColor;
   private JTextField mapNameTextField;
   private JMenuItem mntmSaveGame;
+  private JComboBox tilesetComboBox;
   public WorldEditorFrame(EditorGameManager game) {
     PrintStream origOut = System.out;
     PrintStream interceptor = new LogInterceptor(origOut);
     System.setOut(interceptor);
     
     setIconImage(Toolkit.getDefaultToolkit().getImage(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/gwn.ico")));
-    setTitle("WorldEd - [No Name]");
     setDefaultCloseOperation(EXIT_ON_CLOSE);
     Runtime.getRuntime().addShutdownHook(new Thread() {
       public void run () {
@@ -162,6 +170,22 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     this.mainMenuBar = new JMenuBar();
     setJMenuBar(mainMenuBar);
     
+    JMenu mnMap = new JMenu("Map");
+    mainMenuBar.add(mnMap);
+    
+    JMenuItem mntmNew = new JMenuItem("New");
+    mntmNew.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
+    mnMap.add(mntmNew);
+    
+    this.mntmSaveGame = new JMenuItem("Save");
+    mnMap.add(mntmSaveGame);
+    mntmSaveGame.addActionListener(this);
+    mntmSaveGame.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
+    
+    JMenuItem mntmOpen = new JMenuItem("Open");
+    mntmOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
+    mnMap.add(mntmOpen);
+    
     JMenu mnGame = new JMenu("Game");
     mainMenuBar.add(mnGame);
     
@@ -175,14 +199,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     JMenuItem mntmBuildAssetBundle = new JMenuItem("Build Asset Bundle");
     mnGame.add(mntmBuildAssetBundle);
-    
-    JSeparator separator_1 = new JSeparator();
-    mnGame.add(separator_1);
-    
-    this.mntmSaveGame = new JMenuItem("Save");
-    mntmSaveGame.addActionListener(this);
-    mntmSaveGame.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
-    mnGame.add(mntmSaveGame);
     
     JMenu mnEdit = new JMenu("Edit");
     mainMenuBar.add(mnEdit);
@@ -329,14 +345,16 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     panel_6.add(lblNewLabel_5, "2, 2, right, default");
     
     mapNameTextField = new JTextField();
+    mapNameTextField.addKeyListener(this);
     panel_6.add(mapNameTextField, "4, 2, fill, default");
     mapNameTextField.setColumns(10);
     
     JLabel lblNewLabel_6 = new JLabel("Tileset");
     panel_6.add(lblNewLabel_6, "2, 4, right, default");
     
-    JComboBox comboBox = new JComboBox();
-    panel_6.add(comboBox, "4, 4, fill, default");
+    this.tilesetComboBox = new JComboBox();
+    tilesetComboBox.addItemListener(this);
+    panel_6.add(tilesetComboBox, "4, 4, fill, default");
     
     JLabel lblNewLabel_3 = new JLabel("Ambient Color:");
     panel_6.add(lblNewLabel_3, "2, 6, right, default");
@@ -548,9 +566,11 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     DirectionalLight sun = scene.getSunLight();
     
     if (e.getSource() == tabbedInspectorPane) {
+      G.db.save();
       switch (tabbedInspectorPane.getSelectedIndex()) {
         case 0:
           updateInfoForMapSettings();
+          screen.setCurrentBrush(null);
         break;
         case 1:
           screen.setCurrentBrush(screen.getTerrainBrush());
@@ -563,7 +583,8 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
         break;
         
         default:
-          break;
+          screen.setCurrentBrush(null);
+        break;
       }
     }
     
@@ -594,6 +615,20 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     Array<String> shadersName = G.shaders.getAllShaderNames().toArray();
     shadersComboBox.setModel(new DefaultComboBoxModel(shadersName.toArray(String.class)));
+    
+    DefaultComboBoxModel<String> tilesetModel = new DefaultComboBoxModel<String>();
+
+    ArrayList<Tileset> tilesets = G.db.getTilesets();
+    for (Tileset tileset : tilesets) {
+      tilesetModel.addElement(tileset.getName());
+    }
+    tilesetComboBox.setModel(tilesetModel);
+
+    autoTileList.setSelectedIndex(tilesets.indexOf(scene.getTerrain().getTileset()));
+    
+    mapNameTextField.setText(scene.getName());
+    
+    setTitle("WorldEd - ["+scene.getName()+"]");
   }
 
   private void updateInfoForAutotileBrush() {
@@ -625,9 +660,14 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   @Override
   public void itemStateChanged(ItemEvent e) {
     System.gc();
-    
+    WorldEditScreen screen = this.gameManager.getWorldEditScreen();
+    Scene scene            = screen.getScene();
     if (e.getSource() == paintModeComboBox) {
       updateInfoForAutotileBrush();
+    }
+    
+    if (e.getSource() == tilesetComboBox) {
+      scene.getTerrain().setTileset((String)tilesetComboBox.getSelectedItem());
     }
   }
 
@@ -815,4 +855,26 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     // TODO Auto-generated method stub
     
   }
+
+
+  @Override
+  public void keyPressed(KeyEvent arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void keyReleased(KeyEvent arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void keyTyped(KeyEvent event) {
+    WorldEditScreen screen = this.gameManager.getWorldEditScreen();
+    if (event.getSource() == mapNameTextField) {
+      screen.getScene().setName(mapNameTextField.getText());
+    }
+  }
+
 }

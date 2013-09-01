@@ -1,8 +1,16 @@
 package com.macbury.fabula.map;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.zip.Deflater;
+import java.util.zip.DeflaterOutputStream;
+
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
+import org.simpleframework.xml.core.Complete;
+import org.simpleframework.xml.core.Persist;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
@@ -12,10 +20,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.lights.Lights;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Base64Coder;
 import com.badlogic.gdx.utils.Disposable;
 import com.macbury.fabula.db.GameDatabase;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.terrain.Terrain;
+import com.macbury.fabula.terrain.Tile;
 import com.thesecretpie.shader.ShaderManager;
 
 @Root(name="map")
@@ -26,6 +36,12 @@ public class Scene implements Disposable {
   private int              uid;
   @Element
   private Terrain          terrain;
+  @Element
+  private String           finalShader;
+  @Element
+  private int              ambientColor;
+  @Element
+  private int              sunLightColor;
   
   private static final String MAIN_FRAME_BUFFER = "MAIN_FRAME_BUFFER";
   private static final String TAG               = "Scene";
@@ -37,7 +53,7 @@ public class Scene implements Disposable {
   private ShaderManager sm;
   
   private boolean debug;
-  private String finalShader;
+  
   
   public Scene(String name, int uid, int width, int height) {
     //skyBox = ResourceManager.shared().getSkyBox("SKYBOX_DAY");
@@ -95,7 +111,7 @@ public class Scene implements Disposable {
   
   public boolean save() {
     try {
-      GameDatabase.save(this, "maps/"+this.uid+".map");
+      GameDatabase.save(this, "maps/"+this.name+".map");
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -120,4 +136,22 @@ public class Scene implements Disposable {
     this.finalShader = finalShader;
   }
   
+  @Persist
+  public void prepare() {
+    ambientColor  = lights.ambientLight.toIntBits();
+    sunLightColor = sunLight.color.toIntBits();
+  }
+
+  @Complete
+  public void release() {
+    
+  }
+
+  public void setName(String text) {
+    this.name = text;
+  }
+
+  public String getName() {
+    return this.name;
+  }
 }

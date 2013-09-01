@@ -69,7 +69,7 @@ public class GameDatabase {
     Style style           = new HyphenStyle();
     Format format         = new Format(style);
     Serializer serializer = new Persister(format);
-    File file             = G.fs( "game.features" ).file();
+    File file             = G.fs("game.features").file();
    
     Gdx.app.log(TAG, "Loading " + file.getAbsolutePath());
     
@@ -119,5 +119,9 @@ public class GameDatabase {
     Serializer serializer = new Persister(format);
     File result = G.fs(path).file();
     serializer.write(object, result);
+  }
+
+  public String[] getMapNames() {
+    return this.maps;
   }
 }

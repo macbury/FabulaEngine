@@ -101,7 +101,16 @@ public class GameTreeModel implements TreeModel {
   public class GameMapsFolderNode extends BaseGameFolderNode {
     public GameMapsFolderNode() {
       super("Maps");
-      add(new GameMapNode("MAP001"));
+      
+      String[] maps = G.db.getMapNames();
+      
+      if (maps != null) {
+        for (int i = 0; i < maps.length; i++) {
+          add(new GameMapNode(maps[i]));
+        }
+      }
+      
+      
     }
   }
   

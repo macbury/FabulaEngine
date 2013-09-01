@@ -1,10 +1,19 @@
 package com.macbury.fabula.terrain;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.zip.Deflater;
+import java.util.zip.DeflaterOutputStream;
 
 import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
+import org.simpleframework.xml.core.Commit;
+import org.simpleframework.xml.core.Complete;
+import org.simpleframework.xml.core.Persist;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -18,6 +27,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
+import com.badlogic.gdx.utils.Base64Coder;
 import com.badlogic.gdx.utils.Disposable;
 import com.macbury.fabula.manager.G;
 import com.thesecretpie.shader.ShaderManager;
@@ -33,6 +43,9 @@ public class Terrain implements Disposable {
   private int rows;
   @Attribute
   private String tilesetName;
+  
+  @Element
+  private String terrainData;
   
   private int horizontalSectorCount;
   private int veriticalSectorCount;
@@ -296,6 +309,52 @@ public class Terrain implements Disposable {
 
   private Tile getTile(float x, float z) {
     return getTile((int)x, (int)z);
+  }
+  
+  @Commit
+  public void commit() {
+     //decoded = encoder.decode(encoded, format);
+     //encoded = null;
+  }
+
+  @Persist
+  public void prepare() {
+    Deflater deflater = new Deflater();
+    deflater.setStrategy(Deflater.BEST_SPEED);
+    
+    ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+    DeflaterOutputStream dout              = new DeflaterOutputStream(byteOutputStream, deflater);
+    DataOutputStream dos                   = new DataOutputStream(dout);
+    
+    try {
+      for (int z = 0; z < rows; z++) {
+        for (int x = 0; x < columns; x++) {
+          Tile tile = getTile(x, z);
+          dos.writeInt(tile.getGid());
+          dos.writeFloat(tile.getX());
+          dos.writeFloat(tile.getZ());
+          dos.writeFloat(tile.getY());
+          dos.writeFloat(tile.getY1());
+          dos.writeFloat(tile.getY2());
+          dos.writeFloat(tile.getY3());
+          dos.writeFloat(tile.getY4());
+          dos.writeChars(tile.getAutoType().toString());
+        }
+      }
+      
+      dos.close();
+      dout.close();
+      byteOutputStream.close();
+      terrainData = new String(Base64Coder.encode(byteOutputStream.toByteArray()));
+      
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Complete
+  public void release() {
+    terrainData = null;
   }
   
 }

@@ -77,10 +77,10 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     this.camera = new TopDownCamera();
     Gdx.app.log(TAG, "Initialized screen");
     
-    int width = 150;
-    int height = 150;
+    int width =  200;
+    int height = 200;
     
-    this.scene   = new Scene("New Map", 1, width, height);
+    this.scene   = new Scene("MAP001", 1, width, height);
     this.terrain = this.scene.getTerrain();
     terrain.setDebugListener(this);
     terrain.fillEmptyTilesWithDebugTile();
@@ -256,7 +256,11 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
 
   public void setCurrentBrush(Brush currentBrush) {
     this.currentBrush = currentBrush;
-    this.currentBrush.setChangeManager(this.changeManager);
+    
+    if (currentBrush != null) {
+      this.currentBrush.setChangeManager(this.changeManager);
+    }
+    
   }
 
   public TerrainBrush getTerrainBrush() {
