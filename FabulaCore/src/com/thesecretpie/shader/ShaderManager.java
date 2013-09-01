@@ -31,6 +31,7 @@ import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Keys;
+import com.macbury.fabula.manager.G;
 
 /**
  * @author Przemek Muller
@@ -49,7 +50,6 @@ public class ShaderManager {
 	private ObjectMap<String, String> sourcesFrag;
 	private ObjectMap<String, FrameBuffer> frameBuffers;
 	private Array<String> openedFrameBuffers;
-	private String shaderDir;
 
 	protected ShaderProgram currentShader = null;
 	public String currentShaderIdn = null;
@@ -64,7 +64,7 @@ public class ShaderManager {
 	 * @param shaderDir - path to the shader dir, set to "" if you just want to use built-in shaders
 	 * @param am - your app's AssetManager instance
 	 */
-	public ShaderManager(String shaderDir, AssetManager am) {
+	public ShaderManager(AssetManager am) {
 		shaders = new ObjectMap<String, ShaderProgram>();
 		shaderPaths = new ObjectMap<String, String>();
 		sourcesVert = new ObjectMap<String, String>();
@@ -74,21 +74,12 @@ public class ShaderManager {
 		
 		screenCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		createScreenQuad();
-		setShaderDir(shaderDir);
 		setAssetManager(am);
-		add("empty", "empty.vert", "empty.frag");
-		add("default", "default.vert", "default.frag");
-		add("processor", "processor.vert", "processor.frag");
-		add("processor_blur", "processor.vert", "processor_blur.frag");
-		add("copy", "processor.vert", "copy.frag");
-	}
-
-	/**
-	 * Path to the shader dir, set to "" if you just want to use built-in shaders
-	 * @param shaderDir
-	 */
-	public void setShaderDir(String shaderDir) {
-		this.shaderDir = shaderDir;
+		//add("empty", "empty.vert", "empty.frag");
+		//add("default", "default.vert", "default.frag");
+		//add("processor", "processor.vert", "processor.frag");
+		//add("processor_blur", "processor.vert", "processor_blur.frag");
+		//add("copy", "processor.vert", "copy.frag");
 	}
 	
 	/**
@@ -582,18 +573,10 @@ public class ShaderManager {
 		am.setLoader(String.class, new TextFileLoader(new InternalFileHandleResolver()));
 		
 		FileHandle vertFh = null, fragFh = null;
-		String vertPath = shaderDir + "/" + baseVertPath;
-		vertFh = Gdx.files.internal(vertPath);
-		if (!vertFh.exists()) {
-			vertFh = Gdx.files.classpath(SHADER_CLASSPATH + "/" + baseVertPath);
-			vertPath = vertFh.path();
-		}
-		String fragPath = shaderDir + "/" + baseFragPath;
-		fragFh = Gdx.files.internal(fragPath);
-		if (!fragFh.exists()) {
-			fragFh = Gdx.files.classpath(SHADER_CLASSPATH + "/" + baseFragPath);
-			fragPath = fragFh.path();
-		}
+		String vertPath = G.fs("shaders/"+baseVertPath).path();
+		String fragPath = G.fs("shaders/"+baseFragPath).path();
+		fragFh = Gdx.files.absolute(fragPath);
+		vertFh = Gdx.files.absolute(vertPath);
 		
 		if (!vertFh.exists())
 			throw new GdxRuntimeException("ShaderManager: shader '" + vertPath + "' does not exist!");
@@ -609,7 +592,7 @@ public class ShaderManager {
 		am.load(fragPath, String.class);
 
 		//TODO dirty...
-		while (!am.isLoaded(vertPath) || !am.isLoaded(fragPath)) {
+		while (!am.update()) {
 			am.update();
 		}
 		String vert = am.get(vertPath, String.class);
@@ -653,7 +636,7 @@ public class ShaderManager {
 		if (fh == null)
 			return null;
 		if (!fh.exists()) {
-			fh = Gdx.files.internal(shaderDir + "/" + fh.path());
+			//fh = Gdx.files.internal(shaderDir + "/" + fh.path());
 		}
 		if (!fh.exists()) {
 			throw new GdxRuntimeException("Shader not found: " + fh.path());
@@ -1056,13 +1039,15 @@ public class ShaderManager {
     int ind           = paths.indexOf(";");
     String vertPath   = paths.substring(0, ind);
     String fragPath   = paths.substring(ind + 1,paths.length());
-    File vertexFile   = Gdx.files.internal(shaderDir + "/" + vertPath).file().getAbsoluteFile();
-    File fragmentFile = Gdx.files.internal(shaderDir + "/" + fragPath).file().getAbsoluteFile();
+    //TODO: fix this!
+    //throw(new Exception());
+    //File vertexFile   = Gdx.files.internal(shaderDir + "/" + vertPath).file().getAbsoluteFile();
+    //File fragmentFile = Gdx.files.internal(shaderDir + "/" + fragPath).file().getAbsoluteFile();
     
-    saveShaderTo(vertexFile, vertexSource);
-    saveShaderTo(fragmentFile, fragmentSource);
+    //saveShaderTo(vertexFile, vertexSource);
+    //saveShaderTo(fragmentFile, fragmentSource);
     
-    this.reload();
+    //this.reload();
   }
 
   private void saveShaderTo(File file, String source) {

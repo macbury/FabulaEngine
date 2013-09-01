@@ -11,6 +11,6 @@ public class MainActivity extends AndroidApplication  {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    initialize(new GameManager(Environment.getExternalStorageDirectory() + "/game"), true);
+    initialize(new AndroidGameManager(this), true);
   }
 }

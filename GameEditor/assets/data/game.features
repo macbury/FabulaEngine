@@ -1,8 +1,9 @@
 <game-features game:build="31" xmlns:game="http://macbury.pl/">
    <title>Brutal Crasher</title>
-   <shaders length="2">
+   <shaders length="3">
       <shader>terrain-editor</shader>
       <shader>bloom</shader>
+      <shader>default</shader>
    </shaders>
    <tilesets>
       <tileset name="outside" atlas="outside">

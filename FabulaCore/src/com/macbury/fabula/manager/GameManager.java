@@ -9,7 +9,8 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.macbury.fabula.db.GameDatabase;
 import com.thesecretpie.shader.ShaderManager;
 
-public class GameManager extends Game {
+public abstract class GameManager extends Game {
+  public static final String GAME_DIRECTORY_NAME = "brutal-crasher";
   protected static final String TAG = "GameManager";
   protected static GameManager _shared;
   
@@ -39,21 +40,26 @@ public class GameManager extends Game {
     
     ShaderProgram.pedantic = false;
     
-    this.shaderManager     = new ShaderManager("assets/data/shaders", new AssetManager());
+    Gdx.app.log(TAG, "Loading shaders");
+    this.shaderManager     = new ShaderManager(new AssetManager());
     G.game      = this;
     G.shaders   = shaderManager;
+    Gdx.app.log(TAG, "Preparing game DB");
     G.db        = GameDatabase.load();
 
-    G.db.initialize();
-    G.db.save();
-    setScreen(getInitialScreen());
-    loading = false;
+    if (G.db == null) {
+      onNoGameData();
+    } else {
+      G.db.initialize();
+      G.db.save();
+      setScreen(getInitialScreen());
+      loading = false;
+    }
   }
 
-  protected Screen getInitialScreen() {
-    return null;
-  }
-
+  public abstract Screen getInitialScreen();
+  public abstract void   onNoGameData();
+  
   @Override
   public void render() {
     Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

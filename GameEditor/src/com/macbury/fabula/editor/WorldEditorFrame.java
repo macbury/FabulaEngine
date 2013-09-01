@@ -2,63 +2,9 @@ package com.macbury.fabula.editor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.BorderFactory;
-import javax.swing.DropMode;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JMenu;
-import javax.swing.DefaultListModel;
-import javax.swing.JColorChooser;
-import javax.swing.JButton;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.JSplitPane;
-import javax.swing.JTree;
-import javax.swing.JTabbedPane;
-import javax.swing.JSeparator;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
-import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap.Keys;
-import com.macbury.fabula.editor.brushes.AutoTileBrush;
-import com.macbury.fabula.editor.brushes.TerrainBrush;
-import com.macbury.fabula.manager.EditorGameManager;
-import com.macbury.fabula.manager.G;
-import com.macbury.fabula.manager.GameManager;
-import com.macbury.fabula.map.Scene;
-import com.macbury.fabula.screens.WorldEditScreen;
-import com.macbury.fabula.terrain.AutoTile;
-import com.macbury.fabula.terrain.AutoTiles;
-import com.macbury.fabula.terrain.Tileset;
-
-import javax.swing.BoxLayout;
-import javax.swing.SwingConstants;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.factories.FormFactory;
-import javax.swing.JLabel;
-import javax.swing.JComboBox;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.DefaultComboBoxModel;
-
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
-
-import java.awt.datatransfer.DataFlavor;
+import java.awt.Font;
+import java.awt.SystemColor;
+import java.awt.Toolkit;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
@@ -67,24 +13,65 @@ import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.MouseListener;
-
-import javax.swing.JList;
-
-import java.awt.SystemColor;
-import javax.swing.KeyStroke;
-import java.awt.event.KeyEvent;
-import java.awt.event.InputEvent;
-import javax.swing.ListSelectionModel;
-import javax.swing.JTextField;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.text.BadLocationException;
+import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JColorChooser;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JSpinner;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JTree;
+import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
+import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
+import com.badlogic.gdx.utils.Array;
+import com.jgoodies.forms.factories.FormFactory;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
+import com.macbury.fabula.editor.brushes.AutoTileBrush;
 import com.macbury.fabula.editor.brushes.AutoTileBrush.PaintMode;
 import com.macbury.fabula.editor.code.AssetEditorDialog;
 import com.macbury.fabula.editor.gamerunner.RunningGameConsoleFrame;
@@ -92,29 +79,19 @@ import com.macbury.fabula.editor.shaders.ShaderEditorFrame;
 import com.macbury.fabula.editor.tiles.AutoTileDebugFrame;
 import com.macbury.fabula.editor.tiles.TilesetBuilderDialog;
 import com.macbury.fabula.editor.tree.GameTransferableHandler;
-import com.macbury.fabula.editor.tree.GameTransferableHandler.GameTransferable;
 import com.macbury.fabula.editor.tree.GameTreeCellRenderer;
 import com.macbury.fabula.editor.tree.GameTreeModel;
 import com.macbury.fabula.editor.tree.GameTreeModel.BaseGameFolderNode;
 import com.macbury.fabula.editor.tree.GameTreeModel.GameShaderNode;
 import com.macbury.fabula.editor.undo_redo.ChangeManager;
 import com.macbury.fabula.editor.undo_redo.ChangeManagerListener;
-
-import javax.swing.JScrollPane;
-import java.awt.Toolkit;
-import javax.swing.JTextArea;
-import java.awt.Font;
-
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.event.TreeSelectionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.JProgressBar;
+import com.macbury.fabula.manager.EditorGameManager;
+import com.macbury.fabula.manager.G;
+import com.macbury.fabula.map.Scene;
+import com.macbury.fabula.screens.WorldEditScreen;
+import com.macbury.fabula.terrain.AutoTile;
+import com.macbury.fabula.terrain.AutoTiles;
+import com.macbury.fabula.terrain.Tileset;
 
 public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener, MouseListener, DropTargetListener {
   
@@ -192,6 +169,12 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mntmRun.addActionListener(this);
     mntmRun.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0));
     mnGame.add(mntmRun);
+    
+    JMenuItem mntmUploadData = new JMenuItem("Upload data");
+    mnGame.add(mntmUploadData);
+    
+    JMenuItem mntmBuildAssetBundle = new JMenuItem("Build Asset Bundle");
+    mnGame.add(mntmBuildAssetBundle);
     
     JSeparator separator_1 = new JSeparator();
     mnGame.add(separator_1);

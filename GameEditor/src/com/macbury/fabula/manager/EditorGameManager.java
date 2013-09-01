@@ -22,11 +22,10 @@ public class EditorGameManager extends GameManager {
   }
   
   public void startEditor() {
-    final EditorGameManager self = this;
     EventQueue.invokeLater(new Runnable() {
       public void run() {
         try {
-          WorldEditorFrame frame = new WorldEditorFrame(self);
+          WorldEditorFrame frame = new WorldEditorFrame(EditorGameManager.this);
           frame.setVisible(true);
         } catch (Exception e) {
           e.printStackTrace();
@@ -36,7 +35,13 @@ public class EditorGameManager extends GameManager {
   }
 
   @Override
-  protected Screen getInitialScreen() {
+  public Screen getInitialScreen() {
     return getWorldEditScreen();
+  }
+
+  @Override
+  public void onNoGameData() {
+    // TODO Auto-generated method stub
+    
   }
 }

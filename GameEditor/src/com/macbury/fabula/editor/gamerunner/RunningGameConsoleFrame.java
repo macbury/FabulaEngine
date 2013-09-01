@@ -37,6 +37,12 @@ import java.awt.FlowLayout;
 import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
 
+/*
+ * adb wait-for-device
+ * adb push data /sdcard/bca
+ * adb shell am start -n com.macbury.fabula.player/.MainActivity
+ */
+
 public class RunningGameConsoleFrame extends JDialog implements WindowListener, GameRunnableCallback, ActionListener {
   
   private static final String TAG = "Running Game";
