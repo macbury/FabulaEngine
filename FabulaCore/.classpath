@@ -2,17 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry exported="true" kind="lib" path="jars/gdx-natives.jar"/>
-	<classpathentry exported="true" kind="lib" path="jars/gdx-openal.jar"/>
 	<classpathentry exported="true" kind="lib" path="jars/gdx.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://libgdx.badlogicgames.com/nightlies/docs/api/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="jars/gdx-freetype.jar"/>
-	<classpathentry exported="true" kind="lib" path="jars/gdx-freetype-natives.jar"/>
-	<classpathentry exported="true" kind="lib" path="jars/gdx-audio.jar"/>
-	<classpathentry exported="true" kind="lib" path="jars/gdx-audio-natives.jar"/>
 	<classpathentry exported="true" kind="lib" path="jars/js.jar"/>
 	<classpathentry exported="true" kind="lib" path="jars/simple-xml-2.7.jar">
 		<attributes>

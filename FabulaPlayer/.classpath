@@ -6,19 +6,13 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
-	<classpathentry kind="lib" path="/FabulaCore/jars/gdx-audio-natives.jar"/>
-	<classpathentry kind="lib" path="/FabulaCore/jars/gdx-audio.jar"/>
-	<classpathentry kind="lib" path="/FabulaCore/jars/gdx-freetype-natives.jar"/>
-	<classpathentry kind="lib" path="/FabulaCore/jars/gdx-freetype.jar"/>
-	<classpathentry kind="lib" path="/FabulaCore/jars/gdx-natives.jar"/>
-	<classpathentry kind="lib" path="/FabulaCore/jars/gdx-openal.jar"/>
-	<classpathentry kind="lib" path="/FabulaCore/jars/gdx.jar">
+	<classpathentry exported="true" kind="lib" path="/FabulaCore/jars/gdx.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://libgdx.badlogicgames.com/nightlies/docs/api/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/FabulaCore/jars/js.jar"/>
-	<classpathentry kind="lib" path="/FabulaCore/jars/simple-xml-2.7.jar">
+	<classpathentry exported="true" kind="lib" path="/FabulaCore/jars/js.jar"/>
+	<classpathentry exported="true" kind="lib" path="/FabulaCore/jars/simple-xml-2.7.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="http://simple.sourceforge.net/download/stream/doc/javadoc/"/>
 		</attributes>

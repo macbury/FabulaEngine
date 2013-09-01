@@ -12,6 +12,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
+import com.macbury.fabula.manager.G;
 
 @Root
 public class Tileset {
@@ -38,7 +39,7 @@ public class Tileset {
     this.autotiles            = new HashMap<String, AutoTiles>();
     this.orderedAutotiles     = new ArrayList<String>();
     
-    this.textureAtlas         = new TextureAtlas(Gdx.files.internal("assets/textures/"+atlasName+".atlas"));
+    this.textureAtlas         = new TextureAtlas(G.fs("textures/"+atlasName+".atlas"));
     this.texture              = (Texture) this.textureAtlas.getTextures().toArray()[0];
     
     for (AutoTileBuilderInfo autoTileBuilderInfo : autoTileBuilderInfos) {

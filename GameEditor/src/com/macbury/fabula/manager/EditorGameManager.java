@@ -7,6 +7,10 @@ import com.macbury.fabula.editor.WorldEditorFrame;
 import com.macbury.fabula.screens.WorldEditScreen;
 
 public class EditorGameManager extends GameManager {
+  public EditorGameManager() {
+    super(System.getProperty("user.dir")+"/assets/data/");
+  }
+
   protected WorldEditScreen worldEditScreen;
   
   public WorldEditScreen getWorldEditScreen() {

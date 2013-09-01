@@ -92,7 +92,7 @@ public class GameTreeModel implements TreeModel {
   public class GameShadersFolderNode extends BaseGameFolderNode {
     public GameShadersFolderNode() {
       super("Shaders");
-      for (String name : G.game.getShaderManager().getAllShaderNames()) {
+      for (String name : G.shaders.getAllShaderNames()) {
         add(new GameShaderNode(name));
       }
     }

@@ -3,6 +3,7 @@ package com.macbury.fabula.db;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.FileHandler;
 
 
 import org.simpleframework.xml.Attribute;
@@ -19,7 +20,9 @@ import org.simpleframework.xml.stream.HyphenStyle;
 import org.simpleframework.xml.stream.Style;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.macbury.fabula.manager.G;
+import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.terrain.AutoTiles;
 import com.macbury.fabula.terrain.Tileset;
 
@@ -56,21 +59,20 @@ public class GameDatabase {
   public void save() {
     build++;
     try {
-      GameDatabase.save(this, "game.features");
+      //GameDatabase.save(this, "game.features");
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
-
-  public static boolean exists() {
-    return Gdx.files.internal("assets/game.features").file().exists();
-  }
-
+  
   public static GameDatabase load() {
     Style style           = new HyphenStyle();
     Format format         = new Format(style);
     Serializer serializer = new Persister(format);
-    File file             = Gdx.files.internal("assets/game.features").file();
+    File file             = G.fs( "game.features" ).file();
+   
+    Gdx.app.log(TAG, "Loading " + file.getAbsolutePath());
+    
     try {
       return serializer.read(GameDatabase.class, file);
     } catch (Exception e) {
@@ -115,7 +117,7 @@ public class GameDatabase {
     Style style           = new HyphenStyle();
     Format format         = new Format(style);
     Serializer serializer = new Persister(format);
-    File result = Gdx.files.internal("assets/"+path).file();
+    File result = G.fs(path).file();
     serializer.write(object, result);
   }
 }

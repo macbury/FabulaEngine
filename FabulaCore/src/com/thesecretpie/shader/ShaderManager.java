@@ -39,7 +39,7 @@ import com.badlogic.gdx.utils.ObjectMap.Keys;
  */
 public class ShaderManager {
 	
-	public static final String SHADER_CLASSPATH = "com/thesecretpie/shader/shaders";
+	public static final String SHADER_CLASSPATH = "data/shaders/";
 	public static int MAX_FRAMEBUFFERS = 10;
 	public static int FRAMEBUFFER_TEXTURE_ID = 0;
 
