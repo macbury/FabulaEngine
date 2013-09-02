@@ -59,7 +59,7 @@ public class GameDatabase {
   public void save() {
     build++;
     try {
-      //GameDatabase.save(this, "game.features");
+      GameDatabase.save(this, "game.features");
     } catch (Exception e) {
       e.printStackTrace();
     }

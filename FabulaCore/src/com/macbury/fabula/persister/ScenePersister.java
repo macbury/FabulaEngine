@@ -90,7 +90,7 @@ public class ScenePersister {
         stream.write(buffer, 0, count);
       }
       stream.close();
-    } catch (DataFormatException | IOException e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
     

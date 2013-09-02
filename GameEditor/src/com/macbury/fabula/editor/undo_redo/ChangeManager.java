@@ -18,6 +18,7 @@ public class ChangeManager {
    * Clears all Changables contained in this manager.
    */
   public void clear(){
+    parentNode   = new Node();
     currentIndex = parentNode;
     this.listener.onChangeManagerChange(this);
   }

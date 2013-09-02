@@ -108,6 +108,8 @@ import java.awt.event.InputMethodEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.awt.event.KeyAdapter;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.BevelBorder;
 
 public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener, MouseListener, DropTargetListener, WindowListener  {
   
@@ -145,6 +147,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JComboBox tilesetComboBox;
   private JMenuItem mntmOpen;
   private JMenuItem mntmNew;
+  private JMenuItem mntmReloadMap;
   public WorldEditorFrame(EditorGameManager game) {
     PrintStream origOut = System.out;
     PrintStream interceptor = new LogInterceptor(origOut);
@@ -193,13 +196,23 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     this.mntmOpen = new JMenuItem("Open");
     mntmOpen.addActionListener(this);
+    
+    JMenuItem mntmSaveAs = new JMenuItem("Save as");
+    mntmSaveAs.setEnabled(false);
+    mntmSaveAs.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+    mnMap.add(mntmSaveAs);
     mntmOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
     mnMap.add(mntmOpen);
     
     JSeparator separator_1 = new JSeparator();
     mnMap.add(separator_1);
     
+    this.mntmReloadMap = new JMenuItem("Reload");
+    mntmReloadMap.setEnabled(false);
+    mnMap.add(mntmReloadMap);
+    
     JMenuItem mntmResize = new JMenuItem("Resize");
+    mntmResize.setEnabled(false);
     mnMap.add(mntmResize);
     
     JMenu mnGame = new JMenu("Game");
@@ -297,15 +310,11 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     JPanel panel_5 = new JPanel();
     panel_8.add(panel_5, BorderLayout.SOUTH);
-    panel_5.setBorder(new EmptyBorder(10, 5, 5, 5));
+    panel_5.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
     panel_5.setLayout(new BorderLayout(0, 0));
     
     this.statusBarLabel = new JLabel("X: 0 Y:0 Z:0");
     panel_5.add(statusBarLabel, BorderLayout.WEST);
-    
-    JProgressBar progressBar = new JProgressBar();
-    progressBar.setIndeterminate(true);
-    panel_5.add(progressBar, BorderLayout.EAST);
     
     JPanel panel_9 = new JPanel();
     panel_9.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -744,6 +753,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     if (e.getSource() == shadersComboBox) {
       screen.getScene().setFinalShader((String)shadersComboBox.getSelectedItem());
+    }
+    
+    if (e.getSource() == mntmReloadMap) {
+      
     }
   }
 

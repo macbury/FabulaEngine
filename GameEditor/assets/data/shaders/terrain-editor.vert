@@ -19,6 +19,11 @@ uniform vec3 u_light_direction;
 uniform vec4 u_light_color;
 
 void main() {
+  if ((int)a_tile_position.x % 2 == 0 && (int)a_tile_position.y % 2 != 0) {
+    a_color = vec4(0.9,0.9,0.9,1) * a_color;
+  } else if ((int)a_tile_position.x % 2 != 0 && (int)a_tile_position.y % 2 == 0) {
+    a_color = vec4(0.9,0.9,0.9,1) * a_color;
+  }
   
   v_normal        = a_normal;
   v_color         = (a_color * u_ambient_color);
