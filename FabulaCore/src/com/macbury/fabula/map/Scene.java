@@ -1,47 +1,29 @@
 package com.macbury.fabula.map;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.zip.Deflater;
-import java.util.zip.DeflaterOutputStream;
+import java.io.File;
 
-import org.simpleframework.xml.Attribute;
-import org.simpleframework.xml.Element;
-import org.simpleframework.xml.Root;
-import org.simpleframework.xml.core.Complete;
-import org.simpleframework.xml.core.Persist;
+import org.simpleframework.xml.Serializer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.lights.Lights;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Base64Coder;
 import com.badlogic.gdx.utils.Disposable;
 import com.macbury.fabula.db.GameDatabase;
 import com.macbury.fabula.manager.G;
+import com.macbury.fabula.persister.ScenePersister;
 import com.macbury.fabula.terrain.Terrain;
-import com.macbury.fabula.terrain.Tile;
 import com.thesecretpie.shader.ShaderManager;
 
-@Root(name="map")
 public class Scene implements Disposable {
-  @Attribute
+  private static String FILE_EXT = "red";
   private String           name;
-  @Attribute
   private int              uid;
-  @Element
   private Terrain          terrain;
-  @Element
   private String           finalShader;
-  @Element
-  private int              ambientColor;
-  @Element
-  private int              sunLightColor;
   
   private static final String MAIN_FRAME_BUFFER = "MAIN_FRAME_BUFFER";
   private static final String TAG               = "Scene";
@@ -53,7 +35,6 @@ public class Scene implements Disposable {
   private ShaderManager sm;
   
   private boolean debug;
-  
   
   public Scene(String name, int uid, int width, int height) {
     //skyBox = ResourceManager.shared().getSkyBox("SKYBOX_DAY");
@@ -77,7 +58,7 @@ public class Scene implements Disposable {
   }
   
   public void render(Camera camera) {
-    GL20 gl = Gdx.graphics.getGL20();
+    //GL20 gl = Gdx.graphics.getGL20();
     Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
     Gdx.gl.glEnable(GL10.GL_BLEND);
@@ -109,12 +90,28 @@ public class Scene implements Disposable {
     return name != null;
   }
   
-  public boolean save() {
+  public static Scene open(File file) {
+    Serializer serializer = GameDatabase.getDefaultSerializer();
     try {
-      GameDatabase.save(this, "maps/"+this.name+".map");
+      ScenePersister scenePersister = serializer.read(ScenePersister.class, file);
+      
+      return scenePersister.getScene();
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+  
+  public boolean save() {
+    long start = System.currentTimeMillis();
+    try {
+      GameDatabase.save(new ScenePersister(this), "maps/"+this.name+"."+FILE_EXT);
     } catch (Exception e) {
       e.printStackTrace();
     }
+    
+    long time = (System.currentTimeMillis() - start);
+    Gdx.app.log(TAG, "Saved in: "+time + " miliseconds");
     return true;
   }
   
@@ -136,16 +133,7 @@ public class Scene implements Disposable {
     this.finalShader = finalShader;
   }
   
-  @Persist
-  public void prepare() {
-    ambientColor  = lights.ambientLight.toIntBits();
-    sunLightColor = sunLight.color.toIntBits();
-  }
-
-  @Complete
-  public void release() {
-    
-  }
+  
 
   public void setName(String text) {
     this.name = text;
@@ -154,4 +142,9 @@ public class Scene implements Disposable {
   public String getName() {
     return this.name;
   }
+
+  public int getUID() {
+    return this.uid;
+  }
+
 }

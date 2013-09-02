@@ -1,5 +1,7 @@
 package com.macbury.fabula.screens;
 
+import java.io.File;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
@@ -76,11 +78,17 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     this.brushTimer = new ActionTimer(APPLY_BRUSH_EVERY, this);
     this.camera = new TopDownCamera();
     Gdx.app.log(TAG, "Initialized screen");
+    newMap(100,100);
+    //setCurrentBrush(terrainBrush);
     
-    int width =  200;
-    int height = 200;
-    
-    this.scene   = new Scene("MAP001", 1, width, height);
+    this.camController = new EditorCamController(camera);
+    InputMultiplexer inputMultiplexer = new InputMultiplexer(this, camController);
+    Gdx.input.setInputProcessor(inputMultiplexer);
+  }
+  
+  public void newMap(int width, int height) {
+    int id = G.db.getMapUid();
+    this.scene   = new Scene(null, id, width, height);
     this.terrain = this.scene.getTerrain();
     terrain.setDebugListener(this);
     terrain.fillEmptyTilesWithDebugTile();
@@ -90,13 +98,20 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     
     terrainBrush  = new TerrainBrush(terrain);
     autoTileBrush = new AutoTileBrush(terrain);
-    //setCurrentBrush(terrainBrush);
-    
-    this.camController = new EditorCamController(camera);
-    InputMultiplexer inputMultiplexer = new InputMultiplexer(this, camController);
-    Gdx.input.setInputProcessor(inputMultiplexer);
   }
   
+  public void openMap(File file) {
+    this.scene = Scene.open(file);
+    this.terrain = scene.getTerrain();
+    terrain.setDebugListener(this);
+    terrain.buildSectors();
+    camera.position.set(terrain.getColumns()/2, 17, terrain.getRows()/2);
+    camera.lookAt(terrain.getColumns()/2, 0, terrain.getRows()/2);
+    
+    terrainBrush  = new TerrainBrush(terrain);
+    autoTileBrush = new AutoTileBrush(terrain);
+  }
+
   @Override
   public void hide() {
   }

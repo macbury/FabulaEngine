@@ -109,8 +109,6 @@ public class GameTreeModel implements TreeModel {
           add(new GameMapNode(maps[i]));
         }
       }
-      
-      
     }
   }
   

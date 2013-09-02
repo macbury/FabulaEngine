@@ -9,3 +9,5 @@ Thumbs.db
 bin/
 .dex
 .class
+*.class
+.red

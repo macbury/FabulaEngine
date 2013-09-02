@@ -16,6 +16,7 @@ import com.macbury.fabula.manager.G;
 
 @Root
 public class Tileset {
+  private static final String TAG = "Tileset";
   @Attribute
   private String name;
   @Attribute(name="atlas")
@@ -63,6 +64,8 @@ public class Tileset {
     }
     this.autotiles.put(name, autoTiles);
     this.orderedAutotiles.add(name);
+    
+    //Gdx.app.log(TAG, "Added auto tile " + name  +" = " + autoTiles.getId());
   }
   
   public AutoTiles getAutoTiles(String key) {
@@ -132,5 +135,14 @@ public class Tileset {
     public boolean slope;
     
     public AutoTileBuilderInfo() {}
+  }
+
+  public AutoTiles getAutoTilesById(int autoTileId) {
+    for (AutoTiles at : autotiles.values()) {
+      if (at.getId() == autoTileId) {
+        return at;
+      }
+    }
+    return null;
   }
 }

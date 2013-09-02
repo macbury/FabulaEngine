@@ -22,6 +22,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -35,12 +38,15 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -62,6 +68,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
@@ -101,7 +109,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.awt.event.KeyAdapter;
 
-public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener, MouseListener, DropTargetListener, KeyListener  {
+public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener, MouseListener, DropTargetListener, WindowListener  {
   
   protected static final String TAG = "WorldEditorFrame";
   private JPanel contentPane;
@@ -133,9 +141,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JComboBox shadersComboBox;
   private JButton btnPickAmbientColor;
   private JButton btnPickDirectionalLightColor;
-  private JTextField mapNameTextField;
   private JMenuItem mntmSaveGame;
   private JComboBox tilesetComboBox;
+  private JMenuItem mntmOpen;
+  private JMenuItem mntmNew;
   public WorldEditorFrame(EditorGameManager game) {
     PrintStream origOut = System.out;
     PrintStream interceptor = new LogInterceptor(origOut);
@@ -172,7 +181,8 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     JMenu mnMap = new JMenu("Map");
     mainMenuBar.add(mnMap);
     
-    JMenuItem mntmNew = new JMenuItem("New");
+    this.mntmNew = new JMenuItem("New");
+    mntmNew.addActionListener(this);
     mntmNew.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
     mnMap.add(mntmNew);
     
@@ -181,9 +191,16 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mntmSaveGame.addActionListener(this);
     mntmSaveGame.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
     
-    JMenuItem mntmOpen = new JMenuItem("Open");
+    this.mntmOpen = new JMenuItem("Open");
+    mntmOpen.addActionListener(this);
     mntmOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
     mnMap.add(mntmOpen);
+    
+    JSeparator separator_1 = new JSeparator();
+    mnMap.add(separator_1);
+    
+    JMenuItem mntmResize = new JMenuItem("Resize");
+    mnMap.add(mntmResize);
     
     JMenu mnGame = new JMenu("Game");
     mainMenuBar.add(mnGame);
@@ -256,7 +273,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     this.mainSplitPane = new JSplitPane();
     mainSplitPane.setBorder(BorderFactory.createEmptyBorder());
-    mainSplitPane.setResizeWeight(0.7);
+    mainSplitPane.setResizeWeight(0.8);
     mainSplitPane.setContinuousLayout(true);
     mainSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
     contentPane.add(mainSplitPane, BorderLayout.CENTER);
@@ -345,13 +362,12 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
         FormFactory.RELATED_GAP_ROWSPEC,
         FormFactory.DEFAULT_ROWSPEC,}));
     
-    JLabel lblNewLabel_5 = new JLabel("Name");
-    panel_6.add(lblNewLabel_5, "2, 2, right, default");
+    JLabel lblPostProcessing = new JLabel("Post processing");
+    panel_6.add(lblPostProcessing, "2, 2, right, default");
     
-    mapNameTextField = new JTextField();
-    mapNameTextField.addKeyListener(this);
-    panel_6.add(mapNameTextField, "4, 2, fill, default");
-    mapNameTextField.setColumns(10);
+    this.shadersComboBox = new JComboBox();
+    shadersComboBox.addActionListener(this);
+    panel_6.add(shadersComboBox, "4, 2, fill, default");
     
     JLabel lblNewLabel_6 = new JLabel("Tileset");
     panel_6.add(lblNewLabel_6, "2, 4, right, default");
@@ -408,13 +424,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     lightPositionZSpinner.addChangeListener(this);
     lightPositionZSpinner.setModel(new SpinnerNumberModel(new Float(0), new Float(-1000), new Float(1000), new Float(0.010f)));
     panel_6.add(lightPositionZSpinner, "4, 14");
-    
-    JLabel lblPostProcessing = new JLabel("Post processing");
-    panel_6.add(lblPostProcessing, "2, 16, right, default");
-    
-    this.shadersComboBox = new JComboBox();
-    shadersComboBox.addActionListener(this);
-    panel_6.add(shadersComboBox, "4, 16, fill, default");
     
     JPanel panel = new JPanel();
     panel.setBackground(SystemColor.window);
@@ -513,6 +522,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     statusbarThread.start();
     
     changeManager = new ChangeManager(this);
+    addWindowListener(this);
   }
   
   private class StatusBarInfoRunnable implements Runnable {
@@ -606,9 +616,12 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
 
     autoTileList.setSelectedIndex(tilesets.indexOf(scene.getTerrain().getTileset()));
     
-    mapNameTextField.setText(scene.getName());
+    if (scene.haveName()) {
+      setTitle("WorldEd - ["+scene.getName()+"]");
+    } else {
+      setTitle("WorldEd - [ New map ]");
+    }
     
-    setTitle("WorldEd - ["+scene.getName()+"]");
   }
 
   private void updateInfoForAutotileBrush() {
@@ -691,9 +704,16 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
       dialog.setVisible(true);
     }
     
+    if (e.getSource() == mntmNew) {
+      newMap();
+    }
+    
     if (e.getSource() == mntmSaveGame) {
-      G.db.save();
-      scene.save();
+      saveMap();
+    }
+    
+    if (e.getSource() == mntmOpen) {
+      openMap();
     }
     
     if (e.getSource() == mntmDebugFrameBuffer) {
@@ -724,6 +744,57 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     if (e.getSource() == shadersComboBox) {
       screen.getScene().setFinalShader((String)shadersComboBox.getSelectedItem());
+    }
+  }
+
+  private void openMap() {
+    saveMap();
+    JFileChooser fh = new JFileChooser(G.fs("maps/").file());
+    
+    fh.addChoosableFileFilter(new FileNameExtensionFilter("Map file", "red"));
+    int returnVal = fh.showOpenDialog(this);
+    
+    if (returnVal == JFileChooser.APPROVE_OPTION) {
+      File file = fh.getSelectedFile();
+      this.gameManager.getWorldEditScreen().openMap(file);
+      resetEditor();
+    }
+    
+  }
+
+  private void resetEditor() {
+    tabbedInspectorPane.setSelectedIndex(0);
+    updateInfoForMapSettings();
+    changeManager.clear();
+  }
+
+  private void newMap() {
+    WorldEditScreen screen = this.gameManager.getWorldEditScreen();
+    saveMap();
+    screen.newMap(50, 50);
+    resetEditor();
+  }
+
+  private boolean saveMap() {
+    WorldEditScreen screen = this.gameManager.getWorldEditScreen();
+    Scene scene            = screen.getScene();
+    
+    if (scene.haveName()) {
+      scene.save();
+      G.db.save();
+      updateInfoForMapSettings();
+      return true;
+    } else {
+      String output = JOptionPane.showInputDialog(this, "Save map name:");
+      if (output != null && output.length() > 1) {
+        scene.setName(output);
+        scene.save();
+        G.db.save();
+        updateInfoForMapSettings();
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 
@@ -836,25 +907,47 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
   }
 
-
   @Override
-  public void keyPressed(KeyEvent arg0) {
+  public void windowActivated(WindowEvent arg0) {
     // TODO Auto-generated method stub
     
   }
 
   @Override
-  public void keyReleased(KeyEvent arg0) {
+  public void windowClosed(WindowEvent arg0) {
     // TODO Auto-generated method stub
     
   }
 
   @Override
-  public void keyTyped(KeyEvent event) {
-    WorldEditScreen screen = this.gameManager.getWorldEditScreen();
-    if (event.getSource() == mapNameTextField) {
-      screen.getScene().setName(mapNameTextField.getText());
-    }
+  public void windowClosing(WindowEvent arg0) {
+    saveMap();
   }
+
+  @Override
+  public void windowDeactivated(WindowEvent arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void windowDeiconified(WindowEvent arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void windowIconified(WindowEvent arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void windowOpened(WindowEvent arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+
 
 }

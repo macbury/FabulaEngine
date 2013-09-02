@@ -110,7 +110,25 @@ public class GameDatabase {
   }
   
   public int getMapUid() {
-    return 1;
+    int i = 1;
+    for (FileHandle fh : G.fs("maps/").list()) {
+      if (!fh.isDirectory()) {
+        try {
+          int id = Integer.parseInt(fh.nameWithoutExtension().replaceAll("\\D", ""));
+          i = Math.max(i, id);
+        } catch (NumberFormatException e) {
+          
+        }
+      }
+    }
+    return i;
+  }
+  
+  public static Serializer getDefaultSerializer() {
+    Style style           = new HyphenStyle();
+    Format format         = new Format(style);
+    Serializer serializer = new Persister(format);
+    return serializer;
   }
   
   public static void save(Object object, String path) throws Exception {

@@ -1,24 +1,18 @@
 package com.macbury.fabula.terrain;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Arrays;
-import java.util.HashMap;
-
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
-import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
-import com.macbury.fabula.terrain.AutoTiles.Types;
-import com.macbury.fabula.utils.PNG;
-import com.badlogic.gdx.graphics.PixmapIO;
 
 public class AutoTiles {
   public static final int CORNER_TOP_LEFT     = 0;
@@ -163,8 +157,7 @@ public class AutoTiles {
   };
   
   private static final String TAG = "AutoTiles";
- 
-  
+
   
   /**
    * Genereating new autotile based on tilemap
@@ -211,9 +204,6 @@ public class AutoTiles {
       }
     }
   }
-
-  
-
   
   private TextureRegion generateTileForCombination(int i) {
     TextureRegion topLeftRegion     = this.tileParts.get(TILE_COMBINATIONS[i]);
@@ -321,5 +311,9 @@ public class AutoTiles {
 
   public void setSlope(boolean slope) {
     this.slope = slope;
+  }
+
+  public int getId() {
+    return this.id;
   }
 }
