@@ -14,7 +14,7 @@ public class AndroidGameManager extends GameManager {
   private MainActivity activity;
 
   public AndroidGameManager(MainActivity mainActivity) {
-    super(Environment.getExternalStorageDirectory() + "/" + GameManager.GAME_DIRECTORY_NAME + "/");
+    super(Environment.getExternalStorageDirectory() + "/" + GameManager.ANDROID_GAME_DIRECTORY_NAME + "/");
     this.activity = mainActivity;
   }
 

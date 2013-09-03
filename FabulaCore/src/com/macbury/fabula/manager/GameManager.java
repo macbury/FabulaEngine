@@ -10,7 +10,7 @@ import com.macbury.fabula.db.GameDatabase;
 import com.thesecretpie.shader.ShaderManager;
 
 public abstract class GameManager extends Game {
-  public static final String GAME_DIRECTORY_NAME = "brutal-crasher";
+  public static final String ANDROID_GAME_DIRECTORY_NAME = "brutal-crasher";
   protected static final String TAG = "GameManager";
   protected static GameManager _shared;
   
