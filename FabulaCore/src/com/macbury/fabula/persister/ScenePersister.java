@@ -29,7 +29,7 @@ public class ScenePersister {
   @Element
   private String           name;
   @Element
-  private int              uid;
+  private String           uid;
   @Element
   private String           finalShader;
   @Element
@@ -48,6 +48,8 @@ public class ScenePersister {
   
   private Scene scene;
   private Terrain terrain;
+  
+  private boolean skipLoadingTerrainData;
   
   public ScenePersister() {
     
@@ -69,6 +71,10 @@ public class ScenePersister {
   
   @Commit
   public void load() {
+    if (skipLoadingTerrainData) {
+      terrainData = null;
+      return;
+    }
     Inflater inflater = new Inflater();
     //inflater.setStrategy(Deflater.BEST_SPEED);
     
@@ -181,5 +187,17 @@ public class ScenePersister {
 
   public Scene getScene() {
     return scene;
+  }
+
+  public boolean isSkipLoadingTerrainData() {
+    return skipLoadingTerrainData;
+  }
+
+  public void setSkipLoadingTerrainData(boolean skipLoadingTerrainData) {
+    this.skipLoadingTerrainData = skipLoadingTerrainData;
+  }
+
+  public String getUID() {
+    return this.uid;
   }
 }

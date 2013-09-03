@@ -21,8 +21,11 @@ import org.simpleframework.xml.stream.Style;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.manager.GameManager;
+import com.macbury.fabula.map.Scene;
+import com.macbury.fabula.persister.ScenePersister;
 import com.macbury.fabula.terrain.AutoTiles;
 import com.macbury.fabula.terrain.Tileset;
 
@@ -43,14 +46,15 @@ public class GameDatabase {
   @ElementArray(entry="shader", required=false)
   private String[] shaders;
   
-  @ElementArray(entry="name", required=false)
-  private String[] maps;
-  
   @ElementList(required=false)
   private ArrayList<Tileset> tilesets;
   
+  @ElementMap(name="maps", entry="map", key="uuid", attribute=true, inline=true, required=false)
+  public static HashMap<String, String> maps;
+  
   @ElementMap(name="autotile-combinations", entry="corner", key="combination", attribute=true, inline=true, required=false)
   public static HashMap<String, AutoTiles.Types> CORNER_MAP;
+
   
   public GameDatabase() {
     Gdx.app.log(TAG, "Game database initialized");
@@ -65,6 +69,25 @@ public class GameDatabase {
     }
   }
   
+  public void reloadMapData() {
+    Serializer serializer = GameDatabase.getDefaultSerializer();
+    for (FileHandle fh : G.fs("maps/").list()) {
+      if (fh.extension().equalsIgnoreCase(Scene.FILE_EXT)) {
+        ScenePersister scenePersister = new ScenePersister();
+        scenePersister.setSkipLoadingTerrainData(true);
+        try {
+          serializer.read(scenePersister, fh.file());
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+        
+        maps.put(scenePersister.getUID(), fh.nameWithoutExtension());
+      }
+    }
+    
+    save();
+  }
+
   public static GameDatabase load() {
     Style style           = new HyphenStyle();
     Format format         = new Format(style);
@@ -94,6 +117,10 @@ public class GameDatabase {
     if (tilesets == null) {
       tilesets = new ArrayList<Tileset>();
     }
+    
+    if (maps == null) {
+      maps = new HashMap<String, String>();
+    }
   }
   
   public Tileset getTileset(String name) {
@@ -102,7 +129,7 @@ public class GameDatabase {
         return tileset;
       }
     }
-    throw new RuntimeException("Could not find tileset with name: "+ name);
+    throw new GdxRuntimeException("Could not find tileset with name: "+ name);
   }
 
   public ArrayList<Tileset> getTilesets() {
@@ -139,7 +166,12 @@ public class GameDatabase {
     serializer.write(object, result);
   }
 
-  public String[] getMapNames() {
-    return this.maps;
+
+  public PlayerStartPosition getPlayerStartPosition() {
+    return this.playerStartPosition;
+  }
+
+  public void setPlayerStartPosition(PlayerStartPosition psp) {
+    this.playerStartPosition = psp;
   }
 }

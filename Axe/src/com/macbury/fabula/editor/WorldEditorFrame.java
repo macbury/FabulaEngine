@@ -154,9 +154,12 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JMenuItem mntmOpen;
   private JMenuItem mntmNew;
   private JMenuItem mntmReloadMap;
-  private Canvas canvas;
+  public Canvas canvas;
   private JPopupMenu gamePopupMenu;
   private JMenuItem mntmForceAppStop;
+  public JPopupMenu eventPopupMenu;
+  private JMenuItem mntmNewEvent;
+  private JMenuItem mntmSetStartPosition;
   public WorldEditorFrame(EditorGameManager game) {
     PrintStream origOut = System.out;
     PrintStream interceptor = new LogInterceptor(origOut);
@@ -348,6 +351,22 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     inspectorAndOpenGlContainerSplitPane.setRightComponent(openGLContainerPane);
     canvas = this.gameCanvas.getCanvas();
     openGLContainerPane.add(canvas, BorderLayout.CENTER);
+    
+    this.eventPopupMenu = new JPopupMenu();
+    addPopup(openGLContainerPane, eventPopupMenu);
+    
+    this.mntmNewEvent = new JMenuItem("New event");
+    eventPopupMenu.add(mntmNewEvent);
+    
+    this.mntmSetStartPosition = new JMenuItem("Set start position");
+    mntmSetStartPosition.addActionListener(this);
+    eventPopupMenu.add(mntmSetStartPosition);
+    
+    JSeparator separator_3 = new JSeparator();
+    eventPopupMenu.add(separator_3);
+    
+    JMenuItem mntmCancel = new JMenuItem("Cancel");
+    eventPopupMenu.add(mntmCancel);
     
     openGLContainerPane.setLayout(new BoxLayout(openGLContainerPane, BoxLayout.X_AXIS));
     
@@ -781,6 +800,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
       screen.getScene().setFinalShader((String)shadersComboBox.getSelectedItem());
     }
     
+    if (e.getSource() == mntmSetStartPosition) {
+      screen.getEventBrush().placeStartPosition();
+    }
+    
     if (e.getSource() == mntmReloadMap) {
       
     }
@@ -832,7 +855,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
       if (output != null && output.length() > 1) {
         scene.setName(output);
         scene.save();
-        G.db.save();
+        G.db.reloadMapData();
         updateInfoForMapSettings();
         return true;
       } else {

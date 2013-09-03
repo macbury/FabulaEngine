@@ -102,13 +102,13 @@ public class GameTreeModel implements TreeModel {
     public GameMapsFolderNode() {
       super("Maps");
       
-      String[] maps = G.db.getMapNames();
+      /*String[] maps = G.db.getMapNames();
       
       if (maps != null) {
         for (int i = 0; i < maps.length; i++) {
           add(new GameMapNode(maps[i]));
         }
-      }
+      }*/
     }
   }
   

@@ -21,6 +21,12 @@ public class EditorGameManager extends GameManager {
     return worldEditScreen;
   }
   
+  @Override
+  public void create() {
+    super.create();
+    G.db.reloadMapData();
+  }
+
   public void startEditor() {
     EventQueue.invokeLater(new Runnable() {
       public void run() {
@@ -43,5 +49,10 @@ public class EditorGameManager extends GameManager {
   public void onNoGameData() {
     // TODO Auto-generated method stub
     
+  }
+
+  @Override
+  public void onNoPlayerStartPosition() {
+    setScreen(getInitialScreen());
   }
 }

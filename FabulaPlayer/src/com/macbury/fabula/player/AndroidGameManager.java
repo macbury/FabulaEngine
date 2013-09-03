@@ -2,6 +2,7 @@ package com.macbury.fabula.player;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Environment;
 import android.os.Looper;
 
@@ -28,6 +29,13 @@ public class AndroidGameManager extends GameManager {
   public void onNoGameData() {
     final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
     builder.setMessage("No Game data. Open World Editor Game->Upload to upload!");
+    builder.setCancelable(false);
+    builder.setPositiveButton("EXIT", new OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        Gdx.app.exit();
+      }
+    });
     activity.runOnUiThread(new Runnable() {
       @Override
       public void run() {
@@ -35,6 +43,23 @@ public class AndroidGameManager extends GameManager {
       }
     });
   }
-  
 
+  @Override
+  public void onNoPlayerStartPosition() {
+    final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+    builder.setMessage("No player start position!");
+    builder.setCancelable(false);
+    builder.setPositiveButton("EXIT", new OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        Gdx.app.exit();
+      }
+    });
+    activity.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        builder.create().show();
+      }
+    });
+  }
 }

@@ -511,11 +511,6 @@ public class ShaderManager {
 		if (!sp.isCompiled()) {
 			Gdx.app.log("ShaderManager", "Error while loading shader '" + key
 					+ "':\n" + sp.getLog());
-			Gdx.app.log("ShaderManager", "--------------------------------");
-			Gdx.app.log("ShaderManager", "Vertex shader source: \n" + vert);
-			Gdx.app.log("ShaderManager", "--------------------------------");
-			Gdx.app.log("ShaderManager", "Fragment shader source: \n" + frag);
-			Gdx.app.log("ShaderManager", "--------------------------------");
 			return;
 		}
 		shaders.put(key, sp);
@@ -583,20 +578,8 @@ public class ShaderManager {
 		if (!fragFh.exists())
 			throw new GdxRuntimeException("ShaderManager: shader '" + fragPath + "' does not exist!");
 		
-		if (am.isLoaded(vertPath))
-			am.unload(vertPath);
-		if (am.isLoaded(fragPath))
-			am.unload(fragPath);
-		
-		am.load(vertPath, String.class);
-		am.load(fragPath, String.class);
-
-		//TODO dirty...
-		while (!am.update()) {
-			am.update();
-		}
-		String vert = am.get(vertPath, String.class);
-		String frag = am.get(fragPath, String.class);
+		String vert = vertFh.readString();
+		String frag = fragFh.readString();
 		if (init(key, vert, frag)) {
 			shaderPaths.put(key, baseVertPath + ";" + baseFragPath);
 		}
@@ -625,7 +608,7 @@ public class ShaderManager {
 			Gdx.app.log("ShaderManager", "--------------------------------");
 			Gdx.app.log("ShaderManager", "Fragment shader source: \n" + frag);
 			Gdx.app.log("ShaderManager", "--------------------------------");
-			return false;
+			throw new GdxRuntimeException("Error while loading shader '" + key + "':\n" + sp.getLog());
 		}
 		shaders.put(key, sp);
 		Gdx.app.log("ShaderManager", "Shader '" + key + "' loaded");

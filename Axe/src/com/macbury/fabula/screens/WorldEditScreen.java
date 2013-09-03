@@ -1,6 +1,7 @@
 package com.macbury.fabula.screens;
 
 import java.io.File;
+import java.util.UUID;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
@@ -80,7 +81,15 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     this.brushTimer = new ActionTimer(APPLY_BRUSH_EVERY, this);
     this.camera = new TopDownCamera();
     Gdx.app.log(TAG, "Initialized screen");
-    newMap(100,100);
+    G.shaders.add("terrain-editor", "terrain-editor.vert", "terrain-editor.frag");
+    
+    if (G.db.getPlayerStartPosition() == null) {
+      newMap(100,100);
+    } else {
+      openMap(G.db.getPlayerStartPosition().getFileHandler().file());
+    }
+    
+    
     //setCurrentBrush(terrainBrush);
     
     this.camController = new EditorCamController(camera);
@@ -89,8 +98,8 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   }
   
   public void newMap(int width, int height) {
-    int id = G.db.getMapUid();
-    this.scene   = new Scene(null, id, width, height);
+    String uuid = UUID.randomUUID().toString();
+    this.scene   = new Scene(null, uuid, width, height);
     this.terrain = this.scene.getTerrain();
     terrain.setDebugListener(this);
     terrain.fillEmptyTilesWithDebugTile();

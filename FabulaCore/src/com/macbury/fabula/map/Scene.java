@@ -19,9 +19,9 @@ import com.macbury.fabula.terrain.Terrain;
 import com.thesecretpie.shader.ShaderManager;
 
 public class Scene implements Disposable {
-  private static String FILE_EXT = "red";
+  public static String FILE_EXT = "red";
   private String           name;
-  private int              uid;
+  private String           uid;
   private Terrain          terrain;
   private String           finalShader;
   
@@ -36,7 +36,7 @@ public class Scene implements Disposable {
   
   private boolean debug;
   
-  public Scene(String name, int uid, int width, int height) {
+  public Scene(String name, String uid, int width, int height) {
     //skyBox = ResourceManager.shared().getSkyBox("SKYBOX_DAY");
     this.name = name;
     this.uid  = uid;
@@ -94,7 +94,6 @@ public class Scene implements Disposable {
     Serializer serializer = GameDatabase.getDefaultSerializer();
     try {
       ScenePersister scenePersister = serializer.read(ScenePersister.class, file);
-      
       return scenePersister.getScene();
     } catch (Exception e) {
       e.printStackTrace();
@@ -143,7 +142,7 @@ public class Scene implements Disposable {
     return this.name;
   }
 
-  public int getUID() {
+  public String getUID() {
     return this.uid;
   }
 

@@ -54,15 +54,20 @@ public abstract class GameManager extends Game {
       onNoGameData();
     } else {
       G.db.initialize();
-      G.db.save();
-      setScreen(getInitialScreen());
+      
+      if (G.db.getPlayerStartPosition() == null) {
+        onNoPlayerStartPosition();
+      } else {
+        setScreen(getInitialScreen());
+      }
+      
       loading = false;
     }
   }
 
   public abstract Screen getInitialScreen();
   public abstract void   onNoGameData();
-  
+  public abstract void   onNoPlayerStartPosition();
   @Override
   public void render() {
     Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

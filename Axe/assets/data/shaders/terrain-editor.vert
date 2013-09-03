@@ -21,10 +21,10 @@ uniform float layer_style;
 
 void main() {
   if ((int)layer_style == 1) {
-      if ((int)a_tile_position.x % 2 == 0 && (int)a_tile_position.y % 2 != 0) {
-        a_color = vec4(0.9,0.9,0.9,1) * a_color;
-      } else if ((int)a_tile_position.x % 2 != 0 && (int)a_tile_position.y % 2 == 0) {
-        a_color = vec4(0.9,0.9,0.9,1) * a_color;
+      if (((int)a_tile_position.x % 2 == 0) && ((int)a_tile_position.y % 2) != 0) {
+        a_color *= vec4(0.9f,0.9f,0.9f,1f);
+      } else if (((int)a_tile_position.x % 2) != 0 && ((int)a_tile_position.y % 2) == 0) {
+        a_color *= vec4(0.9f,0.9f,0.9f,1f);
       }
   }
   
