@@ -6,28 +6,34 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
+
 public class StreamGobbler extends Thread {
   private BufferedReader reader = null;
-  private List<String> writer = null;
+  private String tag;
+  private InputStream is;
 
-  public StreamGobbler(InputStream inputStream, List<String> outputList) {
-    reader = new BufferedReader(new InputStreamReader(inputStream));
-    writer = outputList;
+  public StreamGobbler(InputStream inputStream, String tag) {
+    this.is = inputStream;
+    this.tag = tag;
   }
 
   @Override
   public void run() {
     try {
+      reader = new BufferedReader(new InputStreamReader(is));
       String line = null;
       while ((line = reader.readLine()) != null) {
-        if (writer != null) writer.add(line);
+        Gdx.app.log(tag, line);
       }
     } catch (IOException e) {
+      e.printStackTrace();
     }
 
     try {
       reader.close();
-    } catch (IOException e) {     
+    } catch (IOException e) {  
+      e.printStackTrace();
     }
   }
 }

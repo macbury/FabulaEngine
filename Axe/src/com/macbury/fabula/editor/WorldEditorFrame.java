@@ -100,6 +100,7 @@ import com.macbury.fabula.editor.undo_redo.ChangeManager;
 import com.macbury.fabula.editor.undo_redo.ChangeManagerListener;
 import com.macbury.fabula.manager.EditorGameManager;
 import com.macbury.fabula.manager.G;
+import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.screens.WorldEditScreen;
 import com.macbury.fabula.terrain.AutoTile;
@@ -155,6 +156,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JMenuItem mntmReloadMap;
   private Canvas canvas;
   private JPopupMenu gamePopupMenu;
+  private JMenuItem mntmForceAppStop;
   public WorldEditorFrame(EditorGameManager game) {
     PrintStream origOut = System.out;
     PrintStream interceptor = new LogInterceptor(origOut);
@@ -230,7 +232,15 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mntmRun.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0));
     mnGame.add(mntmRun);
     
+    this.mntmForceAppStop = new JMenuItem("Terminate");
+    mntmForceAppStop.addActionListener(this);
+    mnGame.add(mntmForceAppStop);
+    
+    JSeparator separator_2 = new JSeparator();
+    mnGame.add(separator_2);
+    
     JMenuItem mntmBuildAssetBundle = new JMenuItem("Build Asset Bundle");
+    mntmBuildAssetBundle.setEnabled(false);
     mnGame.add(mntmBuildAssetBundle);
     
     JMenu mnEdit = new JMenu("Edit");
@@ -773,6 +783,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     if (e.getSource() == mntmReloadMap) {
       
+    }
+    
+    if (e.getSource() == mntmForceAppStop) {
+      AdbManager.stopApplication(GameManager.ANDROID_APP_PACKAGE);
     }
   }
 

@@ -95,7 +95,6 @@ public class RunningGameConsoleFrame extends JDialog implements WindowListener, 
 
   @Override
   public void windowClosed(WindowEvent arg0) {
-    Gdx.app.log(TAG, "Finishing game");
     this.runThread = null;
     gameManager.resume();
   }
@@ -126,21 +125,14 @@ public class RunningGameConsoleFrame extends JDialog implements WindowListener, 
   }
   
   private class RunnerThread extends Thread {
-    private Stack<String> commands;
-    public RunnerThread() {
-      commands = new Stack<String>();
-      commands.add("adb shell am start -n com.macbury.fabula.player/.MainActivity");
-      commands.add("adb push "+ G.fs("").file().getAbsolutePath() + " /sdcard/"+GameManager.ANDROID_GAME_DIRECTORY_NAME);
-    }
-    
     @Override
     public void run() {
-      
-      while(commands.size() > 0) {
-        List<String> res = AdbManager.execute(commands.pop(), true);
-        if (res == null) {
-          Gdx.app.log(TAG, "Could not run!");
-        }
+      try {
+        AdbManager.adbPush(G.fs("").file().getAbsolutePath(), "/sdcard/"+GameManager.ANDROID_GAME_DIRECTORY_NAME);
+        AdbManager.stopApplication(GameManager.ANDROID_APP_PACKAGE);
+        AdbManager.startApplication(GameManager.ANDROID_APP_PACKAGE+"/.MainActivity");
+      } catch (IOException e) {
+        e.printStackTrace();
       }
       
       SwingUtilities.invokeLater(new Runnable() {

@@ -11,7 +11,10 @@ import com.thesecretpie.shader.ShaderManager;
 
 public abstract class GameManager extends Game {
   public static final String ANDROID_GAME_DIRECTORY_NAME = "brutal-crasher";
+  public static final String ANDROID_APP_PACKAGE         = "com.macbury.fabula.player";
+  
   protected static final String TAG = "GameManager";
+  
   protected static GameManager _shared;
   
   protected boolean loading = true;
