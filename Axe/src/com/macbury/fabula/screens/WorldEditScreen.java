@@ -65,6 +65,9 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   private boolean isPaused;
   private boolean isDragging = false;
   private EventBrush eventBrush;
+  private BitmapFont baseFont;
+  private SpriteBatch uiSpriteBatch;
+  private OrthographicCamera guiCamera;
   
   public WorldEditScreen(GameManager manager) {
     super(manager);
@@ -78,8 +81,13 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   @Override
   public void show() {
     Gdx.app.log(TAG, "Showed screen");
-    this.brushTimer = new ActionTimer(APPLY_BRUSH_EVERY, this);
-    this.camera = new TopDownCamera();
+    this.brushTimer    = new ActionTimer(APPLY_BRUSH_EVERY, this);
+    this.camera        = new TopDownCamera();
+    this.baseFont      = G.db.getFont("base");
+    this.uiSpriteBatch = new SpriteBatch();
+    guiCamera          = new OrthographicCamera();
+    guiCamera.setToOrtho(false);
+    
     Gdx.app.log(TAG, "Initialized screen");
     G.shaders.add("terrain-editor", "terrain-editor.vert", "terrain-editor.frag");
     
@@ -156,14 +164,21 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     }
     debugInfo += "FPS: "+ Gdx.graphics.getFramesPerSecond() + " Java Heap: " + (Gdx.app.getJavaHeap() / 1024) + " KB" + " Native Heap: " + (Gdx.app.getNativeHeap() / 1024);
     
+    guiCamera.update();
+    this.uiSpriteBatch.setProjectionMatrix(guiCamera.combined);
+    uiSpriteBatch.begin();
+      baseFont.draw(uiSpriteBatch, "Font test!", 10, 30);
+    uiSpriteBatch.end();
   }
 
   @Override
   public void resize(int width, int height) {
     G.shaders.resize(width, height, true);
-    camera.viewportWidth = Gdx.graphics.getWidth();
-    camera.viewportHeight = Gdx.graphics.getHeight();
+    guiCamera.viewportWidth  = camera.viewportWidth  = Gdx.graphics.getWidth();
+    guiCamera.viewportHeight = camera.viewportHeight = Gdx.graphics.getHeight();
     this.camera.update(true);
+    this.guiCamera.update(true);
+    this.guiCamera.position.set(guiCamera.viewportWidth/2, guiCamera.viewportHeight/2, 0);
   }
   
   @Override

@@ -3,8 +3,6 @@ package com.macbury.fabula.db;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.FileHandler;
-
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
@@ -21,9 +19,9 @@ import org.simpleframework.xml.stream.Style;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.macbury.fabula.manager.G;
-import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.persister.ScenePersister;
 import com.macbury.fabula.terrain.AutoTiles;
@@ -43,6 +41,10 @@ public class GameDatabase {
   @Element(required=false)
   private PlayerStartPosition playerStartPosition;
   
+  @ElementArray(entry="font", required=false, name="fonts")
+  private String[] fontsName;
+  private BitmapFont[] fonts;
+  
   @ElementArray(entry="shader", required=false)
   private String[] shaders;
   
@@ -50,12 +52,11 @@ public class GameDatabase {
   private ArrayList<Tileset> tilesets;
   
   @ElementMap(name="maps", entry="map", key="uuid", attribute=true, inline=true, required=false)
-  public static HashMap<String, String> maps;
+  public HashMap<String, String> maps;
   
   @ElementMap(name="autotile-combinations", entry="corner", key="combination", attribute=true, inline=true, required=false)
   public static HashMap<String, AutoTiles.Types> CORNER_MAP;
 
-  
   public GameDatabase() {
     Gdx.app.log(TAG, "Game database initialized");
   }
@@ -112,6 +113,15 @@ public class GameDatabase {
       }
     } else {
       shaders = new String[0];
+    }
+    
+    if (fontsName == null) {
+      fontsName = new String[0];
+    }
+    
+    fonts = new BitmapFont[fontsName.length];
+    for (int i = 0; i < fontsName.length; i++) {
+      fonts[i] = new BitmapFont(G.fs("font/"+fontsName[i]+".fnt"), false);
     }
     
     if (tilesets == null) {
@@ -177,5 +187,15 @@ public class GameDatabase {
 
   public FileHandle getMapFile(String uuid) {
     return G.fs("maps/"+this.maps.get(uuid)+"."+Scene.FILE_EXT);
+  }
+  
+  public BitmapFont getFont(String name) {
+    for (int i = 0; i < fontsName.length; i++) {
+      if (fontsName[i].equalsIgnoreCase(name)) {
+        return fonts[i];
+      }
+    }
+    
+    return null;
   }
 }

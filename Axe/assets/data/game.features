@@ -1,6 +1,9 @@
-<game-features game:build="409" xmlns:game="http://macbury.pl/">
+<game-features game:build="437" xmlns:game="http://macbury.pl/">
    <title>Brutal Crasher</title>
    <player-start-position x="53" y="50" map="1"/>
+   <fonts length="1">
+      <font>base</font>
+   </fonts>
    <shaders length="3">
       <shader>bloom</shader>
       <shader>default</shader>
