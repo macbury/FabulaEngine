@@ -4,7 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Environment;
-import android.os.Looper;
+import android.util.DisplayMetrics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -14,10 +14,13 @@ import com.macbury.fabula.screens.GamePlayScreen;
 public class AndroidGameManager extends GameManager {
   
   private MainActivity activity;
-
   public AndroidGameManager(MainActivity mainActivity) {
     super(Environment.getExternalStorageDirectory() + "/" + GameManager.ANDROID_GAME_DIRECTORY_NAME + "/");
     this.activity = mainActivity;
+    
+    DisplayMetrics metrics = new DisplayMetrics();
+    mainActivity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+    this.scaledDensity = metrics.scaledDensity;
   }
 
   @Override
@@ -62,4 +65,5 @@ public class AndroidGameManager extends GameManager {
       }
     });
   }
+  
 }

@@ -16,7 +16,7 @@ public abstract class GameManager extends Game {
   protected static final String TAG = "GameManager";
   
   protected static GameManager _shared;
-  
+  protected float scaledDensity;
   protected boolean loading = true;
   protected ShaderManager shaderManager;
   private String storePath;
@@ -78,6 +78,14 @@ public abstract class GameManager extends Game {
   
   public boolean loading() {
     return loading;
+  }
+
+  public float getScaledDensity() {
+    return scaledDensity;
+  }
+
+  public void setScaledDensity(float scaledDensity) {
+    this.scaledDensity = scaledDensity;
   }
 
 }

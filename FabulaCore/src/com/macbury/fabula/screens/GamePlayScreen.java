@@ -9,7 +9,6 @@ import com.macbury.fabula.manager.G;
 import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.terrain.Terrain;
-import com.macbury.fabula.utils.EditorCamController;
 import com.macbury.fabula.utils.TopDownCamera;
 
 public class GamePlayScreen extends BaseScreen {
@@ -84,11 +83,12 @@ public class GamePlayScreen extends BaseScreen {
   
   @Override
   public void resize(int width, int height) {
-    guiCamera.viewportWidth  = camera.viewportWidth  = width;
-    guiCamera.viewportHeight = camera.viewportHeight = height;
+    guiCamera.viewportWidth  = camera.viewportWidth  = width / G.game.getScaledDensity();
+    guiCamera.viewportHeight = camera.viewportHeight = height / G.game.getScaledDensity();
     this.camera.update(true);
     this.guiCamera.update(true);
     this.guiCamera.position.set(guiCamera.viewportWidth/2, guiCamera.viewportHeight/2, 0);
+    Gdx.app.log(TAG, "Viewport: " + guiCamera.viewportWidth + "x" + guiCamera.viewportHeight);
   }
   
   @Override
