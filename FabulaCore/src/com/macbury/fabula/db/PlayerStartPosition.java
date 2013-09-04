@@ -26,6 +26,7 @@ public class PlayerStartPosition {
   }
 
   public FileHandle getFileHandler() {
-    return G.fs("maps/"+map+"."+Scene.FILE_EXT);
+    return G.db.getMapFile(map);
   }
+  
 }

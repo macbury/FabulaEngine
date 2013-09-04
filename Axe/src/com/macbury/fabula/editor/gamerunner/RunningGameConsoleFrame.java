@@ -81,7 +81,8 @@ public class RunningGameConsoleFrame extends JDialog implements WindowListener, 
   public void runGame(WorldEditorFrame worldEditorFrame, GameManager gameManager) {
     this.gameManager = gameManager;
     gameManager.pause();
-    
+    worldEditorFrame.saveMap();
+    G.db.save();
     runThread = new RunnerThread();
     runThread.start();
     System.gc();

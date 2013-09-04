@@ -9,6 +9,7 @@ import android.os.Looper;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.macbury.fabula.manager.GameManager;
+import com.macbury.fabula.screens.GamePlayScreen;
 
 public class AndroidGameManager extends GameManager {
   
@@ -21,8 +22,7 @@ public class AndroidGameManager extends GameManager {
 
   @Override
   public Screen getInitialScreen() {
-    // TODO Auto-generated method stub
-    return null;
+    return new GamePlayScreen(this);
   }
 
   @Override

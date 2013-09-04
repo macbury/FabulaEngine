@@ -174,4 +174,8 @@ public class GameDatabase {
   public void setPlayerStartPosition(PlayerStartPosition psp) {
     this.playerStartPosition = psp;
   }
+
+  public FileHandle getMapFile(String uuid) {
+    return G.fs("maps/"+this.maps.get(uuid)+"."+Scene.FILE_EXT);
+  }
 }

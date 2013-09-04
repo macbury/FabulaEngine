@@ -58,6 +58,7 @@ public abstract class GameManager extends Game {
       if (G.db.getPlayerStartPosition() == null) {
         onNoPlayerStartPosition();
       } else {
+        Gdx.app.log(TAG, "Found player position!");
         setScreen(getInitialScreen());
       }
       

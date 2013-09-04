@@ -132,7 +132,7 @@ public class Terrain implements Disposable {
     visibleSectorCount  = 0;
     final int textureId = 1;
     tileset.getTexture().bind(textureId);
-    sm.begin("terrain-editor");
+    sm.begin(getShader());
       sm.setUniformMatrix("u_projectionViewMatrix", camera.combined);
       sm.setUniformi("u_texture0", textureId);
       sm.getCurrent().setUniformf("u_ambient_color", lights.ambientLight);
@@ -163,6 +163,10 @@ public class Terrain implements Disposable {
    // gl.glDisable(GL20.GL_TEXTURE_2D);
   }
   
+  private String getShader() {
+    return isDebug() ? "terrain-editor" : "terrain";
+  }
+
   public int getTotalSectorCount() {
     return totalSectorCount;
   }
@@ -246,6 +250,10 @@ public class Terrain implements Disposable {
   
   public TerrainDebugListener getDebugListener() {
     return debugListener;
+  }
+  
+  public boolean isDebug() {
+    return debugListener != null;
   }
 
   public void setDebugListener(TerrainDebugListener debugListener) {

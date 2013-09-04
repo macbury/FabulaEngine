@@ -156,7 +156,7 @@ public class TriangleGrid implements Disposable {
   public void end() {
     calculateNormals();
     this.verties       = new float[vertextCount * getAttributesPerVertex()];
-    
+    boolean usingTilePos = isUsing(AttributeType.TilePosition);
     vertexCursor = 0;
     for (GridVertex vertex : this.vertexsList) {
       this.verties[vertexCursor++] = vertex.position.x;
@@ -173,8 +173,10 @@ public class TriangleGrid implements Disposable {
       this.verties[vertexCursor++] = vertex.textureCordinates.x;
       this.verties[vertexCursor++] = vertex.textureCordinates.y;
       
-      this.verties[vertexCursor++] = vertex.tilePosition.x;
-      this.verties[vertexCursor++] = vertex.tilePosition.y;
+      if (usingTilePos) {
+        this.verties[vertexCursor++] = vertex.tilePosition.x;
+        this.verties[vertexCursor++] = vertex.tilePosition.y;
+      }
     }
     
     this.mesh = new Mesh(true, this.verties.length, this.indices.length, this.getVertexAttributes());

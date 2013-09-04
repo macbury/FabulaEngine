@@ -841,13 +841,12 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     resetEditor();
   }
 
-  private boolean saveMap() {
+  public boolean saveMap() {
     WorldEditScreen screen = this.gameManager.getWorldEditScreen();
     Scene scene            = screen.getScene();
     
     if (scene.haveName()) {
       scene.save();
-      G.db.save();
       updateInfoForMapSettings();
       return true;
     } else {
