@@ -127,10 +127,9 @@ public class Terrain implements Disposable {
     gl.glEnable(GL10.GL_DEPTH_TEST);
     gl.glEnable(GL20.GL_TEXTURE_2D);
     gl.glEnable(GL10.GL_CULL_FACE);
-    gl.glActiveTexture(GL20.GL_TEXTURE1);
     
     visibleSectorCount  = 0;
-    final int textureId = 1;
+    final int textureId = 2;
     tileset.getTexture().bind(textureId);
     sm.begin(getShader());
       sm.setUniformMatrix("u_projectionViewMatrix", camera.combined);
@@ -160,7 +159,7 @@ public class Terrain implements Disposable {
     
     gl.glDisable(GL10.GL_CULL_FACE); // TODO: this must to be disabled to show sprite batch duh
     gl.glDisable(GL10.GL_DEPTH_TEST);
-   // gl.glDisable(GL20.GL_TEXTURE_2D);
+    gl.glDisable(GL20.GL_TEXTURE_2D);
   }
   
   private String getShader() {

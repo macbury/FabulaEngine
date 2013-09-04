@@ -104,7 +104,7 @@ public class TilesetGenerator {
     
     listener.onLog("Packing...");
     listener.onProgress(0, 0);
-    TexturePacker2.process("preprocessed/expanded/", "assets/textures/", tileset.getAtlasName()+".atlas");
+    TexturePacker2.process("preprocessed/expanded/", "assets/data/textures/", tileset.getAtlasName()+".atlas");
     listener.onLog("Finished: "+tileset.getAtlasName());
     listener.onFinish();
   }

@@ -5,9 +5,15 @@ import java.io.File;
 import org.simpleframework.xml.Serializer;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
+import com.badlogic.gdx.graphics.g3d.decals.Decal;
+import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.lights.Lights;
 import com.badlogic.gdx.math.Vector3;
@@ -19,37 +25,38 @@ import com.macbury.fabula.terrain.Terrain;
 import com.thesecretpie.shader.ShaderManager;
 
 public class Scene implements Disposable {
-  public static String FILE_EXT = "red";
+  private static final String MAIN_FRAME_BUFFER = "MAIN_FRAME_BUFFER";
+  private static final String TAG               = "Scene";
+  public static String FILE_EXT                 = "red";
   private String           name;
   private String           uid;
   private Terrain          terrain;
   private String           finalShader;
-  
-  private static final String MAIN_FRAME_BUFFER = "MAIN_FRAME_BUFFER";
-  private static final String TAG               = "Scene";
-  
+
   private Lights           lights;
   private DirectionalLight sunLight;
   
   private SkyBox           skyBox;
-  private ShaderManager sm;
+  private ShaderManager    sm;
   
   private boolean debug;
+  private DecalBatch decalBatch;
+  private PerspectiveCamera perspectiveCamera;
+  private Decal startPositionDecal;
   
   public Scene(String name, String uid, int width, int height) {
-    //skyBox = ResourceManager.shared().getSkyBox("SKYBOX_DAY");
     this.name = name;
     this.uid  = uid;
     lights    = new Lights();
     lights.ambientLight.set(1f, 1f, 1f, 0.5f);
-    sunLight = new DirectionalLight();
+    sunLight  = new DirectionalLight();
     sunLight.set(Color.WHITE, new Vector3(-0.008f, -0.716f, -0.108f));
     lights.add(sunLight);
     
-    this.terrain = new Terrain(width, height);
+    this.terrain      = new Terrain(width, height);
     this.terrain.setTileset("outside");
-    this.finalShader = "default";
-    this.sm = G.shaders;
+    this.finalShader  = "default";
+    this.sm           = G.shaders;
     this.sm.createFB(MAIN_FRAME_BUFFER);
   }
   
@@ -57,25 +64,26 @@ public class Scene implements Disposable {
     return this.terrain;
   }
   
-  public void render(Camera camera) {
-    //GL20 gl = Gdx.graphics.getGL20();
+  public void render() {
     Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
     Gdx.gl.glEnable(GL10.GL_BLEND);
     sm.beginFB(MAIN_FRAME_BUFFER);
-      
-      this.terrain.render(camera, this.lights);
+      this.terrain.render(perspectiveCamera, this.lights);
       if (debug) {
-        sm.debugToDisk(MAIN_FRAME_BUFFER, "assets/debug.png");
+        this.decalBatch.add(startPositionDecal);
       }
+      this.decalBatch.flush();
     sm.endFB();
-    
     
     sm.begin(finalShader); 
       sm.renderFB(MAIN_FRAME_BUFFER);
     sm.end();
-    
-    this.debug = false;
+  }
+  
+  public void setCamera(PerspectiveCamera camera) {
+    this.perspectiveCamera = camera;
+    this.decalBatch        = new DecalBatch(new CameraGroupStrategy(perspectiveCamera));
   }
   
   public DirectionalLight getSunLight() {
@@ -121,7 +129,8 @@ public class Scene implements Disposable {
   @Override
   public void dispose() {
     this.terrain.dispose();
-    this.skyBox.dispose();
+    //this.skyBox.dispose();
+    this.decalBatch.dispose();
   }
 
   public String getFinalShader() {
@@ -131,8 +140,7 @@ public class Scene implements Disposable {
   public void setFinalShader(String finalShader) {
     this.finalShader = finalShader;
   }
-  
-  
+
 
   public void setName(String text) {
     this.name = text;
@@ -146,4 +154,14 @@ public class Scene implements Disposable {
     return this.uid;
   }
 
+  public void setDebug(boolean debug) {
+    this.debug = debug;
+    Texture startPositionTexture = new Texture(Gdx.files.classpath("com/macbury/icon/start_position.png"));
+    this.startPositionDecal = Decal.newDecal(1,1,new TextureRegion(startPositionTexture), false);
+    this.startPositionDecal.setWidth(1);
+    this.startPositionDecal.setHeight(1);
+    //this.startPositionDecal.setBlending(GL10.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+    
+    startPositionDecal.getPosition().set(15, 0.5f, 20);
+  }
 }

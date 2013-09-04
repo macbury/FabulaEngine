@@ -7,6 +7,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.macbury.fabula.db.GameDatabase;
+import com.macbury.fabula.screens.SplashScreen;
 import com.thesecretpie.shader.ShaderManager;
 
 public abstract class GameManager extends Game {
@@ -20,6 +21,7 @@ public abstract class GameManager extends Game {
   protected boolean loading = true;
   protected ShaderManager shaderManager;
   private String storePath;
+  private SplashScreen splashScreen;
   
   public static GameManager shared() {
     return _shared;
@@ -40,16 +42,18 @@ public abstract class GameManager extends Game {
     Gdx.app.log(TAG, "Store path: " + this.storePath);
     Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
     Gdx.gl.glDepthFunc(GL10.GL_LESS);
+    splashScreen = new SplashScreen(this);
+    setScreen(splashScreen);
     
     ShaderProgram.pedantic = false;
     
     Gdx.app.log(TAG, "Loading shaders");
     this.shaderManager     = new ShaderManager(new AssetManager());
     G.game      = this;
+    G.objects   = new ObjectManager();
     G.shaders   = shaderManager;
     Gdx.app.log(TAG, "Preparing game DB");
     G.db        = GameDatabase.load();
-
     if (G.db == null) {
       onNoGameData();
     } else {
@@ -60,6 +64,8 @@ public abstract class GameManager extends Game {
       } else {
         Gdx.app.log(TAG, "Found player position!");
         setScreen(getInitialScreen());
+        splashScreen.dispose();
+        splashScreen = null;
       }
       
       loading = false;

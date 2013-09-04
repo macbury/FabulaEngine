@@ -42,7 +42,7 @@ public class GamePlayScreen extends BaseScreen {
     this.guiCamera.setToOrtho(false);
     this.camera.position.set(terrain.getColumns()/2, 17, terrain.getRows()/2);
     this.camera.lookAt(terrain.getColumns()/2, 0, terrain.getRows()/2 - 3);
-    
+    this.scene.setCamera(camera);
     this.camController = new CameraInputController(camera);
     Gdx.input.setInputProcessor(camController);
     this.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -73,7 +73,7 @@ public class GamePlayScreen extends BaseScreen {
   public void render(float delta) {
     camController.update();
     camera.update();
-    scene.render(camera);
+    scene.render();
     
     uiSpriteBatch.setProjectionMatrix(guiCamera.combined);
     uiSpriteBatch.begin();

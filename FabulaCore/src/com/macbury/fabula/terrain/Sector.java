@@ -17,8 +17,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
 public class Sector implements Disposable {
-  public final static int ROW_COUNT               = 10;
-  public final static int COLUMN_COUNT            = 10;
+  public final static int ROW_COUNT               = 5;
+  public final static int COLUMN_COUNT            = 5;
   public final static int VERTEX_PER_BOX_COUNT    = 4;
   public final static int VERTEX_ATTRIBUTE_COUNT  = 6;
   public final static int TOTAL_ATTRIBUTES_COUNT  = VERTEX_PER_BOX_COUNT * VERTEX_ATTRIBUTE_COUNT;

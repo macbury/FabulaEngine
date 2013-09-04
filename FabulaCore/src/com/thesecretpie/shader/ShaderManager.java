@@ -42,7 +42,7 @@ public class ShaderManager {
 	
 	public static final String SHADER_CLASSPATH = "data/shaders/";
 	public static int MAX_FRAMEBUFFERS = 10;
-	public static int FRAMEBUFFER_TEXTURE_ID = 0;
+	public static int FRAMEBUFFER_TEXTURE_ID = 1;
 
 	private ObjectMap<String, ShaderProgram> shaders;
 	private ObjectMap<String, String> shaderPaths;

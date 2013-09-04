@@ -9,6 +9,7 @@ public class G {
   public static GameManager game;
   public static ShaderManager shaders;
   public static GameDatabase db;
+  public static ObjectManager objects;
 
   public static FileHandle fs(String path) {
     return Gdx.files.absolute(GameManager.shared().getStorePath() + path);

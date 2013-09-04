@@ -108,6 +108,8 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   public void newMap(int width, int height) {
     String uuid = UUID.randomUUID().toString();
     this.scene   = new Scene(null, uuid, width, height);
+    this.scene.setCamera(camera);
+    this.scene.setDebug(true);
     this.terrain = this.scene.getTerrain();
     terrain.setDebugListener(this);
     terrain.fillEmptyTilesWithDebugTile();
@@ -127,6 +129,8 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   public void openMap(File file) {
     this.scene = Scene.open(file);
     this.terrain = scene.getTerrain();
+    this.scene.setCamera(camera);
+    this.scene.setDebug(true);
     terrain.setDebugListener(this);
     terrain.buildSectors();
     camera.position.set(terrain.getColumns()/2, 17, terrain.getRows()/2);
@@ -153,7 +157,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     this.brushTimer.update(delta);
     camController.update();
     camera.update();
-    this.scene.render(this.camera);
+    this.scene.render();
     //modelBatch.begin(camera);
     //modelBatch.render(cursorInstance);
     //modelBatch.end();
@@ -164,11 +168,11 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     }
     debugInfo += "FPS: "+ Gdx.graphics.getFramesPerSecond() + " Java Heap: " + (Gdx.app.getJavaHeap() / 1024) + " KB" + " Native Heap: " + (Gdx.app.getNativeHeap() / 1024);
     
-    guiCamera.update();
+    /*guiCamera.update();
     this.uiSpriteBatch.setProjectionMatrix(guiCamera.combined);
     uiSpriteBatch.begin();
       baseFont.draw(uiSpriteBatch, "Font test!", 10, 30);
-    uiSpriteBatch.end();
+    uiSpriteBatch.end();*/
   }
 
   @Override
