@@ -168,11 +168,11 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     }
     debugInfo += "FPS: "+ Gdx.graphics.getFramesPerSecond() + " Java Heap: " + (Gdx.app.getJavaHeap() / 1024) + " KB" + " Native Heap: " + (Gdx.app.getNativeHeap() / 1024);
     
-    /*guiCamera.update();
+    guiCamera.update();
     this.uiSpriteBatch.setProjectionMatrix(guiCamera.combined);
     uiSpriteBatch.begin();
       baseFont.draw(uiSpriteBatch, "Font test!", 10, 30);
-    uiSpriteBatch.end();*/
+    uiSpriteBatch.end();
   }
 
   @Override

@@ -69,11 +69,11 @@ public class Scene implements Disposable {
     Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
     Gdx.gl.glEnable(GL10.GL_BLEND);
     sm.beginFB(MAIN_FRAME_BUFFER);
-      this.terrain.render(perspectiveCamera, this.lights);
       if (debug) {
         this.decalBatch.add(startPositionDecal);
       }
       this.decalBatch.flush();
+      this.terrain.render(perspectiveCamera, this.lights);
     sm.endFB();
     
     sm.begin(finalShader); 

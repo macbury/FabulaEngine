@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g3d.lights.Lights;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -127,9 +128,8 @@ public class Terrain implements Disposable {
     gl.glEnable(GL10.GL_DEPTH_TEST);
     gl.glEnable(GL20.GL_TEXTURE_2D);
     gl.glEnable(GL10.GL_CULL_FACE);
-    
     visibleSectorCount  = 0;
-    final int textureId = 2;
+    final int textureId = 5;
     tileset.getTexture().bind(textureId);
     sm.begin(getShader());
       sm.setUniformMatrix("u_projectionViewMatrix", camera.combined);
