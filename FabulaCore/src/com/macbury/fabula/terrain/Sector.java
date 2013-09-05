@@ -1,22 +1,17 @@
 package com.macbury.fabula.terrain;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
-import com.badlogic.gdx.graphics.VertexAttribute;
-import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
-public class Sector implements Disposable {
+public class Sector extends Renderable implements Disposable {
   public final static int ROW_COUNT               = 5;
   public final static int COLUMN_COUNT            = 5;
   public final static int VERTEX_PER_BOX_COUNT    = 4;
@@ -36,6 +31,7 @@ public class Sector implements Disposable {
     this.topLeftCorner     = pos;
     this.bottomRightCorner = pos.cpy().add(COLUMN_COUNT, 0, ROW_COUNT);
     this.triangleGrid      = new TriangleGrid(COLUMN_COUNT, ROW_COUNT, false); //TODO: change to static for non world edit
+    this.primitiveType     = GL20.GL_TRIANGLES;
   }
 
   public void build() {
@@ -114,6 +110,10 @@ public class Sector implements Disposable {
       }
     triangleGrid.end();
     
+    this.mesh = triangleGrid.getMesh();
+    this.meshPartOffset = 0;
+    this.meshPartSize = mesh.getNumIndices();
+        
     this.boundingBox = new BoundingBox(this.topLeftCorner, this.bottomRightCorner.cpy().add(0, height, 0));
   }
 
@@ -768,11 +768,17 @@ public class Sector implements Disposable {
   }
 
   public Mesh getMesh() {
-    return this.triangleGrid.getMesh();
+    return this.mesh;
   }
 
   @Override
   public void dispose() {
     this.triangleGrid.dispose();
+    if (this.mesh != null) {
+      this.mesh.dispose();
+    }
+    
+    if (this.shader != null) {
+    }
   }
 }

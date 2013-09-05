@@ -565,7 +565,7 @@ public class ShaderManager {
 	 * @param baseFragPath - path to fragment shader source
 	 */
 	public void add(AssetManager am, String key, String baseVertPath, String baseFragPath) {
-		am.setLoader(String.class, new TextFileLoader(new InternalFileHandleResolver()));
+		//am.setLoader(String.class, new TextFileLoader(new InternalFileHandleResolver()));
 		
 		FileHandle vertFh = null, fragFh = null;
 		String vertPath = G.fs("shaders/"+baseVertPath).path();

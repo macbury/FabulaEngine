@@ -13,7 +13,13 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.lights.Lights;
+import com.badlogic.gdx.graphics.g3d.materials.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.materials.Material;
+import com.badlogic.gdx.graphics.g3d.materials.TextureAttribute;
+import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
@@ -41,41 +47,50 @@ public class Terrain implements Disposable {
   
   private Tileset tileset;
   private TerrainDebugListener debugListener;
+  private ModelBatch sectorsBatch;
+  private Material terrainMaterial;
+  private TerrainShader terrainShader;
+  
+  private boolean uninitialized = true;
   
   public Terrain(int columns, int rows) {
-    initialize(columns, rows);
-  }
-
-  /*public Terrain(@Attribute int columns, @Attribute int rows, @Attribute String tilesetName) {
-    initialize(columns, rows);
-    setTileset(tilesetName);
-  }*/
-  
-  private void initialize(int columns, int rows) {
-    Tile.GID_COUNTER  = 1;
-    this.debug        = debug;
     this.columns      = columns;
     this.rows         = rows;
-    this.tiles        = new Tile[columns][rows];
     
+    Tile.GID_COUNTER  = 1;
+    this.tiles        = new Tile[columns][rows];
     if (columns % Sector.COLUMN_COUNT != 0 || rows%Sector.ROW_COUNT != 0) {
       throw new RuntimeException("Map size must be proper!");
     }
+  }
+  
+  public void buildIfNotUnitiliazed() {
+    if (uninitialized) {
+      initialize();
+      uninitialized = false;
+    }
+  }
+  
+  private void initialize() {
+    this.sectorsBatch    = new ModelBatch();
+    this.terrainShader   = new TerrainShader(getShader());
+  }
+  
+  public void setTileset(String name) {
+    tilesetName          = name;
+    tileset              = G.db.getTileset(tilesetName);
+    this.terrainMaterial = new Material(TextureAttribute.createDiffuse(tileset.getTexture()));
     
+  }
+  
+  public void buildSectors() {
     this.horizontalSectorCount = columns/Sector.COLUMN_COUNT;
     this.veriticalSectorCount  = rows/Sector.ROW_COUNT;
     this.totalSectorCount      = horizontalSectorCount * veriticalSectorCount;
     
-    this.sectors        = new Sector[horizontalSectorCount][veriticalSectorCount];
-    this.visibleSectors = new Stack<Sector>();
-  }
-  
-  public void setTileset(String name) {
-    tilesetName = name;
-    tileset     = G.db.getTileset(tilesetName);
-  }
-  
-  public void buildSectors() {
+    this.sectors               = new Sector[horizontalSectorCount][veriticalSectorCount];
+    this.visibleSectors        = new Stack<Sector>();
+    
     for (int x = 0; x < horizontalSectorCount; x++) {
       for (int z = 0; z < veriticalSectorCount; z++) {
         Sector sector = new Sector(new Vector3(x * Sector.COLUMN_COUNT, 0, z * Sector.ROW_COUNT), this);
@@ -122,44 +137,28 @@ public class Terrain implements Disposable {
   }
   
   public void render(Camera camera, Lights lights) {
-    ShaderManager sm = G.shaders;
-    GL20 gl          = Gdx.graphics.getGL20();
-    
-    gl.glEnable(GL10.GL_DEPTH_TEST);
-    gl.glEnable(GL20.GL_TEXTURE_2D);
-    gl.glEnable(GL10.GL_CULL_FACE);
+    buildIfNotUnitiliazed();
+    terrainShader.setShaderName(getShader());
+    terrainShader.setLights(lights);
+    terrainShader.setMaterial(terrainMaterial);
     visibleSectorCount  = 0;
-    final int textureId = 5;
-    tileset.getTexture().bind(textureId);
-    sm.begin(getShader());
-      sm.setUniformMatrix("u_projectionViewMatrix", camera.combined);
-      sm.setUniformi("u_texture0", textureId);
-      sm.getCurrent().setUniformf("u_ambient_color", lights.ambientLight);
-      sm.getCurrent().setUniformf("u_light_color", lights.directionalLights.get(0).color);
-      sm.getCurrent().setUniformf("u_light_direction", lights.directionalLights.get(0).direction);
-  
-      if (debugListener != null) {
-        debugListener.onDebugTerrainConfigureShader(sm.getCurrent());
-      }
-      
-      visibleSectors.clear();
-      
+    
+    sectorsBatch.begin(camera);
       for (int x = 0; x < horizontalSectorCount; x++) {
         for (int z = 0; z < veriticalSectorCount; z++) {
           Sector sector = this.sectors[x][z]; 
           if (sector.visibleInCamera(camera)) {
-            sector.getMesh().render(sm.getCurrent(), GL20.GL_TRIANGLES); // GL20.GL_LINES wireframe
+            sector.material = terrainMaterial;
+            sector.shader   = terrainShader;
+            sectorsBatch.render(sector);
             visibleSectors.add(sector);
             visibleSectorCount++;
-            
           }
         }
       }
-    sm.end();
+    sectorsBatch.end();
     
-    gl.glDisable(GL10.GL_CULL_FACE); // TODO: this must to be disabled to show sprite batch duh
-    gl.glDisable(GL10.GL_DEPTH_TEST);
-    gl.glDisable(GL20.GL_TEXTURE_2D);
+    visibleSectors.clear();
   }
   
   private String getShader() {
@@ -256,9 +255,8 @@ public class Terrain implements Disposable {
   }
 
   public void setDebugListener(TerrainDebugListener debugListener) {
-    this.debugListener = debugListener;
-    this.debug         = true;
-    //terrainShader = ResourceManager.shared().getShaderProgram(debug ? "SHADER_TERRAIN_EDITOR" : "SHADER_TERRAIN");
+    this.debugListener   = debugListener;
+    this.debug           = true;
   }
 
   public interface TerrainDebugListener {
@@ -289,6 +287,8 @@ public class Terrain implements Disposable {
         sector.dispose();
       }
     }
+    
+    sectorsBatch.dispose();
   }
 
   public Tile getTileByTilePosition(Tile t) {

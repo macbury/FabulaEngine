@@ -771,7 +771,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     }
     
     if (e.getSource() == mntmDebugFrameBuffer) {
-      screen.getScene().debug();
     }
     
     if (e.getSource() == mntmUndo) {

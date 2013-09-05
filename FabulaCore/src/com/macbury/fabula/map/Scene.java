@@ -67,13 +67,14 @@ public class Scene implements Disposable {
   public void render() {
     Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-    Gdx.gl.glEnable(GL10.GL_BLEND);
+    
     sm.beginFB(MAIN_FRAME_BUFFER);
       if (debug) {
         this.decalBatch.add(startPositionDecal);
       }
       this.decalBatch.flush();
       this.terrain.render(perspectiveCamera, this.lights);
+      
     sm.endFB();
     
     sm.begin(finalShader); 
@@ -120,10 +121,6 @@ public class Scene implements Disposable {
     long time = (System.currentTimeMillis() - start);
     Gdx.app.log(TAG, "Saved in: "+time + " miliseconds");
     return true;
-  }
-  
-  public void debug() {
-    this.debug = true;
   }
   
   @Override
