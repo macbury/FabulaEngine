@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
@@ -22,6 +23,7 @@ import com.macbury.fabula.db.GameDatabase;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.persister.ScenePersister;
 import com.macbury.fabula.terrain.Terrain;
+import com.macbury.fabula.utils.CameraGroupWithCustomShaderStrategy;
 import com.thesecretpie.shader.ShaderManager;
 
 public class Scene implements Disposable {
@@ -43,6 +45,7 @@ public class Scene implements Disposable {
   private DecalBatch decalBatch;
   private PerspectiveCamera perspectiveCamera;
   private Decal startPositionDecal;
+  private ModelBatch modelBatch;
   
   public Scene(String name, String uid, int width, int height) {
     this.name = name;
@@ -57,7 +60,9 @@ public class Scene implements Disposable {
     this.terrain.setTileset("outside");
     this.finalShader  = "default";
     this.sm           = G.shaders;
+    this.modelBatch   = new ModelBatch();
     this.sm.createFB(MAIN_FRAME_BUFFER);
+    
   }
   
   public Terrain getTerrain() {
@@ -65,26 +70,27 @@ public class Scene implements Disposable {
   }
   
   public void render() {
-    Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-    
+    Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);;
     sm.beginFB(MAIN_FRAME_BUFFER);
-      if (debug) {
-        this.decalBatch.add(startPositionDecal);
-      }
-      this.decalBatch.flush();
-      this.terrain.render(perspectiveCamera, this.lights);
-      
+      modelBatch.begin(perspectiveCamera);
+        this.terrain.render(perspectiveCamera, lights, modelBatch);
+        if (debug) {
+          startPositionDecal.lookAt(perspectiveCamera.position, perspectiveCamera.up.cpy().nor());
+          this.decalBatch.add(startPositionDecal);
+        }
+        this.decalBatch.flush();
+      modelBatch.end();
     sm.endFB();
     
-    sm.begin(finalShader); 
-      sm.renderFB(MAIN_FRAME_BUFFER);
-    sm.end();
+   sm.begin(finalShader); 
+     sm.renderFB(MAIN_FRAME_BUFFER);
+   sm.end();
   }
   
   public void setCamera(PerspectiveCamera camera) {
     this.perspectiveCamera = camera;
-    this.decalBatch        = new DecalBatch(new CameraGroupStrategy(perspectiveCamera));
+    this.decalBatch        = new DecalBatch(new CameraGroupWithCustomShaderStrategy(perspectiveCamera));
   }
   
   public DirectionalLight getSunLight() {
@@ -128,6 +134,7 @@ public class Scene implements Disposable {
     this.terrain.dispose();
     //this.skyBox.dispose();
     this.decalBatch.dispose();
+    this.modelBatch.dispose();
   }
 
   public String getFinalShader() {
@@ -154,7 +161,7 @@ public class Scene implements Disposable {
   public void setDebug(boolean debug) {
     this.debug = debug;
     Texture startPositionTexture = new Texture(Gdx.files.classpath("com/macbury/icon/start_position.png"));
-    this.startPositionDecal = Decal.newDecal(1,1,new TextureRegion(startPositionTexture), false);
+    this.startPositionDecal = Decal.newDecal(1,1,new TextureRegion(startPositionTexture), true);
     this.startPositionDecal.setWidth(1);
     this.startPositionDecal.setHeight(1);
     //this.startPositionDecal.setBlending(GL10.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);

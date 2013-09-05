@@ -47,7 +47,6 @@ public class Terrain implements Disposable {
   
   private Tileset tileset;
   private TerrainDebugListener debugListener;
-  private ModelBatch sectorsBatch;
   private Material terrainMaterial;
   private TerrainShader terrainShader;
   
@@ -72,7 +71,6 @@ public class Terrain implements Disposable {
   }
   
   private void initialize() {
-    this.sectorsBatch    = new ModelBatch();
     this.terrainShader   = new TerrainShader(getShader());
   }
   
@@ -136,7 +134,7 @@ public class Terrain implements Disposable {
     setTile((int)x, (int)z, tile);
   }
   
-  public void render(Camera camera, Lights lights) {
+  public void render(Camera camera, Lights lights, ModelBatch batch) {
     buildIfNotUnitiliazed();
     visibleSectors.clear();
     
@@ -146,20 +144,18 @@ public class Terrain implements Disposable {
     terrainShader.setDebugListener(debugListener);
     visibleSectorCount  = 0;
     
-    sectorsBatch.begin(camera);
-      for (int x = 0; x < horizontalSectorCount; x++) {
-        for (int z = 0; z < veriticalSectorCount; z++) {
-          Sector sector = this.sectors[x][z]; 
-          if (sector.visibleInCamera(camera)) {
-            sector.material = terrainMaterial;
-            sector.shader   = terrainShader;
-            sectorsBatch.render(sector);
-            visibleSectors.add(sector);
-            visibleSectorCount++;
-          }
+    for (int x = 0; x < horizontalSectorCount; x++) {
+      for (int z = 0; z < veriticalSectorCount; z++) {
+        Sector sector = this.sectors[x][z]; 
+        if (sector.visibleInCamera(camera)) {
+          sector.material = terrainMaterial;
+          sector.shader   = terrainShader;
+          batch.render(sector);
+          visibleSectors.add(sector);
+          visibleSectorCount++;
         }
       }
-    sectorsBatch.end();
+    }
   }
   
   private String getShader() {
@@ -288,8 +284,6 @@ public class Terrain implements Disposable {
         sector.dispose();
       }
     }
-    
-    sectorsBatch.dispose();
   }
 
   public Tile getTileByTilePosition(Tile t) {
