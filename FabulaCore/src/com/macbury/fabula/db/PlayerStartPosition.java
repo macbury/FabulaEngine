@@ -1,14 +1,10 @@
 package com.macbury.fabula.db;
 
-import java.util.logging.FileHandler;
-
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.macbury.fabula.manager.G;
-import com.macbury.fabula.map.Scene;
-import com.macbury.fabula.persister.ScenePersister;
 
 @Root
 public class PlayerStartPosition {
@@ -28,5 +24,18 @@ public class PlayerStartPosition {
   public FileHandle getFileHandler() {
     return G.db.getMapFile(map);
   }
+
+  public String getUUID() {
+    return map;
+  }
+
+  public int getTileX() {
+    return x;
+  }
+
+  public int getTileY() {
+    return y;
+  }
+  
   
 }

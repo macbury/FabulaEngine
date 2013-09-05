@@ -20,14 +20,16 @@ import com.badlogic.gdx.graphics.g3d.lights.Lights;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
 import com.macbury.fabula.db.GameDatabase;
+import com.macbury.fabula.db.PlayerStartPosition;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.persister.ScenePersister;
 import com.macbury.fabula.terrain.Terrain;
+import com.macbury.fabula.terrain.Tile;
 import com.macbury.fabula.utils.CameraGroupWithCustomShaderStrategy;
 import com.thesecretpie.shader.ShaderManager;
 
 public class Scene implements Disposable {
-  private static final String MAIN_FRAME_BUFFER = "MAIN_FRAME_BUFFER";
+  public static final String MAIN_FRAME_BUFFER = "MAIN_FRAME_BUFFER";
   private static final String TAG               = "Scene";
   public static String FILE_EXT                 = "red";
   private String           name;
@@ -37,8 +39,7 @@ public class Scene implements Disposable {
 
   private Lights           lights;
   private DirectionalLight sunLight;
-  
-  private SkyBox           skyBox;
+ 
   private ShaderManager    sm;
   
   private boolean debug;
@@ -60,8 +61,10 @@ public class Scene implements Disposable {
     this.terrain.setTileset("outside");
     this.finalShader  = "default";
     this.sm           = G.shaders;
+  }
+  
+  public void initialize() {
     this.modelBatch   = new ModelBatch();
-    this.sm.createFB(MAIN_FRAME_BUFFER);
     
   }
   
@@ -75,19 +78,28 @@ public class Scene implements Disposable {
     sm.beginFB(MAIN_FRAME_BUFFER);
       modelBatch.begin(perspectiveCamera);
         this.terrain.render(perspectiveCamera, lights, modelBatch);
-        if (debug) {
-          startPositionDecal.lookAt(perspectiveCamera.position, perspectiveCamera.up.cpy().nor());
-          this.decalBatch.add(startPositionDecal);
-        }
+        renderDebugInfo();
         this.decalBatch.flush();
       modelBatch.end();
     sm.endFB();
     
-   sm.begin(finalShader); 
-     sm.renderFB(MAIN_FRAME_BUFFER);
-   sm.end();
+    sm.begin(finalShader); 
+      sm.renderFB(MAIN_FRAME_BUFFER);
+    sm.end();
   }
   
+  private void renderDebugInfo() {
+    if (debug) {
+      PlayerStartPosition psp = G.db.getPlayerStartPosition();
+      if (psp != null && psp.getUUID().equalsIgnoreCase(uid)) {
+        Tile tile = terrain.getTile(psp.getTileX(), psp.getTileY());
+        startPositionDecal.getPosition().set(psp.getTileX()+0.5f, tile.getY()+0.5f, psp.getTileY()+0.5f);
+        startPositionDecal.lookAt(perspectiveCamera.position, perspectiveCamera.up.cpy().nor());
+        this.decalBatch.add(startPositionDecal);
+      }
+    }
+  }
+
   public void setCamera(PerspectiveCamera camera) {
     this.perspectiveCamera = camera;
     this.decalBatch        = new DecalBatch(new CameraGroupWithCustomShaderStrategy(perspectiveCamera));
@@ -109,7 +121,9 @@ public class Scene implements Disposable {
     Serializer serializer = GameDatabase.getDefaultSerializer();
     try {
       ScenePersister scenePersister = serializer.read(ScenePersister.class, file);
-      return scenePersister.getScene();
+      Scene scene  = scenePersister.getScene();
+      scene.initialize();
+      return scene;
     } catch (Exception e) {
       e.printStackTrace();
       return null;

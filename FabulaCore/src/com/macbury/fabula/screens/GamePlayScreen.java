@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.manager.GameManager;
+import com.macbury.fabula.map.AsyncSceneLoader;
+import com.macbury.fabula.map.AsyncSceneLoader.AsyncSceneLoaderListener;
 import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.terrain.Terrain;
 import com.macbury.fabula.utils.TopDownCamera;
@@ -17,7 +19,6 @@ public class GamePlayScreen extends BaseScreen {
   private Scene scene;
   private TopDownCamera camera;
   private Terrain terrain;
-  private CameraInputController camController;
   private BitmapFont baseFont;
   private SpriteBatch uiSpriteBatch;
   private OrthographicCamera guiCamera;
@@ -30,31 +31,48 @@ public class GamePlayScreen extends BaseScreen {
   public void show() {
     Gdx.app.log(TAG, "Show");
     
+    G.shaders.createFB(Scene.MAIN_FRAME_BUFFER);
+    
     this.baseFont      = G.db.getFont("base");
     this.uiSpriteBatch = new SpriteBatch();
     
-    this.camera    = new TopDownCamera();
-    this.guiCamera = new OrthographicCamera();
-    this.scene     = Scene.open(G.db.getPlayerStartPosition().getFileHandler().file());
-    this.terrain   = scene.getTerrain();
-    terrain.buildSectors();
-    
+    this.camera        = new TopDownCamera();
+    this.guiCamera     = new OrthographicCamera();
     this.guiCamera.setToOrtho(false);
+    this.guiCamera.update(true);
+    this.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    teleport(G.db.getPlayerStartPosition().getUUID(), 0,0);
+  }
+  
+  public void teleport(String uuid, int tx, int ty) {
+    if (scene != null) {
+      scene.dispose();
+      scene = null;
+      terrain = null;
+    }
+    
+    scene = Scene.open(G.db.getPlayerStartPosition().getFileHandler().file());
+    scene.getTerrain().buildSectors();
+    scene.initialize();
+    this.terrain = scene.getTerrain();
     this.camera.position.set(terrain.getColumns()/2, 17, terrain.getRows()/2);
     this.camera.lookAt(terrain.getColumns()/2, 0, terrain.getRows()/2 - 3);
-    this.scene.setCamera(camera);
-    this.camController = new CameraInputController(camera);
-    Gdx.input.setInputProcessor(camController);
-    this.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    scene.setCamera(camera);
+    
+    this.camera.update();
+    this.guiCamera.update();
   }
+
   
   @Override
   public void dispose() {
-    this.terrain.dispose();
+    this.scene.dispose();
     this.baseFont.dispose();
     this.uiSpriteBatch.dispose();
-    camera    = null;
-    guiCamera = null;
+    camera           = null;
+    guiCamera        = null;
+    scene            = null;
+    terrain          = null;
   }
   
   @Override
@@ -71,8 +89,8 @@ public class GamePlayScreen extends BaseScreen {
   
   @Override
   public void render(float delta) {
-    camController.update();
     camera.update();
+    
     scene.render();
     
     uiSpriteBatch.setProjectionMatrix(guiCamera.combined);
@@ -89,6 +107,7 @@ public class GamePlayScreen extends BaseScreen {
     this.guiCamera.update(true);
     this.guiCamera.position.set(guiCamera.viewportWidth/2, guiCamera.viewportHeight/2, 0);
     Gdx.app.log(TAG, "Viewport: " + guiCamera.viewportWidth + "x" + guiCamera.viewportHeight);
+    G.shaders.resize(width, height, true);
   }
   
   @Override
@@ -96,6 +115,8 @@ public class GamePlayScreen extends BaseScreen {
     // TODO Auto-generated method stub
     
   }
+
+  
   
   
   

@@ -81,6 +81,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   @Override
   public void show() {
     Gdx.app.log(TAG, "Showed screen");
+    G.shaders.createFB(Scene.MAIN_FRAME_BUFFER);
     this.brushTimer    = new ActionTimer(APPLY_BRUSH_EVERY, this);
     this.camera        = new TopDownCamera();
     this.baseFont      = G.db.getFont("base");
