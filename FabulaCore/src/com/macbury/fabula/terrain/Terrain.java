@@ -138,9 +138,12 @@ public class Terrain implements Disposable {
   
   public void render(Camera camera, Lights lights) {
     buildIfNotUnitiliazed();
+    visibleSectors.clear();
+    
     terrainShader.setShaderName(getShader());
     terrainShader.setLights(lights);
     terrainShader.setMaterial(terrainMaterial);
+    terrainShader.setDebugListener(debugListener);
     visibleSectorCount  = 0;
     
     sectorsBatch.begin(camera);
@@ -157,8 +160,6 @@ public class Terrain implements Disposable {
         }
       }
     sectorsBatch.end();
-    
-    visibleSectors.clear();
   }
   
   private String getShader() {

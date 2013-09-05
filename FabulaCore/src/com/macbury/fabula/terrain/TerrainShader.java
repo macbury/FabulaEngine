@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.IntIntMap;
 import com.macbury.fabula.manager.G;
+import com.macbury.fabula.terrain.Terrain.TerrainDebugListener;
 
 public class TerrainShader implements Shader {
   private String shaderName;
@@ -23,7 +24,7 @@ public class TerrainShader implements Shader {
   private Lights lights;
   private Material terrainMaterial;
   private RenderContext context;
-  private Mesh currentMesh;
+  private TerrainDebugListener debugListener;
   
   public TerrainShader(String shaderName) {
     setShaderName(shaderName);
@@ -54,7 +55,11 @@ public class TerrainShader implements Shader {
     int textureId                = context.textureBinder.bind(textureAttr.textureDescription);
     
     shader.setUniformi("u_texture0", textureId);
-    currentMesh = null;
+    
+    
+    if (debugListener != null) {
+      debugListener.onDebugTerrainConfigureShader(shader);
+    }
   }
   
   @Override
@@ -93,6 +98,10 @@ public class TerrainShader implements Shader {
 
   public void setLights(Lights lights) {
     this.lights = lights;
+  }
+
+  public void setDebugListener(TerrainDebugListener listener) {
+    this.debugListener = listener;
   }
   
 }
