@@ -50,8 +50,6 @@ public class Terrain implements Disposable {
   private Material terrainMaterial;
   private TerrainShader terrainShader;
   
-  private boolean uninitialized = true;
-  
   public Terrain(int columns, int rows) {
     this.columns      = columns;
     this.rows         = rows;
@@ -61,26 +59,31 @@ public class Terrain implements Disposable {
     if (columns % Sector.COLUMN_COUNT != 0 || rows%Sector.ROW_COUNT != 0) {
       throw new RuntimeException("Map size must be proper!");
     }
-  }
-  
-  public void buildIfNotUnitiliazed() {
-    if (uninitialized) {
-      initialize();
-      uninitialized = false;
-    }
-  }
-  
-  private void initialize() {
-    this.terrainShader   = new TerrainShader(getShader());
+    
+    this.terrainShader   = new TerrainShader();
   }
   
   public void setTileset(String name) {
     tilesetName          = name;
     tileset              = G.db.getTileset(tilesetName);
     this.terrainMaterial = new Material(TextureAttribute.createDiffuse(tileset.getTexture()));
+    this.terrainShader.setMaterial(terrainMaterial);
     
+    clearSectorRenderData();
   }
   
+  private void clearSectorRenderData() {
+    for (int x = 0; x < horizontalSectorCount; x++) {
+      for (int z = 0; z < veriticalSectorCount; z++) {
+        Sector sector = this.sectors[x][z];
+        if (sector != null) {
+          sector.shader = null;
+          sector.material = null;
+        }
+      }
+    }
+  }
+
   public void buildSectors() {
     this.horizontalSectorCount = columns/Sector.COLUMN_COUNT;
     this.veriticalSectorCount  = rows/Sector.ROW_COUNT;
@@ -135,31 +138,25 @@ public class Terrain implements Disposable {
   }
   
   public void render(Camera camera, Lights lights, ModelBatch batch) {
-    buildIfNotUnitiliazed();
     visibleSectors.clear();
-    
-    terrainShader.setShaderName(getShader());
     terrainShader.setLights(lights);
-    terrainShader.setMaterial(terrainMaterial);
     terrainShader.setDebugListener(debugListener);
     visibleSectorCount  = 0;
     
     for (int x = 0; x < horizontalSectorCount; x++) {
       for (int z = 0; z < veriticalSectorCount; z++) {
         Sector sector = this.sectors[x][z]; 
-        if (sector.visibleInCamera(camera)) {
+        if (sector.material == null) {
           sector.material = terrainMaterial;
           sector.shader   = terrainShader;
+        }
+        if (sector.visibleInCamera(camera)) {
           batch.render(sector);
           visibleSectors.add(sector);
           visibleSectorCount++;
         }
       }
     }
-  }
-  
-  private String getShader() {
-    return isDebug() ? "terrain-editor" : "terrain";
   }
 
   public int getTotalSectorCount() {
@@ -254,6 +251,7 @@ public class Terrain implements Disposable {
   public void setDebugListener(TerrainDebugListener debugListener) {
     this.debugListener   = debugListener;
     this.debug           = true;
+    clearSectorRenderData();
   }
 
   public interface TerrainDebugListener {

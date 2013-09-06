@@ -6,13 +6,10 @@ import org.simpleframework.xml.Serializer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
@@ -48,6 +45,7 @@ public class Scene implements Disposable {
   private Decal startPositionDecal;
   private ModelBatch modelBatch;
   
+
   public Scene(String name, String uid, int width, int height) {
     this.name = name;
     this.uid  = uid;
@@ -64,8 +62,7 @@ public class Scene implements Disposable {
   }
   
   public void initialize() {
-    this.modelBatch   = new ModelBatch();
-    
+    this.terrain.buildSectors();
   }
   
   public Terrain getTerrain() {
@@ -73,14 +70,12 @@ public class Scene implements Disposable {
   }
   
   public void render() {
-    Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-    Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);;
     sm.beginFB(MAIN_FRAME_BUFFER);
-      modelBatch.begin(perspectiveCamera);
-        this.terrain.render(perspectiveCamera, lights, modelBatch);
-        renderDebugInfo();
-        this.decalBatch.flush();
-      modelBatch.end();
+      getModelBatch().begin(perspectiveCamera);
+        this.terrain.render(perspectiveCamera, lights, getModelBatch());
+      getModelBatch().end();
+      renderDebugInfo();
+      this.decalBatch.flush();
     sm.endFB();
     
     sm.begin(finalShader); 
@@ -181,5 +176,12 @@ public class Scene implements Disposable {
     //this.startPositionDecal.setBlending(GL10.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
     
     startPositionDecal.getPosition().set(15, 0.5f, 20);
+  }
+  
+  public ModelBatch getModelBatch() {
+    if (modelBatch == null) {
+      this.modelBatch   = new ModelBatch();
+    }
+    return modelBatch;
   }
 }

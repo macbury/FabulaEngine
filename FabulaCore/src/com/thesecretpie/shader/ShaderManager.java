@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttribute;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -244,10 +245,11 @@ public class ShaderManager {
 	 */
 	public void renderFB(FrameBuffer fb, Mesh out, String textureUniformName, int textureId) {
 		if (fb != null) {
-			fb.getColorBufferTexture().bind(textureId);
-	        getCurrent().setUniformMatrix("u_worldView", screenCamera.combined);
-	        getCurrent().setUniformi(textureUniformName, textureId);
-	        out.render(getCurrent(), GL20.GL_TRIANGLES);
+		  Texture texture = fb.getColorBufferTexture();
+		  texture.bind(textureId);
+      getCurrent().setUniformMatrix("u_worldView", screenCamera.combined);
+      getCurrent().setUniformi(textureUniformName, textureId);
+      out.render(getCurrent(), GL20.GL_TRIANGLES);
 		}
 	}
 	

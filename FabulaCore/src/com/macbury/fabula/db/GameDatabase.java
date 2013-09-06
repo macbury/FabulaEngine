@@ -20,6 +20,7 @@ import org.simpleframework.xml.stream.Style;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.map.Scene;
@@ -56,7 +57,9 @@ public class GameDatabase {
   
   @ElementMap(name="autotile-combinations", entry="corner", key="combination", attribute=true, inline=true, required=false)
   public static HashMap<String, AutoTiles.Types> CORNER_MAP;
-
+  
+  private Skin uiSkin;
+  
   public GameDatabase() {
     Gdx.app.log(TAG, "Game database initialized");
   }
@@ -121,7 +124,7 @@ public class GameDatabase {
     
     fonts = new BitmapFont[fontsName.length];
     for (int i = 0; i < fontsName.length; i++) {
-      fonts[i] = new BitmapFont(G.fs("font/"+fontsName[i]+".fnt"), false);
+      fonts[i] = new BitmapFont(G.fs("ui/"+fontsName[i]+".fnt"), false);
     }
     
     if (tilesets == null) {
@@ -131,6 +134,8 @@ public class GameDatabase {
     if (maps == null) {
       maps = new HashMap<String, String>();
     }
+    
+    uiSkin = new Skin(G.fs("ui/uiskin.json"));
   }
   
   public Tileset getTileset(String name) {
@@ -197,5 +202,9 @@ public class GameDatabase {
     }
     
     return null;
+  }
+
+  public Skin getUiSkin() {
+    return uiSkin;
   }
 }

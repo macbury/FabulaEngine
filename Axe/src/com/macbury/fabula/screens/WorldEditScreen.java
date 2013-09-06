@@ -151,6 +151,8 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   
   @Override
   public void render(float delta) {
+    Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+    Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     if (isPaused) {
       debugInfo = "Paused";
       return;

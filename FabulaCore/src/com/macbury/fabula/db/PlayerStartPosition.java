@@ -4,6 +4,7 @@ import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.math.Vector2;
 import com.macbury.fabula.manager.G;
 
 @Root
@@ -35,6 +36,10 @@ public class PlayerStartPosition {
 
   public int getTileY() {
     return y;
+  }
+
+  public Vector2 getSpawnPosition() {
+    return new Vector2(x, y);
   }
   
   

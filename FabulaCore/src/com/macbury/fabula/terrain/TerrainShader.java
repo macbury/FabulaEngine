@@ -19,15 +19,15 @@ import com.macbury.fabula.manager.G;
 import com.macbury.fabula.terrain.Terrain.TerrainDebugListener;
 
 public class TerrainShader implements Shader {
+  private static final String DEFAULT_SHADER = "terrain";
+  private static final String EDITOR_SHADER  = "terrain-editor";
   private String shaderName;
-  private ShaderProgram shader;
   private Lights lights;
   private Material terrainMaterial;
-  private RenderContext context;
   private TerrainDebugListener debugListener;
   
-  public TerrainShader(String shaderName) {
-    setShaderName(shaderName);
+  public TerrainShader() {
+    setShaderName(DEFAULT_SHADER);
   }
   
   @Override
@@ -42,29 +42,25 @@ public class TerrainShader implements Shader {
   
   @Override
   public void begin(Camera camera, RenderContext context) {
-    this.shader  = G.shaders.begin(shaderName);
-    this.context = context;
     context.setDepthTest(GL20.GL_LEQUAL);
     context.setCullFace(GL20.GL_BACK);
-    shader.setUniformMatrix("u_projectionViewMatrix", camera.combined);
-    shader.setUniformf("u_ambient_color", lights.ambientLight);
-    shader.setUniformf("u_light_color", lights.directionalLights.get(0).color);
-    shader.setUniformf("u_light_direction", lights.directionalLights.get(0).direction);
+    G.shaders.begin(shaderName);
+    G.shaders.setUniformMatrix("u_projectionViewMatrix", camera.combined);
+    G.shaders.getCurrent().setUniformf("u_ambient_color", lights.ambientLight);
+    G.shaders.getCurrent().setUniformf("u_light_color", lights.directionalLights.get(0).color);
+    G.shaders.getCurrent().setUniformf("u_light_direction", lights.directionalLights.get(0).direction);
     
     TextureAttribute textureAttr = (TextureAttribute) terrainMaterial.get(TextureAttribute.Diffuse);
-    int textureId                = context.textureBinder.bind(textureAttr.textureDescription);
-    
-    shader.setUniformi("u_texture0", textureId);
-    
-    
+    G.shaders.setUniformi("u_texture0", context.textureBinder.bind(textureAttr.textureDescription));
+
     if (debugListener != null) {
-      debugListener.onDebugTerrainConfigureShader(shader);
+      debugListener.onDebugTerrainConfigureShader(G.shaders.getCurrent());
     }
   }
   
   @Override
   public void render(Renderable renderable) {
-    renderable.mesh.render(shader, renderable.primitiveType, renderable.meshPartOffset, renderable.meshPartSize, true);
+    renderable.mesh.render(G.shaders.getCurrent(), renderable.primitiveType, renderable.meshPartOffset, renderable.meshPartSize, true);
   }
   
   @Override
@@ -102,6 +98,9 @@ public class TerrainShader implements Shader {
 
   public void setDebugListener(TerrainDebugListener listener) {
     this.debugListener = listener;
+    if (debugListener != null) {
+      setShaderName(EDITOR_SHADER);
+    }
   }
   
 }

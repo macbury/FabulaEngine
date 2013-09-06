@@ -5,6 +5,7 @@ import java.io.File;
 import org.simpleframework.xml.Serializer;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 import com.macbury.fabula.db.GameDatabase;
 import com.macbury.fabula.persister.ScenePersister;
 
@@ -12,10 +13,11 @@ public class AsyncSceneLoader implements Runnable {
   private static final String TAG = "AsyncSceneLoader";
   private File file;
   private AsyncSceneLoaderListener listener;
-  private Scene scene;
-  public AsyncSceneLoader(File file, AsyncSceneLoaderListener list) {
-    this.file = file;
-    this.listener = list;
+  private Vector2 spawnPosition;
+  public AsyncSceneLoader(File file, Vector2 spawnPosition, AsyncSceneLoaderListener list) {
+    this.file          = file;
+    this.listener      = list;
+    this.spawnPosition = spawnPosition;
   }
 
   @Override
@@ -24,14 +26,12 @@ public class AsyncSceneLoader implements Runnable {
     Serializer serializer = GameDatabase.getDefaultSerializer();
     try {
       ScenePersister scenePersister = serializer.read(ScenePersister.class, file);
-      this.scene                   = scenePersister.getScene();
-      Gdx.app.log(TAG, "Loaded " + scene.getName() + " building sectors");
-      scene.getTerrain().buildSectors();
-      Gdx.app.log(TAG, "Scene did load");
+      final Scene scene = scenePersister.getScene();
+      Gdx.app.log(TAG, "Loaded " + scene.getName());
       Gdx.app.postRunnable(new Runnable() {
         @Override
         public void run() {
-          listener.onSceneDidLoad(scene);
+          listener.onSceneDidLoad(scene, spawnPosition);
         }
       });
       
@@ -47,7 +47,7 @@ public class AsyncSceneLoader implements Runnable {
   }
   
   public interface AsyncSceneLoaderListener {
-    public void onSceneDidLoad(Scene scene);
+    public void onSceneDidLoad(Scene scene, Vector2 spawnPosition);
     public void onSceneLoadError(Exception e);
   }
 }
