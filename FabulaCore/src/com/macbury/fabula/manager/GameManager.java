@@ -50,7 +50,6 @@ public abstract class GameManager extends Game {
     Gdx.app.log(TAG, "Loading shaders");
     this.shaderManager     = new ShaderManager(new AssetManager());
     G.game      = this;
-    G.objects   = new ObjectManager();
     G.shaders   = shaderManager;
     Gdx.app.log(TAG, "Preparing game DB");
     G.db        = GameDatabase.load();

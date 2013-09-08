@@ -11,6 +11,5 @@
 	<classpathentry kind="lib" path="jars/im4java-1.4.0.jar"/>
 	<classpathentry kind="lib" path="jars/rsyntaxtextarea.jar"/>
 	<classpathentry kind="lib" path="jars/gdx-natives.jar"/>
-	<classpathentry kind="lib" path="jars/gdx-openal.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
