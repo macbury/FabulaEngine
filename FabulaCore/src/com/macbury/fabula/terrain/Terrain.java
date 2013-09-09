@@ -151,6 +151,7 @@ public class Terrain implements Disposable {
           sector.shader   = terrainShader;
         }
         if (sector.visibleInCamera(camera)) {
+          sector.mesh = sector.getMesh();
           batch.render(sector);
           visibleSectors.add(sector);
           visibleSectorCount++;

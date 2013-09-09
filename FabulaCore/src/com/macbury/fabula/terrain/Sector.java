@@ -41,7 +41,7 @@ public class Sector extends Renderable implements Disposable {
     short columnEnd = (short) (COLUMN_COUNT+topLeftCorner.x);
     
     TileTransformer transformer = new TileTransformer();
-    //TileUVMap uvMap = new TileUVMap();
+    this.mesh = null;
     triangleGrid.begin();
       for (int z = (int) topLeftCorner.z; z < rowEnd; z++) {
         for (int x = (int) topLeftCorner.x; x < columnEnd; x++) {
@@ -110,10 +110,6 @@ public class Sector extends Renderable implements Disposable {
       }
     triangleGrid.end();
     
-    this.mesh = triangleGrid.getMesh();
-    this.meshPartOffset = 0;
-    this.meshPartSize = mesh.getNumIndices();
-        
     this.boundingBox = new BoundingBox(this.topLeftCorner, this.bottomRightCorner.cpy().add(0, height, 0));
   }
 
@@ -768,6 +764,11 @@ public class Sector extends Renderable implements Disposable {
   }
 
   public Mesh getMesh() {
+    if (mesh == null) {
+      this.mesh = triangleGrid.getMesh();
+      this.meshPartOffset = 0;
+      this.meshPartSize = mesh.getNumIndices();
+    }
     return this.mesh;
   }
 

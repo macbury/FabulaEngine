@@ -179,9 +179,7 @@ public class TriangleGrid implements Disposable {
       }
     }
     
-    this.mesh = new Mesh(true, this.verties.length, this.indices.length, this.getVertexAttributes());
-    mesh.setVertices(this.verties);
-    mesh.setIndices(this.indices);
+    this.mesh = null;
   }
 
   public float[] getVerties() {
@@ -193,6 +191,11 @@ public class TriangleGrid implements Disposable {
   }
 
   public Mesh getMesh() {
+    if (this.mesh == null) {
+      this.mesh = new Mesh(true, this.verties.length, this.indices.length, this.getVertexAttributes());
+      mesh.setVertices(this.verties);
+      mesh.setIndices(this.indices);
+    }
     return mesh;
   }
 

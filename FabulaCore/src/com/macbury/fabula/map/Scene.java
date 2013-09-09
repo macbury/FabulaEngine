@@ -74,8 +74,7 @@ public class Scene implements Disposable {
   public void initialize() {
     this.decalBatch           = new DecalBatch(new CameraGroupWithCustomShaderStrategy(perspectiveCamera));
     this.decalRenderingSystem = this.objectsWorld.setSystem(new DecalRenderingSystem(decalBatch, perspectiveCamera), true);
-    
-    this.terrain.buildSectors();
+
     this.objectsWorld.initialize();
     G.factory.setWorld(this.objectsWorld);
   }

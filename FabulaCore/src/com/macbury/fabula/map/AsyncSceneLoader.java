@@ -28,6 +28,8 @@ public class AsyncSceneLoader implements Runnable {
       ScenePersister scenePersister = serializer.read(ScenePersister.class, file);
       final Scene scene = scenePersister.getScene();
       Gdx.app.log(TAG, "Loaded " + scene.getName());
+      scene.getTerrain().buildSectors();
+      Gdx.app.log(TAG, "Builded sectors");
       Gdx.app.postRunnable(new Runnable() {
         @Override
         public void run() {

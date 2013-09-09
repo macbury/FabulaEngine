@@ -39,7 +39,7 @@ public class GamePlayUI extends Stage {
 
   public void update(float delta) {
     if (screen.getScene() == null) {
-      this.statusLabel.setText("Loading...");
+      this.statusLabel.setText("Loading... " + "FPS: " + Gdx.graphics.getFramesPerSecond());
     } else {
       this.statusLabel.setText("FPS: " + Gdx.graphics.getFramesPerSecond());
     }
