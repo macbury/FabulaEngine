@@ -116,6 +116,7 @@ public class GamePlayScreen extends BaseScreen implements AsyncSceneLoaderListen
     
     this.scene.initialize();
     this.camera.update();
+    this.scene.spawnOrMovePlayer(spawnPosition);
     this.sceneLoadingThread = null;
   }
 

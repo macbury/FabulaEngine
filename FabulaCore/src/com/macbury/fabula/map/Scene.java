@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.lights.Lights;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
 import com.macbury.fabula.db.GameDatabase;
@@ -51,6 +52,7 @@ public class Scene implements Disposable {
   private ModelBatch modelBatch;
   private World objectsWorld;
   private DecalRenderingSystem decalRenderingSystem;
+  private Entity playerEntity;
 
   public Scene(String name, String uid, int width, int height) {
     this.name = name;
@@ -75,6 +77,7 @@ public class Scene implements Disposable {
     
     this.terrain.buildSectors();
     this.objectsWorld.initialize();
+    G.factory.setWorld(this.objectsWorld);
   }
   
   public Terrain getTerrain() {
@@ -197,5 +200,13 @@ public class Scene implements Disposable {
       this.modelBatch   = new ModelBatch();
     }
     return modelBatch;
+  }
+
+  public void spawnOrMovePlayer(Vector2 spawnPosition) {
+    if (playerEntity == null) {
+      playerEntity = G.factory.buildPlayer(spawnPosition);
+      playerEntity.addToWorld();
+    }
+    playerEntity.getComponent(PositionComponent.class).setPosition(spawnPosition);
   }
 }
