@@ -3,6 +3,7 @@ package com.macbury.fabula.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -88,10 +89,10 @@ public class GamePlayScreen extends BaseScreen implements AsyncSceneLoaderListen
   
   @Override
   public void resize(int width, int height) {
-    camera.viewportWidth  = width / G.game.getScaledDensity();
-    camera.viewportHeight = height / G.game.getScaledDensity();
+    camera.viewportWidth  = width;
+    camera.viewportHeight = height;
     this.camera.update(true);
-    this.gamePlayUI.resize(camera.viewportWidth, camera.viewportHeight);
+    this.gamePlayUI.resize(Math.round(width / G.game.getScaledDensity()), Math.round(height / G.game.getScaledDensity()));
 
     Gdx.app.log(TAG, "Viewport: " + camera.viewportWidth + "x" + camera.viewportHeight + " for " + G.game.getScaledDensity());
     G.shaders.resize(width, height, true);
@@ -127,5 +128,9 @@ public class GamePlayScreen extends BaseScreen implements AsyncSceneLoaderListen
 
   public Scene getScene() {
     return scene;
+  }
+
+  public PerspectiveCamera get3DCamera() {
+    return this.camera;
   }
 }

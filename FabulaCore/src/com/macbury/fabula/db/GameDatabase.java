@@ -20,6 +20,7 @@ import org.simpleframework.xml.stream.Style;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.macbury.fabula.manager.G;
@@ -52,11 +53,15 @@ public class GameDatabase {
   @ElementList(required=false)
   private ArrayList<Tileset> tilesets;
   
+  @ElementList(required=false, name="atlases", entry="atlas")
+  private ArrayList<TextureAtlasLoader> atlases;
+  
   @ElementMap(name="maps", entry="map", key="uuid", attribute=true, inline=true, required=false)
   public HashMap<String, String> maps;
   
   @ElementMap(name="autotile-combinations", entry="corner", key="combination", attribute=true, inline=true, required=false)
   public static HashMap<String, AutoTiles.Types> CORNER_MAP;
+
   
   private Skin uiSkin;
   
@@ -109,6 +114,10 @@ public class GameDatabase {
   }
 
   public void initialize() {
+    if (atlases == null) {
+      this.atlases = new ArrayList<TextureAtlasLoader>();
+    }
+    
     if (shaders != null) {
       for (int i = 0; i < shaders.length; i++) {
         String name = shaders[i];
@@ -203,7 +212,16 @@ public class GameDatabase {
     
     return null;
   }
-
+  
+  public TextureAtlas getAtlas(String name) {
+    for (TextureAtlasLoader atlas : atlases) {
+      if (atlas.getName().equalsIgnoreCase(name)) {
+        return atlas;
+      }
+    }
+    return null;
+  }
+  
   public Skin getUiSkin() {
     return uiSkin;
   }

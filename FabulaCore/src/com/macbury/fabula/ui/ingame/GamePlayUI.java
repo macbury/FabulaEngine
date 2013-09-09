@@ -32,7 +32,7 @@ public class GamePlayUI extends Stage {
     table.add(this.statusLabel).padLeft(10).padTop(10);
     table.row();
     
-    this.touchPad = new Touchpad(20, this.skin);
+    this.touchPad = new Touchpad(00, this.skin);
     touchPad.setBounds(10, 10, 150, 150);
     addActor(touchPad);
   }
@@ -41,7 +41,8 @@ public class GamePlayUI extends Stage {
     if (screen.getScene() == null) {
       this.statusLabel.setText("Loading... " + "FPS: " + Gdx.graphics.getFramesPerSecond());
     } else {
-      this.statusLabel.setText("FPS: " + Gdx.graphics.getFramesPerSecond());
+      this.statusLabel.setText("FPS: " + Gdx.graphics.getFramesPerSecond() + " Camera: " + screen.get3DCamera().position.y);
+      this.screen.getScene().getPlayerSystem().setVelocity(this.touchPad.getKnobPercentX(), this.touchPad.getKnobPercentY() * -1);
     }
     act(delta);
   }

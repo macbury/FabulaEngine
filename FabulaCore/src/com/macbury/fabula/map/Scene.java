@@ -24,6 +24,9 @@ import com.macbury.fabula.db.PlayerStartPosition;
 import com.macbury.fabula.game_objects.components.DecalComponent;
 import com.macbury.fabula.game_objects.components.PositionComponent;
 import com.macbury.fabula.game_objects.system.DecalRenderingSystem;
+import com.macbury.fabula.game_objects.system.MovementSystem;
+import com.macbury.fabula.game_objects.system.PlayerSystem;
+import com.macbury.fabula.game_objects.system.TileInteractionSystem;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.persister.ScenePersister;
 import com.macbury.fabula.terrain.Terrain;
@@ -53,6 +56,8 @@ public class Scene implements Disposable {
   private World objectsWorld;
   private DecalRenderingSystem decalRenderingSystem;
   private Entity playerEntity;
+  private MovementSystem movementSystem;
+  private PlayerSystem playerSystem;
 
   public Scene(String name, String uid, int width, int height) {
     this.name = name;
@@ -74,7 +79,12 @@ public class Scene implements Disposable {
   public void initialize() {
     this.decalBatch           = new DecalBatch(new CameraGroupWithCustomShaderStrategy(perspectiveCamera));
     this.decalRenderingSystem = this.objectsWorld.setSystem(new DecalRenderingSystem(decalBatch, perspectiveCamera), true);
-
+    this.playerSystem         = this.objectsWorld.setSystem(new PlayerSystem(perspectiveCamera));
+    if (!debug) {
+      this.movementSystem     = this.objectsWorld.setSystem(new MovementSystem());
+    }
+    
+    this.objectsWorld.setSystem(new TileInteractionSystem(terrain));
     this.objectsWorld.initialize();
     G.factory.setWorld(this.objectsWorld);
   }
@@ -207,5 +217,9 @@ public class Scene implements Disposable {
       playerEntity.addToWorld();
     }
     playerEntity.getComponent(PositionComponent.class).setPosition(spawnPosition);
+  }
+  
+  public PlayerSystem getPlayerSystem() {
+    return this.playerSystem;
   }
 }
