@@ -4,6 +4,8 @@ import java.io.File;
 
 import org.simpleframework.xml.Serializer;
 
+import com.artemis.Entity;
+import com.artemis.World;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -18,6 +20,9 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
 import com.macbury.fabula.db.GameDatabase;
 import com.macbury.fabula.db.PlayerStartPosition;
+import com.macbury.fabula.game_objects.components.DecalComponent;
+import com.macbury.fabula.game_objects.components.PositionComponent;
+import com.macbury.fabula.game_objects.system.DecalRenderingSystem;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.persister.ScenePersister;
 import com.macbury.fabula.terrain.Terrain;
@@ -44,7 +49,8 @@ public class Scene implements Disposable {
   private PerspectiveCamera perspectiveCamera;
   private Decal startPositionDecal;
   private ModelBatch modelBatch;
-  
+  private World objectsWorld;
+  private DecalRenderingSystem decalRenderingSystem;
 
   public Scene(String name, String uid, int width, int height) {
     this.name = name;
@@ -59,10 +65,16 @@ public class Scene implements Disposable {
     this.terrain.setTileset("outside");
     this.finalShader  = "default";
     this.sm           = G.shaders;
+    
+    this.objectsWorld         = new World();
   }
   
   public void initialize() {
+    this.decalBatch           = new DecalBatch(new CameraGroupWithCustomShaderStrategy(perspectiveCamera));
+    this.decalRenderingSystem = this.objectsWorld.setSystem(new DecalRenderingSystem(decalBatch, perspectiveCamera), true);
+    
     this.terrain.buildSectors();
+    this.objectsWorld.initialize();
   }
   
   public Terrain getTerrain() {
@@ -70,12 +82,15 @@ public class Scene implements Disposable {
   }
   
   public void render() {
+    this.objectsWorld.setDelta(Gdx.graphics.getDeltaTime());
+    this.objectsWorld.process();
+    
     sm.beginFB(MAIN_FRAME_BUFFER);
       getModelBatch().begin(perspectiveCamera);
         this.terrain.render(perspectiveCamera, lights, getModelBatch());
       getModelBatch().end();
       renderDebugInfo();
-      this.decalBatch.flush();
+      this.decalRenderingSystem.process();
     sm.endFB();
     
     sm.begin(finalShader); 
@@ -97,7 +112,6 @@ public class Scene implements Disposable {
 
   public void setCamera(PerspectiveCamera camera) {
     this.perspectiveCamera = camera;
-    this.decalBatch        = new DecalBatch(new CameraGroupWithCustomShaderStrategy(perspectiveCamera));
   }
   
   public DirectionalLight getSunLight() {

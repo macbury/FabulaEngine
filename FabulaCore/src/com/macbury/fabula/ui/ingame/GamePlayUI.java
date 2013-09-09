@@ -6,6 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.screens.GamePlayScreen;
@@ -15,6 +17,7 @@ public class GamePlayUI extends Stage {
   private Table table;
   private Skin skin;
   private GamePlayScreen screen;
+  private Touchpad touchPad;
 
   public GamePlayUI(GamePlayScreen screen) {
     this.screen = screen;
@@ -28,6 +31,10 @@ public class GamePlayUI extends Stage {
     this.statusLabel = new Label("Loading...", skin);
     table.add(this.statusLabel).padLeft(10).padTop(10);
     table.row();
+    
+    this.touchPad = new Touchpad(20, this.skin);
+    touchPad.setBounds(10, 10, 150, 150);
+    addActor(touchPad);
   }
 
   public void update(float delta) {

@@ -13,6 +13,7 @@ public class DesktopGame {
     config.width      = 1280;
     config.height     = 768;
     config.useGL20    = true;
+    config.vSyncEnabled = true;
     LwjglApplication application = new LwjglApplication(manager, config);
   }
   

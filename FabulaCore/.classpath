@@ -13,6 +13,6 @@
 			<attribute name="javadoc_location" value="http://simple.sourceforge.net/download/stream/doc/javadoc/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="jars/artmetis.jar"/>
+	<classpathentry exported="true" kind="lib" path="jars/artmetis.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -93,7 +93,7 @@ public class GamePlayScreen extends BaseScreen implements AsyncSceneLoaderListen
     this.camera.update(true);
     this.gamePlayUI.resize(camera.viewportWidth, camera.viewportHeight);
 
-    Gdx.app.log(TAG, "Viewport: " + camera.viewportWidth + "x" + camera.viewportHeight);
+    Gdx.app.log(TAG, "Viewport: " + camera.viewportWidth + "x" + camera.viewportHeight + " for " + G.game.getScaledDensity());
     G.shaders.resize(width, height, true);
   }
   
@@ -104,15 +104,17 @@ public class GamePlayScreen extends BaseScreen implements AsyncSceneLoaderListen
 
   @Override
   public void onSceneDidLoad(Scene newScene, Vector2 spawnPosition) {
+    Gdx.app.log(TAG, "Mounting scene");
     synchronized (newScene) {
       this.scene = newScene;
     }
-    this.scene.initialize();
+    
     this.terrain = scene.getTerrain();
     this.camera.position.set(spawnPosition.x, 12, spawnPosition.y);
     this.camera.lookAt(spawnPosition.x, 0, spawnPosition.y-4);
     scene.setCamera(camera);
     
+    this.scene.initialize();
     this.camera.update();
     this.sceneLoadingThread = null;
   }

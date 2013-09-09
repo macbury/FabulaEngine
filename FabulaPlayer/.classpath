@@ -17,5 +17,6 @@
 			<attribute name="javadoc_location" value="http://simple.sourceforge.net/download/stream/doc/javadoc/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="/FabulaCore/jars/artmetis.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

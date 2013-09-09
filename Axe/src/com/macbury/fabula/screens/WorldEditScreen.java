@@ -117,7 +117,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     terrain.buildSectors();
     camera.position.set(width/2, 17, height/2);
     camera.lookAt(width/2, 0, height/2);
-    
+    this.scene.initialize();
     createBrushes();
   }
   
@@ -136,7 +136,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     terrain.buildSectors();
     camera.position.set(terrain.getColumns()/2, 17, terrain.getRows()/2);
     camera.lookAt(terrain.getColumns()/2, 0, terrain.getRows()/2);
-    
+    this.scene.initialize();
     createBrushes();
   }
 

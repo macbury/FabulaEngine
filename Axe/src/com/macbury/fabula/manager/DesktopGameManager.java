@@ -8,6 +8,7 @@ public class DesktopGameManager extends GameManager {
   
   public DesktopGameManager() {
     super(System.getProperty("user.dir")+"/assets/data/");
+    this.scaledDensity = 2.0f;
   }
 
   @Override
