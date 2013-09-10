@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="430"
+   height="260"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48+devel r10101"
+   sodipodi:docname="onscreen controller.svg">
+  <title
+     id="title4205">On-Screen Controller Kit</title>
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#808080"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="1"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="165.79701"
+     inkscape:cy="187.13505"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1366"
+     inkscape:window-height="748"
+     inkscape:window-x="-2"
+     inkscape:window-y="-3"
+     inkscape:window-maximized="1"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     fit-margin-top="5"
+     fit-margin-left="5"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>On-Screen Controller Kit</dc:title>
+        <dc:date>10 Apr 2011</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Joshua L. Blocher</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Joshua L. Blocher</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:publisher>
+          <cc:Agent>
+            <dc:title>Joshua L. Blocher</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>Buttons</rdf:li>
+            <rdf:li></rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:description>On-Screen Controller Kit for Touch Devices</dc:description>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by/3.0/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by/3.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-273.375,-437.6875)">
+    <rect
+       style="opacity:0.65714285;color:#000000;fill:#d6d6d6;fill-opacity:0.52777782;fill-rule:evenodd;stroke:#ececec;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.36111109;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="Button"
+       width="39.514511"
+       height="39.514511"
+       x="556.44324"
+       y="549.87146"
+       ry="14.437994"
+       inkscape:export-filename="/home/verbalshadow/Documents/art/OSCK.png"
+       inkscape:export-xdpi="89.913849"
+       inkscape:export-ydpi="89.913849" />
+    <rect
+       ry="3.7106929"
+       y="509.4704"
+       x="450.45908"
+       height="10.155581"
+       width="39.514511"
+       id="MiniButton"
+       style="opacity:0.65714285;color:#000000;fill:#d6d6d6;fill-opacity:0.52777782;stroke:#ececec;stroke-width:8;stroke-opacity:0.36111109;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       inkscape:export-filename="/home/verbalshadow/Documents/art/OSCK.png"
+       inkscape:export-xdpi="89.913849"
+       inkscape:export-ydpi="89.913849" />
+    <path
+       style="opacity:0.65714285;color:#000000;fill:#d6d6d6;fill-opacity:0.52777782;stroke:#ececec;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.36111109;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 290.5188,449.44896 c -5.07607,0 -9.15625,4.08018 -9.15625,9.15625 l 0,6.75 0,15.21875 c 0,5.07607 4.08018,9.15625 9.15625,9.15625 l 6.75,0 c 5.07607,0 9.15625,-4.08018 9.15625,-9.15625 l 0,-6.03125 68.375,0 c 5.07607,0 9.15625,-4.11143 9.15625,-9.1875 l 0,-6.75 c 0,-5.07607 -4.08018,-9.15625 -9.15625,-9.15625 l -77.53125,0 -6.75,0 z"
+       id="LTriggerTop"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/verbalshadow/Documents/art/OSCK.png"
+       inkscape:export-xdpi="89.913849"
+       inkscape:export-ydpi="89.913849" />
+    <path
+       id="RTriggerTop"
+       d="m 688.63646,449.44896 c 5.07607,0 9.15625,4.08018 9.15625,9.15625 l 0,6.75 0,15.21875 c 0,5.07607 -4.08018,9.15625 -9.15625,9.15625 l -6.75,0 c -5.07607,0 -9.15625,-4.08018 -9.15625,-9.15625 l 0,-6.03125 -68.375,0 c -5.07607,0 -9.15625,-4.11143 -9.15625,-9.1875 l 0,-6.75 c 0,-5.07607 4.08018,-9.15625 9.15625,-9.15625 l 77.53125,0 6.75,0 z"
+       style="opacity:0.65714285;color:#000000;fill:#d6d6d6;fill-opacity:0.52777782;stroke:#ececec;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.36111109;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/verbalshadow/Documents/art/OSCK.png"
+       inkscape:export-xdpi="89.913849"
+       inkscape:export-ydpi="89.913849" />
+    <path
+       id="LTriggerBottom"
+       d="m 290.5188,689.69327 c -5.07607,0 -9.15625,-4.08018 -9.15625,-9.15625 l 0,-6.75 0,-15.21875 c 0,-5.07607 4.08018,-9.15625 9.15625,-9.15625 l 6.75,0 c 5.07607,0 9.15625,4.08018 9.15625,9.15625 l 0,6.03125 68.375,0 c 5.07607,0 9.15625,4.11143 9.15625,9.1875 l 0,6.75 c 0,5.07607 -4.08018,9.15625 -9.15625,9.15625 l -77.53125,0 -6.75,0 z"
+       style="opacity:0.65714285;color:#000000;fill:#d6d6d6;fill-opacity:0.52777782;stroke:#ececec;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.36111109;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/verbalshadow/Documents/art/OSCK.png"
+       inkscape:export-xdpi="89.913849"
+       inkscape:export-ydpi="89.913849" />
+    <path
+       inkscape:connector-curvature="0"
+       style="opacity:0.65714285;color:#000000;fill:#d6d6d6;fill-opacity:0.52777782;stroke:#ececec;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.36111109;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 688.63646,689.69327 c 5.07607,0 9.15625,-4.08018 9.15625,-9.15625 l 0,-6.75 0,-15.21875 c 0,-5.07607 -4.08018,-9.15625 -9.15625,-9.15625 l -6.75,0 c -5.07607,0 -9.15625,4.08018 -9.15625,9.15625 l 0,6.03125 -68.375,0 c -5.07607,0 -9.15625,4.11143 -9.15625,9.1875 l 0,6.75 c 0,5.07607 4.08018,9.15625 9.15625,9.15625 l 77.53125,0 6.75,0 z"
+       id="RTriggerBottom"
+       inkscape:export-filename="/home/verbalshadow/Documents/art/OSCK.png"
+       inkscape:export-xdpi="89.913849"
+       inkscape:export-ydpi="89.913849" />
+    <rect
+       y="549.87146"
+       x="610.39575"
+       height="39.514511"
+       width="39.514511"
+       id="Button2"
+       style="opacity:0.65714285;color:#000000;fill:#d6d6d6;fill-opacity:0.52777782;stroke:#ececec;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.36111109;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       inkscape:export-filename="/home/verbalshadow/Documents/art/OSCK.png"
+       inkscape:export-xdpi="89.913849"
+       inkscape:export-ydpi="89.913849" />
+    <rect
+       style="opacity:0.65714285;color:#000000;fill:#d6d6d6;fill-opacity:0.52777782;stroke:#ececec;stroke-width:8;stroke-linejoin:round;stroke-opacity:0.36111109;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="MiniButton2"
+       width="39.514511"
+       height="10.155581"
+       x="500.45908"
+       y="509.4704"
+       inkscape:export-filename="/home/verbalshadow/Documents/art/OSCK.png"
+       inkscape:export-xdpi="89.913849"
+       inkscape:export-ydpi="89.913849" />
+    <g
+       id="Down"
+       transform="translate(-109.13708,-186.43355)"
+       inkscape:export-filename="/home/verbalshadow/Documents/art/OSCK.png"
+       inkscape:export-xdpi="89.913849"
+       inkscape:export-ydpi="89.913849">
+      <path
+         id="path4131"
+         d="m 458.28035,778.46776 c 1.23142,1.21906 2.58537,2.31505 4.03948,3.27143 -2.64994,2.00493 -4.34375,5.18739 -4.34375,8.78125 l 0,15 c 0,6.094 4.906,11 11,11 l 15,0 c 6.094,0 11,-4.906 11,-11 l 0,-15 c 0,-3.5979 -1.71996,-6.77671 -4.375,-8.78125 1.41422,-0.92963 2.73462,-1.9888 3.9397,-3.16488"
+         style="opacity:0.65714285;color:#000000;fill:#d6d6d6;fill-opacity:0.52777782;stroke:#ececec;stroke-width:8;stroke-miterlimit:4;stroke-opacity:0.36111109;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         inkscape:connector-curvature="0" />
+      <path
+         sodipodi:type="star"
+         style="opacity:0.65714285;color:#000000;fill:#d6d6d6;fill-opacity:0.52777782;fill-rule:evenodd;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         id="path4119"
+         sodipodi:sides="3"
+         sodipodi:cx="177.0554"
+         sodipodi:cy="524.23553"
+         sodipodi:r1="64.658043"
+         sodipodi:r2="32.329021"
+         sodipodi:arg1="0.51623067"
+         sodipodi:arg2="1.5634282"
+         inkscape:flatsided="true"
+         inkscape:rounded="0.07"
+         inkscape:randomized="0"
+         d="m 233.28759,556.1511 c -3.86955,6.81779 -108.01837,7.58519 -111.98797,0.82516 -3.9696,-6.76003 47.44022,-97.33925 55.27938,-97.39701 7.83916,-0.0578 60.57815,89.75406 56.70859,96.57185 z"
+         inkscape:transform-center-x="0.71617243"
+         inkscape:transform-center-y="-0.39913764"
+         transform="matrix(0.17859545,0,0,-0.17859545,444.62614,891.47717)" />
+    </g>
+    <g
+       id="Up"
+       inkscape:label="#up"
+       transform="translate(-109.13708,-186.43355)"
+       inkscape:export-filename="/home/verbalshadow/Documents/art/OSCK.png"
+       inkscape:export-xdpi="89.913849"
+       inkscape:export-ydpi="89.913849">
+      <path
+         id="path4117"
+         d="m 494.99462,742.25901 c -1.02616,-1.05593 -2.14184,-2.02472 -3.33104,-2.89482 2.03446,-1.994 3.3125,-4.75681 3.3125,-7.84375 l 0,-15 c 0,-6.094 -4.906,-11 -11,-11 l -15,0 c -6.094,0 -11,4.906 -11,11 l 0,15 c 0,3.08694 1.24679,5.84975 3.28125,7.84375 -1.22932,0.89946 -2.37716,1.90499 -3.42891,3.0032"
+         style="opacity:0.65714285;color:#000000;fill:#d6d6d6;fill-opacity:0.52777782;stroke:#ececec;stroke-width:8;stroke-miterlimit:4;stroke-opacity:0.36111109;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         inkscape:connector-curvature="0" />
+      <path
+         transform="matrix(0.17859545,0,0,0.17859545,444.62614,631.0862)"
+         inkscape:transform-center-y="0.39913793"
+         inkscape:transform-center-x="0.71617243"
+         d="m 233.28759,556.1511 c -3.86955,6.81779 -108.01837,7.58519 -111.98797,0.82516 -3.9696,-6.76003 47.44022,-97.33925 55.27938,-97.39701 7.83916,-0.0578 60.57815,89.75406 56.70859,96.57185 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0.07"
+         inkscape:flatsided="true"
+         sodipodi:arg2="1.5634282"
+         sodipodi:arg1="0.51623067"
+         sodipodi:r2="32.329021"
+         sodipodi:r1="64.658043"
+         sodipodi:cy="524.23553"
+         sodipodi:cx="177.0554"
+         sodipodi:sides="3"
+         id="path4121"
+         style="opacity:0.65714285;color:#000000;fill:#d6d6d6;fill-opacity:0.52777782;fill-rule:evenodd;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         sodipodi:type="star" />
+    </g>
+    <g
+       id="Left"
+       transform="translate(-109.13708,-186.43355)"
+       inkscape:export-filename="/home/verbalshadow/Documents/art/OSCK.png"
+       inkscape:export-xdpi="89.913849"
+       inkscape:export-ydpi="89.913849">
+      <path
+         id="path4133"
+         d="m 457.82842,742.36739 c -1.05175,1.09821 -2.0074,2.2891 -2.85234,3.5593 -2.00934,-2.58373 -5.14627,-4.25 -8.6875,-4.25 l -15,0 c -6.094,0 -11,4.906 -11,11 l 0,15 c 0,6.094 4.906,11 11,11 l 15,0 c 3.54123,0 6.67816,-1.63502 8.6875,-4.21875 0.96396,1.44865 2.07285,2.79077 3.30427,4.00982"
+         style="opacity:0.65714285;color:#000000;fill:#d6d6d6;fill-opacity:0.52777782;stroke:#ececec;stroke-width:8;stroke-miterlimit:4;stroke-opacity:0.36111109;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         inkscape:connector-curvature="0" />
+      <path
+         transform="matrix(0,0.17859545,0.17859545,0,345.40485,729.358)"
+         inkscape:transform-center-y="-0.71617551"
+         inkscape:transform-center-x="-0.39913629"
+         d="m 233.28759,556.1511 c -3.86955,6.81779 -108.01837,7.58519 -111.98797,0.82516 -3.9696,-6.76003 47.44022,-97.33925 55.27938,-97.39701 7.83916,-0.0578 60.57815,89.75406 56.70859,96.57185 z"
+         inkscape:randomized="0"
+         inkscape:rounded="0.07"
+         inkscape:flatsided="true"
+         sodipodi:arg2="1.5634282"
+         sodipodi:arg1="0.51623067"
+         sodipodi:r2="32.329021"
+         sodipodi:r1="64.658043"
+         sodipodi:cy="524.23553"
+         sodipodi:cx="177.0554"
+         sodipodi:sides="3"
+         id="path4123"
+         style="opacity:0.65714285;color:#000000;fill:#d6d6d6;fill-opacity:0.52777782;fill-rule:evenodd;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         sodipodi:type="star" />
+    </g>
+    <g
+       id="Right"
+       transform="translate(-109.13708,-186.43355)"
+       inkscape:export-filename="/home/verbalshadow/Documents/art/OSCK.png"
+       inkscape:export-xdpi="89.913849"
+       inkscape:export-ydpi="89.913849">
+      <path
+         id="path4129"
+         d="m 494.54078,778.57431 c 1.20508,-1.17609 2.29485,-2.46908 3.2478,-3.86637 2.01437,2.44285 5.07212,3.96875 8.5,3.96875 l 15,0 c 6.094,0 11,-4.906 11,-11 l 0,-15 c 0,-6.094 -4.906,-11 -11,-11 l -15,0 c -3.42788,0 -6.48563,1.55715 -8.5,4 -0.83115,-1.21869 -1.7678,-2.36176 -2.79396,-3.41768"
+         style="opacity:0.65714285;color:#000000;fill:#d6d6d6;fill-opacity:0.52777782;stroke:#ececec;stroke-width:8;stroke-miterlimit:4;stroke-opacity:0.36111109;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         inkscape:connector-curvature="0" />
+      <path
+         sodipodi:type="star"
+         style="opacity:0.65714285;color:#000000;fill:#d6d6d6;fill-opacity:0.52777782;fill-rule:evenodd;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         id="path4125"
+         sodipodi:sides="3"
+         sodipodi:cx="177.0554"
+         sodipodi:cy="524.23553"
+         sodipodi:r1="64.658043"
+         sodipodi:r2="32.329021"
+         sodipodi:arg1="0.51623067"
+         sodipodi:arg2="1.5634282"
+         inkscape:flatsided="true"
+         inkscape:rounded="0.07"
+         inkscape:randomized="0"
+         d="m 233.28759,556.1511 c -3.86955,6.81779 -108.01837,7.58519 -111.98797,0.82516 -3.9696,-6.76003 47.44022,-97.33925 55.27938,-97.39701 7.83916,-0.0578 60.57815,89.75406 56.70859,96.57185 z"
+         inkscape:transform-center-x="0.39913928"
+         inkscape:transform-center-y="-0.71617551"
+         transform="matrix(0,0.17859545,-0.17859545,0,605.79582,729.358)" />
+    </g>
+    <g
+       id="Center"
+       transform="translate(-109.13708,-186.43355)"
+       inkscape:export-filename="/home/verbalshadow/Documents/art/OSCK.png"
+       inkscape:export-xdpi="89.913849"
+       inkscape:export-ydpi="89.913849">
+      <path
+         sodipodi:type="arc"
+         style="opacity:0.65714285;color:#000000;fill:#d6d6d6;fill-opacity:0.52777782;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         id="path4115"
+         sodipodi:cx="164"
+         sodipodi:cy="536.36218"
+         sodipodi:rx="8"
+         sodipodi:ry="8"
+         d="m 172,536.36218 c 0,4.41828 -3.58172,8 -8,8 -4.41828,0 -8,-3.58172 -8,-8 0,-4.41828 3.58172,-8 8,-8 4.41828,0 8,3.58172 8,8 z"
+         transform="matrix(0.58333333,0,0,0.58333333,380.62191,448.1425)" />
+      <path
+         transform="matrix(2.9903965,0,0,2.9903965,-14.136454,-843.57874)"
+         d="m 171.18637,536.36218 c 0,3.96892 -3.21745,7.18637 -7.18637,7.18637 -3.96892,0 -7.18637,-3.21745 -7.18637,-7.18637 0,-3.96892 3.21745,-7.18636 7.18637,-7.18636 3.96892,0 7.18637,3.21744 7.18637,7.18636 z"
+         sodipodi:ry="7.186367"
+         sodipodi:rx="7.186367"
+         sodipodi:cy="536.36218"
+         sodipodi:cx="164"
+         id="path4137"
+         style="opacity:0.65714285;color:#000000;fill:#d6d6d6;fill-opacity:0.52777782;stroke:none;stroke-width:8;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         sodipodi:type="arc" />
+    </g>
+  </g>
+</svg>

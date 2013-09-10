@@ -23,7 +23,7 @@ public class Sector extends Renderable implements Disposable {
   private Vector3 topLeftCorner;
   private Terrain terrain;
   private BoundingBox boundingBox;
-  private float height = 0.0f;
+  
   private TriangleGrid triangleGrid;
   
   public Sector(Vector3 pos, Terrain terrain) {
@@ -35,7 +35,8 @@ public class Sector extends Renderable implements Disposable {
   }
 
   public void build() {
-    height = 0;
+    float minHeight = 0.0f;
+    float maxHeight = 0.0f;
     
     short rowEnd    = (short) (ROW_COUNT + topLeftCorner.z);
     short columnEnd = (short) (COLUMN_COUNT+topLeftCorner.x);
@@ -48,7 +49,8 @@ public class Sector extends Renderable implements Disposable {
           Tile tile = terrain.getTile(x, z);
           transformer.setTile(tile);
           tile.calculateHeight();
-          height    = Math.max(tile.getY(), height);
+          maxHeight    = Math.max(tile.getY(), maxHeight);
+          minHeight    = Math.min(tile.getY(), minHeight);
           if (tile.getAutoTiles().isSlope()) {
             switch (tile.getSlope()) {
               case CornerTopLeft:
@@ -110,7 +112,9 @@ public class Sector extends Renderable implements Disposable {
       }
     triangleGrid.end();
     
-    this.boundingBox = new BoundingBox(this.topLeftCorner, this.bottomRightCorner.cpy().add(0, height, 0));
+    Vector3 firstCorner = this.topLeftCorner.cpy();
+    firstCorner.y = maxHeight;
+    this.boundingBox = new BoundingBox(firstCorner, this.bottomRightCorner.cpy().add(0, minHeight, 0));
   }
 
   private void createEdgeTopRightMeshTile(Tile tile) {
@@ -781,5 +785,9 @@ public class Sector extends Renderable implements Disposable {
     
     if (this.shader != null) {
     }
+  }
+  
+  public BoundingBox getBounds() {
+    return boundingBox;
   }
 }

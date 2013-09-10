@@ -3,6 +3,7 @@ package com.macbury.fabula.game_objects.components;
 import com.artemis.Component;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.macbury.fabula.terrain.Terrain;
 
 public class PositionComponent extends Component {
   protected Vector3 vector;
@@ -50,5 +51,9 @@ public class PositionComponent extends Component {
   public void setVector(float x, float z) {
     this.vector.x = x;
     this.vector.z = z;
+  }
+  
+  public boolean isVisible(Terrain terrain) {
+    return terrain.isVisible(vector);
   }
 }

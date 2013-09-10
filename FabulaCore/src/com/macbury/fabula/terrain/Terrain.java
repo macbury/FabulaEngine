@@ -299,4 +299,13 @@ public class Terrain implements Disposable {
      //encoded = null;
   }
 
+  public boolean isVisible(Vector3 vector) {
+    for (Sector sector : visibleSectors) {
+      if (sector.getBounds().contains(vector)) {
+        return false;
+      }
+    }
+    return false;
+  }
+
 }

@@ -1,7 +1,5 @@
 package com.macbury.fabula.game_objects.system;
 
-import java.util.Vector;
-
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
@@ -47,7 +45,6 @@ public class DecalRenderingSystem extends EntitySystem {
       DecalComponent decalComponent = dm.get(entity);
       PositionComponent position    = pm.get(entity);
       Decal decal                   = decalComponent.getDecal();
-      
       decal.setPosition(position.getX()+decal.getWidth()/2, position.getY()+decal.getHeight()/2, position.getZ()+decal.getHeight()/2);
       //decal.setRotationX(-35);
       decal.lookAt(camera.position, this.normalizedCameraVector);

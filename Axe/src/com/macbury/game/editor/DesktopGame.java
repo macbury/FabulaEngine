@@ -9,9 +9,9 @@ public class DesktopGame {
   public static void main(String[] args) {
     DesktopGameManager manager = new DesktopGameManager();
     LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-    config.resizable  = false;
-    config.width      = 1280;
-    config.height     = 768;
+    config.resizable  = true;
+    config.width      = 860;
+    config.height     = 640;
     config.useGL20    = true;
     config.vSyncEnabled = true;
     LwjglApplication application = new LwjglApplication(manager, config);
