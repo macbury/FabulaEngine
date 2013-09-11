@@ -1,0 +1,40 @@
+
+gui.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+left_button
+  rotate: false
+  xy: 1, 1
+  size: 43, 48
+  orig: 43, 48
+  offset: 0, 0
+  index: -1
+down_button
+  rotate: false
+  xy: 46, 6
+  size: 46, 43
+  orig: 46, 43
+  offset: 0, 0
+  index: -1
+up_button
+  rotate: false
+  xy: 94, 7
+  size: 47, 42
+  orig: 47, 42
+  offset: 0, 0
+  index: -1
+right_button
+  rotate: false
+  xy: 143, 3
+  size: 43, 46
+  orig: 43, 46
+  offset: 0, 0
+  index: -1
+center_button
+  rotate: false
+  xy: 188, 14
+  size: 36, 35
+  orig: 36, 35
+  offset: 0, 0
+  index: -1

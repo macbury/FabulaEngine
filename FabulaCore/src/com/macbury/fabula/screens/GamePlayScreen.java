@@ -35,10 +35,10 @@ public class GamePlayScreen extends BaseScreen implements AsyncSceneLoaderListen
     G.shaders.createFB(Scene.MAIN_FRAME_BUFFER);
     
     this.gamePlayUI    = new GamePlayUI(this);
-    Gdx.input.setInputProcessor(gamePlayUI);
-    
     this.camera        = new TopDownCamera();
     this.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    
+    Gdx.input.setInputProcessor(gamePlayUI);
     teleport(G.db.getPlayerStartPosition().getUUID(), 0,0);
   }
   

@@ -1,6 +1,6 @@
-<game-features game:build="786" xmlns:game="http://macbury.pl/">
+<game-features game:build="794" xmlns:game="http://macbury.pl/">
    <title>Brutal Crasher</title>
-   <player-start-position x="22" y="22" map="1"/>
+   <player-start-position x="47" y="41" map="1"/>
    <fonts length="1">
       <font>base</font>
    </fonts>
@@ -36,6 +36,7 @@
    </tilesets>
    <atlases>
       <atlas name="robot"/>
+      <atlas name="gui"/>
    </atlases>
    <map uuid="9bc517cc-e2f1-4e54-a764-e2b49c5a72ed">collision_test</map>
    <map uuid="1">test2</map>

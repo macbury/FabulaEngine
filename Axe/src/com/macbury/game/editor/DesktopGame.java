@@ -10,8 +10,8 @@ public class DesktopGame {
     DesktopGameManager manager = new DesktopGameManager();
     LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
     config.resizable  = true;
-    config.width      = 860;
-    config.height     = 640;
+    config.width      = 1280;
+    config.height     = 768;
     config.useGL20    = true;
     config.vSyncEnabled = true;
     LwjglApplication application = new LwjglApplication(manager, config);

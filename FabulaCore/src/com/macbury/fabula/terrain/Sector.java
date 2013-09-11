@@ -36,7 +36,7 @@ public class Sector extends Renderable implements Disposable {
 
   public void build() {
     float minHeight = 0.0f;
-    float maxHeight = 0.0f;
+    float maxHeight = 1.0f;
     
     short rowEnd    = (short) (ROW_COUNT + topLeftCorner.z);
     short columnEnd = (short) (COLUMN_COUNT+topLeftCorner.x);

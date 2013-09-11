@@ -49,10 +49,8 @@ public class DecalRenderingSystem extends EntitySystem {
     if (pm.has(entity)) {
       PositionComponent position = pm.get(entity);
       
-      if(bbm.has(entity)) {
-        if (terrain.isVisible(bbm.get(entity).getBoundingBox(position.getVector()))) {
-          renderEntity(entity);
-        }
+      if(bbm.has(entity) && terrain.isVisible(bbm.get(entity).getBoundingBox(position.getVector()))) {
+        renderEntity(entity);
       } else if (position.isVisible(terrain)) {
         renderEntity(entity);
       }
