@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.g3d.materials.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Disposable;
 import com.macbury.fabula.manager.G;
@@ -302,10 +303,18 @@ public class Terrain implements Disposable {
   public boolean isVisible(Vector3 vector) {
     for (Sector sector : visibleSectors) {
       if (sector.getBounds().contains(vector)) {
-        return false;
+        return true;
       }
     }
     return false;
   }
 
+  public boolean isVisible(BoundingBox box) {
+    for (Sector sector : visibleSectors) {
+      if (sector.getBounds().contains(box)) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

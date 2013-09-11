@@ -6,9 +6,11 @@ import com.badlogic.gdx.graphics.g3d.decals.Decal;
 
 public class DecalComponent extends Component {
   private Decal decal;
+  private boolean visible;
   
   public DecalComponent(Decal nd) {
     this.decal = nd;
+    this.visible = false;
   }
   
   public DecalComponent(AtlasRegion textureRegion) {
@@ -20,5 +22,13 @@ public class DecalComponent extends Component {
 
   public Decal getDecal() {
     return decal;
+  }
+
+  public boolean isVisible() {
+    return visible;
+  }
+
+  public void setVisible(boolean visible) {
+    this.visible = visible;
   }
 }
