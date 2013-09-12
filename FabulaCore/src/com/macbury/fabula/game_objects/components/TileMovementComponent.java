@@ -59,4 +59,8 @@ public class TileMovementComponent extends VectorComponent {
     return tempPosition.set(startPosition).lerp(finalPosition, alpha);
   }
 
+  public Vector3 getFinalPosition() {
+    return finalPosition;
+  }
+
 }

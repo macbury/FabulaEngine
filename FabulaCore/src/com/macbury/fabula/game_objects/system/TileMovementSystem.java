@@ -26,16 +26,22 @@ public class TileMovementSystem extends EntityProcessingSystem {
     PositionComponent pc     = pm.get(e);
     TileMovementComponent mc = vm.get(e);
     
-    Tile currentTile         = terrain.getTile(pc.getTileX(), pc.getTileZ());
+    Tile currentTile = terrain.getTile(pc.getTileX(), pc.getTileZ());
     if (currentTile != null) {
       pc.setY(currentTile.getY());
     }
     
     if (mc.isMoving()) {
-      mc.addDelta(world.getDelta());
-      pc.setVector(mc.getCurrentPosition());
-      if (mc.moveFinished()) {
+      Tile futureTile = terrain.getTile((int)mc.getFinalPosition().x, (int)mc.getFinalPosition().z);
+      if (futureTile.getY() != currentTile.getY()) {
         mc.setMoving(false);
+      } else {
+        mc.addDelta(world.getDelta());
+        pc.setVector(mc.getCurrentPosition());
+        
+        if (mc.moveFinished()) {
+          mc.setMoving(false);
+        }
       }
     }
   }

@@ -82,7 +82,7 @@ public class GamePlayScreen extends BaseScreen implements AsyncSceneLoaderListen
     }
     
     gamePlayUI.draw();
-    gamePlayUI.renderDebug();
+    //gamePlayUI.renderDebug();
   }
   
   @Override
