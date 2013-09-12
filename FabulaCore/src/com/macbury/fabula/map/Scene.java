@@ -6,6 +6,8 @@ import org.simpleframework.xml.Serializer;
 
 import com.artemis.Entity;
 import com.artemis.World;
+import com.artemis.managers.GroupManager;
+import com.artemis.managers.TagManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -27,9 +29,8 @@ import com.macbury.fabula.game_objects.components.DecalComponent;
 import com.macbury.fabula.game_objects.components.PositionComponent;
 import com.macbury.fabula.game_objects.system.CollisionRenderingSystem;
 import com.macbury.fabula.game_objects.system.DecalRenderingSystem;
-import com.macbury.fabula.game_objects.system.MovementSystem;
 import com.macbury.fabula.game_objects.system.PlayerSystem;
-import com.macbury.fabula.game_objects.system.TileInteractionSystem;
+import com.macbury.fabula.game_objects.system.TileMovementSystem;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.persister.ScenePersister;
 import com.macbury.fabula.terrain.Terrain;
@@ -59,10 +60,10 @@ public class Scene implements Disposable {
   private World objectsWorld;
   private DecalRenderingSystem decalRenderingSystem;
   private Entity playerEntity;
-  private MovementSystem movementSystem;
   private PlayerSystem playerSystem;
   private ShapeRenderer shapeRenderer;
   private CollisionRenderingSystem collisionRenderingSystem;
+  private TileMovementSystem tileMovementSystem;
 
   public Scene(String name, String uid, int width, int height) {
     this.name = name;
@@ -84,15 +85,15 @@ public class Scene implements Disposable {
   public void initialize() {
     this.decalBatch           = new DecalBatch(new CameraGroupWithCustomShaderStrategy(perspectiveCamera));
     this.shapeRenderer        = new ShapeRenderer();
-    this.decalRenderingSystem = this.objectsWorld.setSystem(new DecalRenderingSystem(decalBatch, perspectiveCamera, this.terrain), true);
-    this.playerSystem         = this.objectsWorld.setSystem(new PlayerSystem(perspectiveCamera));
-    if (!debug) {
-      this.movementSystem     = this.objectsWorld.setSystem(new MovementSystem(terrain));
-    }
     
-    this.collisionRenderingSystem = new CollisionRenderingSystem(shapeRenderer);
-    this.objectsWorld.setSystem(collisionRenderingSystem, true);
-    this.objectsWorld.setSystem(new TileInteractionSystem(terrain));
+    this.playerSystem             = this.objectsWorld.setSystem(new PlayerSystem(perspectiveCamera));
+    this.tileMovementSystem       = this.objectsWorld.setSystem(new TileMovementSystem(terrain));
+    
+    this.decalRenderingSystem     = this.objectsWorld.setSystem(new DecalRenderingSystem(decalBatch, perspectiveCamera, this.terrain), true);
+    this.collisionRenderingSystem = this.objectsWorld.setSystem(new CollisionRenderingSystem(shapeRenderer), true);
+    
+    this.objectsWorld.setManager(new TagManager());
+    this.objectsWorld.setManager(new GroupManager());
     this.objectsWorld.initialize();
     G.factory.setWorld(this.objectsWorld);
   }
@@ -101,8 +102,8 @@ public class Scene implements Disposable {
     return this.terrain;
   }
   
-  public void render() {
-    this.objectsWorld.setDelta(Gdx.graphics.getDeltaTime());
+  public void render(float delta) {
+    this.objectsWorld.setDelta(delta);
     this.objectsWorld.process();
     this.shapeRenderer.setProjectionMatrix(perspectiveCamera.combined);
     
@@ -233,10 +234,15 @@ public class Scene implements Disposable {
     if (playerEntity == null) {
       playerEntity = G.factory.buildPlayer(spawnPosition);
       playerEntity.addToWorld();
+      objectsWorld.getManager(TagManager.class).register(PlayerSystem.TAG_PLAYER, playerEntity);
     }
     playerEntity.getComponent(PositionComponent.class).setPosition(spawnPosition);
   }
   
+  public World getWorld() {
+    return objectsWorld;
+  }
+
   public PlayerSystem getPlayerSystem() {
     return this.playerSystem;
   }

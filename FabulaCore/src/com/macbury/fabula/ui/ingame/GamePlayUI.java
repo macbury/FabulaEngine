@@ -14,10 +14,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.macbury.fabula.game_objects.components.TileMovementComponent;
+import com.macbury.fabula.game_objects.system.PlayerSystem;
 import com.macbury.fabula.manager.G;
+import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.screens.GamePlayScreen;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 public class GamePlayUI extends Stage {
@@ -53,6 +57,8 @@ public class GamePlayUI extends Stage {
     table.add().expandX();
     table.row();
     
+    WidgetGroup group = new WidgetGroup();
+    
     this.moveUpButton      = new Button(new TextureRegionDrawable(guiAtlas.findRegion("up_button")));
     this.moveDownButton    = new Button(new TextureRegionDrawable(guiAtlas.findRegion("down_button")));
     this.moveLeftButton    = new Button(new TextureRegionDrawable(guiAtlas.findRegion("left_button")));
@@ -83,7 +89,7 @@ public class GamePlayUI extends Stage {
     if (screen.getScene() == null) {
       this.statusLabel.setText("Loading... " + "FPS: " + Gdx.graphics.getFramesPerSecond());
     } else {
-      this.statusLabel.setText("FPS: " + Gdx.graphics.getFramesPerSecond() + " Camera: " + screen.get3DCamera().position.y);
+      this.statusLabel.setText("FPS: " + Gdx.graphics.getFramesPerSecond() + " Camera: " + screen.get3DCamera().position.y + " JAVA HEAP: " + (Gdx.app.getJavaHeap() / 1024) + " Kb NATIVE HEAP " + (Gdx.app.getNativeHeap() / 1024) + " Kb");
     }
     act(delta);
   }
@@ -101,20 +107,29 @@ public class GamePlayUI extends Stage {
   private ActorGestureListener touchPadGestureListener = new ActorGestureListener() {
     @Override
     public void touchDown(InputEvent event, float x, float y, int pointer, int button) {
-      if (event.getTarget() == moveUpButton) {
-        GamePlayUI.this.screen.getScene().getPlayerSystem().setVelocity(0,-1.0f);
-      } else if (event.getTarget() == moveDownButton) {
-        GamePlayUI.this.screen.getScene().getPlayerSystem().setVelocity(0,1.0f);
-      } else if (event.getTarget() == moveLeftButton) {
-        GamePlayUI.this.screen.getScene().getPlayerSystem().setVelocity(-1.0f,0);
-      } else if (event.getTarget() == moveRightButton) {
-        GamePlayUI.this.screen.getScene().getPlayerSystem().setVelocity(1.0f,0);
+      Scene scene = GamePlayUI.this.screen.getScene();
+      
+      if (scene != null) {
+        PlayerSystem playerSystem = scene.getPlayerSystem();
+        
+        if (event.getTarget() == moveUpButton) {
+          playerSystem.moveIn(TileMovementComponent.DIRECTION_UP);
+        } else if (event.getTarget() == moveDownButton) {
+          playerSystem.moveIn(TileMovementComponent.DIRECTION_DOWN);
+        } else if (event.getTarget() == moveLeftButton) {
+          playerSystem.moveIn(TileMovementComponent.DIRECTION_LEFT);
+        } else if (event.getTarget() == moveRightButton) {
+          playerSystem.moveIn(TileMovementComponent.DIRECTION_RIGHT);
+        }
       }
     }
 
     @Override
     public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-      GamePlayUI.this.screen.getScene().getPlayerSystem().setVelocity(0,0);
+      Scene scene = GamePlayUI.this.screen.getScene();
+      if (scene != null) {
+        scene.getPlayerSystem().stopMove();
+      }
     }
   };
 }

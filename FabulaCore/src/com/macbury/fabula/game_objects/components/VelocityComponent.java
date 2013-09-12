@@ -1,9 +1,8 @@
 package com.macbury.fabula.game_objects.components;
 
-import com.artemis.Component;
 import com.badlogic.gdx.math.Vector3;
 
-public class VelocityComponent extends PositionComponent {
+public class VelocityComponent extends VectorComponent {
   private Vector3 tempScaledVector;
   
   public VelocityComponent(Vector3 pos) {

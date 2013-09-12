@@ -74,13 +74,11 @@ public class GamePlayScreen extends BaseScreen implements AsyncSceneLoaderListen
   
   @Override
   public void render(float delta) {
-    Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-    Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     camera.update();
     gamePlayUI.update(delta);
     
     if (scene != null) {
-      scene.render();
+      scene.render(delta);
     }
     
     gamePlayUI.draw();

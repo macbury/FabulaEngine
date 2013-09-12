@@ -13,7 +13,7 @@ import com.macbury.fabula.game_objects.components.DecalComponent;
 import com.macbury.fabula.game_objects.components.PlayerComponent;
 import com.macbury.fabula.game_objects.components.PositionComponent;
 import com.macbury.fabula.game_objects.components.SolidColliderComponent;
-import com.macbury.fabula.game_objects.components.TileInteractionComponent;
+import com.macbury.fabula.game_objects.components.TileMovementComponent;
 import com.macbury.fabula.game_objects.components.VelocityComponent;
 import com.macbury.fabula.manager.G;
 
@@ -39,9 +39,9 @@ public class GameObjectFactory {
     e.addComponent(new PositionComponent(position));
     e.addComponent(new VelocityComponent(new Vector3(0, 0, 0.0f)));
     e.addComponent(new PlayerComponent());
-    e.addComponent(new TileInteractionComponent());
     e.addComponent(decalComponent);
-    e.addComponent(new BoundingBoxComponent(new Vector3(decalComponent.getDecal().getWidth(),NPC_HEIGHT,NPC_HEIGHT)));
+    e.addComponent(new TileMovementComponent());
+    //e.addComponent(new BoundingBoxComponent(new Vector3(decalComponent.getDecal().getWidth(),NPC_HEIGHT,NPC_HEIGHT)));
     e.addComponent(new SolidColliderComponent());
     return e;
   }

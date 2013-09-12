@@ -3,12 +3,9 @@ package com.macbury.fabula.game_objects.system;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntitySystem;
 import com.artemis.annotations.Mapper;
 import com.artemis.systems.EntityProcessingSystem;
-import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
 import com.macbury.fabula.game_objects.components.BoundingBoxComponent;
 import com.macbury.fabula.game_objects.components.PositionComponent;
 import com.macbury.fabula.game_objects.components.SolidColliderComponent;
@@ -39,12 +36,20 @@ public class MovementSystem extends EntityProcessingSystem {
     if (!velocity.getVector().equals(Vector3.Zero)) {
       futureVector.set(position).add(velocity.getScaledVector(world.delta));
       
+      // get all tiles around me in future
+      // check if i im colliding with one of the tiles
+      // if height of one tile is not equal to my height then stop
+      
       if (scm.has(e) && bbm.has(e)) {
-        BoundingBox box  = bbm.get(e).getBoundingBox(futureVector);
-        Tile currentTile = this.terrain.getTile(pc.getTileX(), pc.getTileZ());
-        Tile futureTile  = this.terrain.getTile(Math.round(futureVector.x), Math.round(futureVector.z));
+        //BoundingBox futureBox  = bbm.get(e).getBoundingBox(futureVector);
+        //BoundingBox currentBox = bbm.get(e).getBoundingBox(pc.getVector());
         
-        if (currentTile.getY() == futureTile.getY()) {
+        Tile currentTile       = this.terrain.getTile(pc.getTileX(), pc.getTileZ());
+        Tile futureTile        = this.terrain.getTile(Math.round(futureVector.x), Math.round(futureVector.z));
+        
+        boolean passable       = currentTile.getY() == futureTile.getY();
+        
+        if (passable) {
           position.set(futureVector);
         }
       } else {

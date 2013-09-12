@@ -12,6 +12,7 @@ public class Tile implements Cloneable, Comparable<Tile> {
   }
   
   public static int GID_COUNTER  = 0;
+  public static final int TILE_SIZE_IN_PIXELS = 32;
   private TypeSlope slope        = TypeSlope.None;
   private Vector3 position;
   float y1 = 0; // |1----3|
@@ -20,7 +21,7 @@ public class Tile implements Cloneable, Comparable<Tile> {
   float y4 = 0; // |2----4|
   
   private int gid = 0;
-  private AutoTile autoTile; 
+  private AutoTile autoTile;
   
   public Tile(float x, float y, float z) {
     gid      = GID_COUNTER++;

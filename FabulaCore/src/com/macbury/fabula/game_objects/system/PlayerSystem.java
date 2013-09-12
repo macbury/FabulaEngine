@@ -1,42 +1,62 @@
 package com.macbury.fabula.game_objects.system;
 
-import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.annotations.Mapper;
-import com.artemis.systems.EntityProcessingSystem;
+import com.artemis.managers.TagManager;
+import com.artemis.systems.VoidEntitySystem;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.macbury.fabula.game_objects.components.PlayerComponent;
 import com.macbury.fabula.game_objects.components.PositionComponent;
-import com.macbury.fabula.game_objects.components.VelocityComponent;
+import com.macbury.fabula.game_objects.components.TileMovementComponent;
 
-public class PlayerSystem extends EntityProcessingSystem {
+public class PlayerSystem extends VoidEntitySystem {
   private static final float PLAYER_SPEED = 2.2f;
-  @Mapper ComponentMapper<VelocityComponent> vm;
+  public static final String TAG_PLAYER   = "PLAYER";
+  private static final float CAMERA_HEIGHT = 8.4f;
+  private static final float CAMERA_OFFSET = 4;
+  @Mapper ComponentMapper<TileMovementComponent> tmm;
   @Mapper ComponentMapper<PositionComponent> pm;
   private PerspectiveCamera camera;
-  private Vector2 velocity;
+  private Vector3 direction;
+  private Entity playerEntity;
+  private boolean moving = false;
 
   public PlayerSystem(PerspectiveCamera camera) {
-    super(Aspect.getAspectForAll(VelocityComponent.class, PlayerComponent.class, PositionComponent.class));
+    super();
     this.camera   = camera;
-    this.velocity = new Vector2();
   }
   
-  @Override
   protected void process(Entity e) {
-    PositionComponent positionComponent = pm.get(e);
-    VelocityComponent velocityComponent = vm.get(e);
+    PositionComponent     pc  = pm.get(e);
+    TileMovementComponent tmc = tmm.get(playerEntity);
     
-    velocityComponent.setVector(velocity.x * PLAYER_SPEED, velocity.y * PLAYER_SPEED);
+    this.camera.position.set(pc.getX(), pc.getY()+CAMERA_HEIGHT, pc.getZ()+CAMERA_OFFSET);
+    this.camera.lookAt(pc.getVector());
     
-    this.camera.position.set(positionComponent.getX(), positionComponent.getY()+8.4f, positionComponent.getZ()+4);
-    this.camera.lookAt(positionComponent.getVector());
+    if (moving) {
+      tmc.startMoving(pc.getVector());
+    }
   }
 
-  public void setVelocity(float x, float y) {
-    this.velocity.set(x, y);
+  @Override
+  protected void processSystem() {
+    if (playerEntity == null) {
+      playerEntity = world.getManager(TagManager.class).getEntity(TAG_PLAYER);
+    } else {
+      process(playerEntity);
+    }
+  }
+
+  public void moveIn(Vector3 direction) {
+    if (playerEntity != null) {
+      TileMovementComponent tmc = tmm.get(playerEntity);
+      tmc.setVector(direction);
+      moving = true;
+    }
+  }
+
+  public void stopMove() {
+    moving = false;
   }
 }

@@ -160,7 +160,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     this.brushTimer.update(delta);
     camController.update();
     camera.update();
-    this.scene.render();
+    this.scene.render(delta);
     //modelBatch.begin(camera);
     //modelBatch.render(cursorInstance);
     //modelBatch.end();
