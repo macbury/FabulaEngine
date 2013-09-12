@@ -18,6 +18,7 @@ import com.macbury.fabula.game_objects.components.VelocityComponent;
 import com.macbury.fabula.manager.G;
 
 public class GameObjectFactory {
+  public static float NPC_HEIGHT = 0.2f;
   private World world;
 
   public World getWorld() {
@@ -40,7 +41,7 @@ public class GameObjectFactory {
     e.addComponent(new PlayerComponent());
     e.addComponent(new TileInteractionComponent());
     e.addComponent(decalComponent);
-    e.addComponent(new BoundingBoxComponent(new Vector3(decalComponent.getDecal().getWidth(),decalComponent.getDecal().getHeight(),decalComponent.getDecal().getHeight())));
+    e.addComponent(new BoundingBoxComponent(new Vector3(decalComponent.getDecal().getWidth(),NPC_HEIGHT,NPC_HEIGHT)));
     e.addComponent(new SolidColliderComponent());
     return e;
   }

@@ -30,7 +30,7 @@ public class CollisionRenderingSystem extends EntityProcessingSystem {
     
     renderer.begin(ShapeType.Line);
       renderer.setColor(Color.WHITE);
-      renderer.box(boundingBox.getCorners()[4].x, boundingBox.getCorners()[4].y, boundingBox.getCorners()[4].z, boundingBox.getDimensions().x, boundingBox.getDimensions().y, boundingBox.getDimensions().z);
+      renderer.box(pc.getX(), pc.getY(), pc.getZ(), boundingBox.getDimensions().x, boundingBox.getDimensions().y, boundingBox.getDimensions().z);
     renderer.end();
   }
   
