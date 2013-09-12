@@ -13,7 +13,7 @@ import com.macbury.fabula.game_objects.components.PositionComponent;
 import com.macbury.fabula.game_objects.components.VelocityComponent;
 
 public class PlayerSystem extends EntityProcessingSystem {
-  private static final float PLAYER_SPEED = 2.0f;
+  private static final float PLAYER_SPEED = 2.2f;
   @Mapper ComponentMapper<VelocityComponent> vm;
   @Mapper ComponentMapper<PositionComponent> pm;
   private PerspectiveCamera camera;

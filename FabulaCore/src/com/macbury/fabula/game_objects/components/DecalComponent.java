@@ -1,7 +1,7 @@
 package com.macbury.fabula.game_objects.components;
 
 import com.artemis.Component;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 
 public class DecalComponent extends Component {
@@ -13,7 +13,7 @@ public class DecalComponent extends Component {
     this.visible = false;
   }
   
-  public DecalComponent(AtlasRegion textureRegion) {
+  public DecalComponent(TextureRegion textureRegion) {
     Decal nd = Decal.newDecal(textureRegion, true);
     nd.setWidth(textureRegion.getRegionWidth() / 32.0f);
     nd.setHeight(textureRegion.getRegionHeight() / 32.0f);

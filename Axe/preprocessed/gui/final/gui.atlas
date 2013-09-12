@@ -3,51 +3,37 @@ gui.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-action_rect
-  rotate: false
-  xy: 1, 1
-  size: 50, 48
-  orig: 50, 48
-  offset: 0, 0
-  index: -1
-action_round
-  rotate: false
-  xy: 53, 1
-  size: 50, 48
-  orig: 50, 48
-  offset: 0, 0
-  index: -1
 center_button
   rotate: false
-  xy: 105, 2
+  xy: 1, 1
   size: 47, 47
   orig: 47, 47
   offset: 0, 0
   index: -1
 down_button
   rotate: false
-  xy: 154, 10
+  xy: 50, 9
   size: 47, 39
   orig: 47, 39
   offset: 0, 0
   index: -1
 up_button
   rotate: false
-  xy: 203, 13
+  xy: 99, 12
   size: 47, 36
   orig: 47, 36
   offset: 0, 0
   index: -1
 right_button
   rotate: false
-  xy: 252, 2
+  xy: 148, 1
   size: 37, 47
   orig: 37, 47
   offset: 0, 0
   index: -1
 left_button
   rotate: false
-  xy: 291, 2
+  xy: 187, 1
   size: 36, 47
   orig: 36, 47
   offset: 0, 0

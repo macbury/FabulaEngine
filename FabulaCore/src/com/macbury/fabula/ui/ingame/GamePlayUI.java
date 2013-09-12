@@ -76,7 +76,6 @@ public class GamePlayUI extends Stage {
     this.moveLeftButton.addListener(touchPadGestureListener);
     this.moveRightButton.addListener(touchPadGestureListener);
     
-    
     table.layout();
   }
 
@@ -85,7 +84,6 @@ public class GamePlayUI extends Stage {
       this.statusLabel.setText("Loading... " + "FPS: " + Gdx.graphics.getFramesPerSecond());
     } else {
       this.statusLabel.setText("FPS: " + Gdx.graphics.getFramesPerSecond() + " Camera: " + screen.get3DCamera().position.y);
-     // this.screen.getScene().getPlayerSystem().setVelocity(this.touchPad.getKnobPercentX(), this.touchPad.getKnobPercentY() * -1);
     }
     act(delta);
   }
@@ -112,8 +110,6 @@ public class GamePlayUI extends Stage {
       } else if (event.getTarget() == moveRightButton) {
         GamePlayUI.this.screen.getScene().getPlayerSystem().setVelocity(1.0f,0);
       }
-      
-      
     }
 
     @Override

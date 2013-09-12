@@ -16,6 +16,8 @@ import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.lights.Lights;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
@@ -23,6 +25,7 @@ import com.macbury.fabula.db.GameDatabase;
 import com.macbury.fabula.db.PlayerStartPosition;
 import com.macbury.fabula.game_objects.components.DecalComponent;
 import com.macbury.fabula.game_objects.components.PositionComponent;
+import com.macbury.fabula.game_objects.system.CollisionRenderingSystem;
 import com.macbury.fabula.game_objects.system.DecalRenderingSystem;
 import com.macbury.fabula.game_objects.system.MovementSystem;
 import com.macbury.fabula.game_objects.system.PlayerSystem;
@@ -58,6 +61,8 @@ public class Scene implements Disposable {
   private Entity playerEntity;
   private MovementSystem movementSystem;
   private PlayerSystem playerSystem;
+  private ShapeRenderer shapeRenderer;
+  private CollisionRenderingSystem collisionRenderingSystem;
 
   public Scene(String name, String uid, int width, int height) {
     this.name = name;
@@ -78,12 +83,15 @@ public class Scene implements Disposable {
   
   public void initialize() {
     this.decalBatch           = new DecalBatch(new CameraGroupWithCustomShaderStrategy(perspectiveCamera));
+    this.shapeRenderer        = new ShapeRenderer();
     this.decalRenderingSystem = this.objectsWorld.setSystem(new DecalRenderingSystem(decalBatch, perspectiveCamera, this.terrain), true);
     this.playerSystem         = this.objectsWorld.setSystem(new PlayerSystem(perspectiveCamera));
     if (!debug) {
-      this.movementSystem     = this.objectsWorld.setSystem(new MovementSystem());
+      this.movementSystem     = this.objectsWorld.setSystem(new MovementSystem(terrain));
     }
     
+    this.collisionRenderingSystem = new CollisionRenderingSystem(shapeRenderer);
+    this.objectsWorld.setSystem(collisionRenderingSystem, true);
     this.objectsWorld.setSystem(new TileInteractionSystem(terrain));
     this.objectsWorld.initialize();
     G.factory.setWorld(this.objectsWorld);
@@ -96,6 +104,7 @@ public class Scene implements Disposable {
   public void render() {
     this.objectsWorld.setDelta(Gdx.graphics.getDeltaTime());
     this.objectsWorld.process();
+    this.shapeRenderer.setProjectionMatrix(perspectiveCamera.combined);
     
     sm.beginFB(MAIN_FRAME_BUFFER);
       getModelBatch().begin(perspectiveCamera);
@@ -103,6 +112,10 @@ public class Scene implements Disposable {
       getModelBatch().end();
       renderDebugInfo();
       this.decalRenderingSystem.process();
+      
+      if (collisionRenderingSystem != null) {
+        this.collisionRenderingSystem.process();
+      }
     sm.endFB();
     
     sm.begin(finalShader); 
@@ -118,6 +131,11 @@ public class Scene implements Disposable {
         startPositionDecal.getPosition().set(psp.getTileX()+0.5f, tile.getY()+0.5f, psp.getTileY()+0.5f);
         startPositionDecal.lookAt(perspectiveCamera.position, perspectiveCamera.up.cpy().nor());
         this.decalBatch.add(startPositionDecal);
+        
+        shapeRenderer.begin(ShapeType.Line);
+          shapeRenderer.setColor(Color.WHITE);
+          shapeRenderer.box(psp.getTileX(), tile.getY(), psp.getTileY()+1, 1, 1, 1);
+        shapeRenderer.end();
       }
     }
   }
