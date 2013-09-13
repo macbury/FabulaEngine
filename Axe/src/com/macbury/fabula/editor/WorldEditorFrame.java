@@ -119,6 +119,7 @@ import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import javax.swing.JRadioButton;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.ImageIcon;
 
 public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener, MouseListener, DropTargetListener, WindowListener  {
   
@@ -402,7 +403,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     JPanel panel_6 = new JPanel();
     panel_6.setBackground(Color.WHITE);
-    tabbedInspectorPane.addTab("Settings", null, panel_6, null);
+    tabbedInspectorPane.addTab("", new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/settings.png")), panel_6, null);
     panel_6.setLayout(new FormLayout(new ColumnSpec[] {
         ColumnSpec.decode("5px"),
         FormFactory.DEFAULT_COLSPEC,
@@ -494,7 +495,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     JPanel panel = new JPanel();
     panel.setBackground(SystemColor.window);
-    tabbedInspectorPane.addTab("Terrain", null, panel, null);
+    tabbedInspectorPane.addTab("", new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/map.png")), panel, null);
     panel.setLayout(new FormLayout(new ColumnSpec[] {
         ColumnSpec.decode("left:4dlu"),
         ColumnSpec.decode("left:default"),
@@ -520,7 +521,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     panel.add(terrainBrushAmountSpinner, "6, 2");
     
     JPanel panel_1 = new JPanel();
-    tabbedInspectorPane.addTab("Tiles", null, panel_1, null);
+    tabbedInspectorPane.addTab("", new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/tiles.png")), panel_1, null);
     panel_1.setLayout(new BorderLayout(0, 0));
     
     this.paintModeComboBox = new JComboBox();
@@ -540,13 +541,13 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     panel_1.add(paintModeComboBox, BorderLayout.NORTH);
     
     JPanel panel_7 = new JPanel();
-    tabbedInspectorPane.addTab("Grass", null, panel_7, null);
+    tabbedInspectorPane.addTab("", new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/grass.png")), panel_7, null);
     
     JPanel panel_4 = new JPanel();
-    tabbedInspectorPane.addTab("Liquid", null, panel_4, null);
+    tabbedInspectorPane.addTab("", new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/liquid.png")), panel_4, null);
     
     JPanel panel_2 = new JPanel();
-    tabbedInspectorPane.addTab("Object", null, panel_2, null);
+    tabbedInspectorPane.addTab("", new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/model.png")), panel_2, null);
     panel_2.setLayout(new FormLayout(new ColumnSpec[] {
         ColumnSpec.decode("15px"),
         FormFactory.RELATED_GAP_COLSPEC,
@@ -580,7 +581,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     panel_2.add(spinner_2, "4, 6");
     
     JPanel panel_3 = new JPanel();
-    tabbedInspectorPane.addTab("Events", null, panel_3, null);
+    tabbedInspectorPane.addTab("", new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/shaders.png")), panel_3, null);
     tabbedInspectorPane.addChangeListener(this);
     
     DropTarget dt = new DropTarget(this.gameCanvas.getCanvas(), this);
