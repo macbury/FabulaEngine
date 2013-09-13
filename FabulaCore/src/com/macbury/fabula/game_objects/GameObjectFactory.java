@@ -15,6 +15,7 @@ import com.macbury.fabula.game_objects.components.PositionComponent;
 import com.macbury.fabula.game_objects.components.SolidColliderComponent;
 import com.macbury.fabula.game_objects.components.TileMovementComponent;
 import com.macbury.fabula.game_objects.components.VelocityComponent;
+import com.macbury.fabula.game_objects.components.WalkingAnimationComponent;
 import com.macbury.fabula.manager.G;
 
 public class GameObjectFactory {
@@ -37,10 +38,11 @@ public class GameObjectFactory {
     DecalComponent decalComponent = new DecalComponent(region);
     
     e.addComponent(new PositionComponent(position));
-    e.addComponent(new VelocityComponent(new Vector3(0, 0, 0.0f)));
+    e.addComponent(new VelocityComponent(TileMovementComponent.DIRECTION_DOWN));
     e.addComponent(new PlayerComponent());
-    e.addComponent(decalComponent);
+    e.addComponent(new DecalComponent());
     e.addComponent(new TileMovementComponent());
+    e.addComponent(new WalkingAnimationComponent(ta.findRegions("franklin")));
     //e.addComponent(new BoundingBoxComponent(new Vector3(decalComponent.getDecal().getWidth(),NPC_HEIGHT,NPC_HEIGHT)));
     e.addComponent(new SolidColliderComponent());
     return e;

@@ -35,15 +35,8 @@ public class MovementSystem extends EntityProcessingSystem {
     
     if (!velocity.getVector().equals(Vector3.Zero)) {
       futureVector.set(position).add(velocity.getScaledVector(world.delta));
-      
-      // get all tiles around me in future
-      // check if i im colliding with one of the tiles
-      // if height of one tile is not equal to my height then stop
-      
+
       if (scm.has(e) && bbm.has(e)) {
-        //BoundingBox futureBox  = bbm.get(e).getBoundingBox(futureVector);
-        //BoundingBox currentBox = bbm.get(e).getBoundingBox(pc.getVector());
-        
         Tile currentTile       = this.terrain.getTile(pc.getTileX(), pc.getTileZ());
         Tile futureTile        = this.terrain.getTile(Math.round(futureVector.x), Math.round(futureVector.z));
         

@@ -113,13 +113,13 @@ public class GamePlayUI extends Stage {
         PlayerSystem playerSystem = scene.getPlayerSystem();
         
         if (event.getTarget() == moveUpButton) {
-          playerSystem.moveIn(TileMovementComponent.DIRECTION_UP);
+          playerSystem.moveIn(TileMovementComponent.Direction.Up);
         } else if (event.getTarget() == moveDownButton) {
-          playerSystem.moveIn(TileMovementComponent.DIRECTION_DOWN);
+          playerSystem.moveIn(TileMovementComponent.Direction.Down);
         } else if (event.getTarget() == moveLeftButton) {
-          playerSystem.moveIn(TileMovementComponent.DIRECTION_LEFT);
+          playerSystem.moveIn(TileMovementComponent.Direction.Left);
         } else if (event.getTarget() == moveRightButton) {
-          playerSystem.moveIn(TileMovementComponent.DIRECTION_RIGHT);
+          playerSystem.moveIn(TileMovementComponent.Direction.Right);
         }
       }
     }

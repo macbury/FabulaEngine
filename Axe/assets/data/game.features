@@ -1,6 +1,6 @@
-<game-features game:build="823" xmlns:game="http://macbury.pl/">
+<game-features game:build="838" xmlns:game="http://macbury.pl/">
    <title>Brutal Crasher</title>
-   <player-start-position x="53" y="49" map="1"/>
+   <player-start-position x="17" y="24" map="1"/>
    <fonts length="1">
       <font>base</font>
    </fonts>
@@ -62,7 +62,7 @@
    <corner combination="A00F0000">PathHorizontalRight</corner>
    <corner combination="FF0F00F0">PathCrossLeftBottom</corner>
    <corner combination="805FF200">PathHorizontal</corner>
-   <corner combination="FF0F00F3">PathCrossLeftTop</corner>
+   <corner combination="FF0F00F3">PathCrossLeftBottom</corner>
    <corner combination="FF0FF005">PathCrossCornerRightBottom</corner>
    <corner combination="F0F0F0">PathCornerTopRight</corner>
    <corner combination="F5FF000">PathHorizontal</corner>
@@ -152,6 +152,7 @@
    <corner combination="FFF0000">PathCornerBottomRight</corner>
    <corner combination="FF5FFFFF">InnerReapeating</corner>
    <corner combination="F00F000">PathCornerBottomLeft</corner>
+   <corner combination="FFFFFFF7">InnerReapeating</corner>
    <corner combination="C00F030">PathCrossRightTopBottom</corner>
    <corner combination="FCCF0000">CornerBottomRight</corner>
    <corner combination="FF0FF0F5">CornerInsideRightLeft</corner>
@@ -380,7 +381,7 @@
    <corner combination="FFFF0A00">CornerBottomRight</corner>
    <corner combination="50FF">PathCornerTopRight</corner>
    <corner combination="F400000">Start</corner>
-   <corner combination="F0F0FF0">EdgeRight</corner>
+   <corner combination="F0F0FF0">PathCrossLeftTop</corner>
    <corner combination="F0F0FF3">PathCrossLeftTop</corner>
    <corner combination="50F0">PathCornerTopRight</corner>
    <corner combination="AF0F0000">InnerReapeating</corner>

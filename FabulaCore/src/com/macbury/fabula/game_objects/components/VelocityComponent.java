@@ -14,4 +14,20 @@ public class VelocityComponent extends VectorComponent {
   public Vector3 getScaledVector(float delta) {
     return tempScaledVector.set(vector).scl(delta);
   }
+
+  public boolean isLeft() {
+    return vector.x < 0.0f;
+  }
+
+  public boolean isRight() {
+    return vector.x > 0.0f;
+  }
+
+  public boolean isUp() {
+    return vector.z < 0.0f;
+  }
+  
+  public String toString() {
+    return vector.toString();
+  }
 }

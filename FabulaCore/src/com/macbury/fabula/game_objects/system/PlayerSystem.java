@@ -48,10 +48,10 @@ public class PlayerSystem extends VoidEntitySystem {
     }
   }
 
-  public void moveIn(Vector3 direction) {
+  public void moveIn(TileMovementComponent.Direction direction) {
     if (playerEntity != null) {
       TileMovementComponent tmc = tmm.get(playerEntity);
-      tmc.setVector(direction);
+      tmc.setDirection(direction);
       moving = true;
     }
   }
