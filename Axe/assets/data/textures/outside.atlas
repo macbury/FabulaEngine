@@ -4917,3 +4917,276 @@ snow_simple
   orig: 32, 32
   offset: 0, 0
   index: 96
+stairs_side
+  rotate: false
+  xy: 715, 579
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+stairs_side
+  rotate: false
+  xy: 715, 579
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 56
+stairs_side
+  rotate: false
+  xy: 749, 613
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 100
+stairs_side
+  rotate: false
+  xy: 749, 613
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 132
+stairs_side
+  rotate: false
+  xy: 749, 613
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 148
+stairs_side
+  rotate: false
+  xy: 749, 613
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 92
+stairs_side
+  rotate: false
+  xy: 783, 647
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 104
+stairs_side
+  rotate: false
+  xy: 783, 647
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 140
+stairs_side
+  rotate: false
+  xy: 783, 647
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 152
+stairs_side
+  rotate: false
+  xy: 783, 647
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 88
+stairs_side
+  rotate: false
+  xy: 817, 681
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 108
+stairs_side
+  rotate: false
+  xy: 851, 715
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 112
+stairs_side
+  rotate: false
+  xy: 851, 715
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 116
+stairs_side
+  rotate: false
+  xy: 851, 715
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 12
+stairs_side
+  rotate: false
+  xy: 851, 715
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 120
+stairs_side
+  rotate: false
+  xy: 851, 715
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 20
+stairs_side
+  rotate: false
+  xy: 851, 715
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 28
+stairs_side
+  rotate: false
+  xy: 851, 715
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 60
+stairs_side
+  rotate: false
+  xy: 851, 715
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 72
+stairs_side
+  rotate: false
+  xy: 851, 715
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 76
+stairs_side
+  rotate: false
+  xy: 885, 749
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 124
+stairs_side
+  rotate: false
+  xy: 919, 783
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 128
+stairs_side
+  rotate: false
+  xy: 953, 817
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 136
+stairs_side
+  rotate: false
+  xy: 953, 817
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 144
+stairs_side
+  rotate: false
+  xy: 953, 817
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 36
+stairs_side
+  rotate: false
+  xy: 953, 817
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 40
+stairs_side
+  rotate: false
+  xy: 953, 817
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 44
+stairs_side
+  rotate: false
+  xy: 953, 817
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 8
+stairs_side
+  rotate: false
+  xy: 953, 817
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 84
+stairs_side
+  rotate: false
+  xy: 953, 817
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 96
+stairs_side
+  rotate: false
+  xy: 987, 851
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 16
+stairs_side
+  rotate: false
+  xy: 171, 1
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 24
+stairs_side
+  rotate: false
+  xy: 205, 35
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 32
+stairs_side
+  rotate: false
+  xy: 205, 35
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 64
+stairs_side
+  rotate: false
+  xy: 239, 69
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 4
+stairs_side
+  rotate: false
+  xy: 273, 103
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 48
+stairs_side
+  rotate: false
+  xy: 307, 137
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 52
+stairs_side
+  rotate: false
+  xy: 341, 171
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 68
+stairs_side
+  rotate: false
+  xy: 375, 205
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 80

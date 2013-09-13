@@ -3027,3 +3027,171 @@ snow_simple
   orig: 16, 16
   offset: 0, 0
   index: 23
+stairs_side
+  rotate: false
+  xy: 649, 37
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+stairs_side
+  rotate: false
+  xy: 649, 37
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 4
+stairs_side
+  rotate: false
+  xy: 649, 37
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 8
+stairs_side
+  rotate: false
+  xy: 649, 37
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 12
+stairs_side
+  rotate: false
+  xy: 649, 37
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 16
+stairs_side
+  rotate: false
+  xy: 649, 37
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 20
+stairs_side
+  rotate: false
+  xy: 667, 55
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 1
+stairs_side
+  rotate: false
+  xy: 667, 55
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 5
+stairs_side
+  rotate: false
+  xy: 667, 55
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 19
+stairs_side
+  rotate: false
+  xy: 667, 55
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 23
+stairs_side
+  rotate: false
+  xy: 685, 73
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 2
+stairs_side
+  rotate: false
+  xy: 685, 73
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 6
+stairs_side
+  rotate: false
+  xy: 703, 91
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 3
+stairs_side
+  rotate: false
+  xy: 703, 91
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 7
+stairs_side
+  rotate: false
+  xy: 703, 91
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 9
+stairs_side
+  rotate: false
+  xy: 703, 91
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 10
+stairs_side
+  rotate: false
+  xy: 703, 91
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 13
+stairs_side
+  rotate: false
+  xy: 703, 91
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 14
+stairs_side
+  rotate: false
+  xy: 703, 91
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 17
+stairs_side
+  rotate: false
+  xy: 703, 91
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 18
+stairs_side
+  rotate: false
+  xy: 703, 91
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 21
+stairs_side
+  rotate: false
+  xy: 703, 91
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 22
+stairs_side
+  rotate: false
+  xy: 721, 109
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 11
+stairs_side
+  rotate: false
+  xy: 721, 109
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 15

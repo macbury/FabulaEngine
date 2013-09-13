@@ -33,6 +33,7 @@ import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -116,6 +117,8 @@ import javax.swing.border.BevelBorder;
 import javax.swing.JPopupMenu;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
+import javax.swing.JRadioButton;
+import javax.swing.JRadioButtonMenuItem;
 
 public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener, MouseListener, DropTargetListener, WindowListener  {
   
@@ -160,6 +163,8 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   public JPopupMenu eventPopupMenu;
   private JMenuItem mntmNewEvent;
   private JMenuItem mntmSetStartPosition;
+  private JRadioButtonMenuItem rdbtnmntmDevice;
+  private JRadioButtonMenuItem rdbtnmntmEmulator;
   public WorldEditorFrame(EditorGameManager game) {
     PrintStream origOut = System.out;
     PrintStream interceptor = new LogInterceptor(origOut);
@@ -237,6 +242,22 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     this.mntmForceAppStop = new JMenuItem("Terminate");
     mntmForceAppStop.addActionListener(this);
+  
+    
+    JMenu mnTarget = new JMenu("Target");
+    mnGame.add(mnTarget);
+    
+    ButtonGroup group = new ButtonGroup();
+    
+    this.rdbtnmntmEmulator = new JRadioButtonMenuItem("Emulator");
+    rdbtnmntmEmulator.setSelected(true);
+    mnTarget.add(rdbtnmntmEmulator);
+    group.add(rdbtnmntmEmulator);
+    
+    this.rdbtnmntmDevice = new JRadioButtonMenuItem("Device");
+    mnTarget.add(rdbtnmntmDevice);
+    group.add(rdbtnmntmDevice);
+    
     mnGame.add(mntmForceAppStop);
     
     JSeparator separator_2 = new JSeparator();
@@ -570,6 +591,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     changeManager = new ChangeManager(this);
     addWindowListener(this);
     
+    refreshDevices();
   }
   
   private class StatusBarInfoRunnable implements Runnable {
@@ -750,6 +772,12 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     if (e.getSource() == mntmRun) {
       RunningGameConsoleFrame runningGameConsoleFrame = new RunningGameConsoleFrame();
+      if (rdbtnmntmEmulator.isSelected()) {
+        runningGameConsoleFrame.setTarget(RunningGameConsoleFrame.TargetType.Emulator);
+      } else {
+        runningGameConsoleFrame.setTarget(RunningGameConsoleFrame.TargetType.Device);
+      }
+      
       runningGameConsoleFrame.runGame(this, gameManager);
     }
     
@@ -810,6 +838,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     if (e.getSource() == mntmForceAppStop) {
       AdbManager.stopApplication(GameManager.ANDROID_APP_PACKAGE);
     }
+  }
+
+  private void refreshDevices() {
+    
   }
 
   private void openMap() {

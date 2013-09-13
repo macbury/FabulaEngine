@@ -44,11 +44,13 @@ import javax.swing.SwingConstants;
 
 
 public class RunningGameConsoleFrame extends JDialog implements WindowListener, ActionListener {
-  
+  public static enum TargetType {
+    Device, Emulator
+  }
   private static final String TAG = "Running Game";
   private GameManager gameManager;
   private RunnerThread runThread;
-
+  private TargetType   target;
   /**
    * Create the frame.
    */
@@ -125,6 +127,14 @@ public class RunningGameConsoleFrame extends JDialog implements WindowListener, 
   public void actionPerformed(ActionEvent e) {
   }
   
+  public TargetType getTarget() {
+    return target;
+  }
+
+  public void setTarget(TargetType target) {
+    this.target = target;
+  }
+
   private class RunnerThread extends Thread {
     @Override
     public void run() {

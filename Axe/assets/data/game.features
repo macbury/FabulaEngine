@@ -1,6 +1,6 @@
-<game-features game:build="838" xmlns:game="http://macbury.pl/">
+<game-features game:build="900" xmlns:game="http://macbury.pl/">
    <title>Brutal Crasher</title>
-   <player-start-position x="17" y="24" map="1"/>
+   <player-start-position x="30" y="29" map="33d58d16-555a-4295-961c-46bb06717b71"/>
    <fonts length="1">
       <font>base</font>
    </fonts>
@@ -11,7 +11,7 @@
    </shaders>
    <tilesets>
       <tileset name="outside" atlas="outside">
-         <auto-tiles length="19">
+         <auto-tiles length="20">
             <auto-tile name="grass_simple" slope="false"/>
             <auto-tile name="grass_sand_road" slope="false"/>
             <auto-tile name="desert_rock_road" slope="false"/>
@@ -31,6 +31,7 @@
             <auto-tile name="ground_hill_side" slope="true"/>
             <auto-tile name="rock_hill_side" slope="true"/>
             <auto-tile name="grass_hill_side" slope="true"/>
+            <auto-tile name="stairs_side" slope="true"/>
          </auto-tiles>
       </tileset>
    </tilesets>
@@ -41,6 +42,7 @@
    <map uuid="91623676-c445-47bd-89df-96c93f7c8e84">test3</map>
    <map uuid="1">test2</map>
    <map uuid="9bc517cc-e2f1-4e54-a764-e2b49c5a72ed">collision_test</map>
+   <map uuid="33d58d16-555a-4295-961c-46bb06717b71"> npc_test_playground</map>
    <map uuid="9b64b33b-e884-443a-85bb-9a9cf61f7bdf">playground</map>
    <corner combination="FF0FF00">InnerReapeating</corner>
    <corner combination="CFC000F3">PathVertical</corner>

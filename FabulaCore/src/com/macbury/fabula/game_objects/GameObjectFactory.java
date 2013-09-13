@@ -34,7 +34,7 @@ public class GameObjectFactory {
     Entity e = world.createEntity();
     
     TextureAtlas ta               = G.db.getAtlas("robot");
-    TextureRegion region          =  ta.findRegion("franklin");
+    TextureRegion region          = ta.findRegion("franklin");
     DecalComponent decalComponent = new DecalComponent(region);
     
     e.addComponent(new PositionComponent(position));
