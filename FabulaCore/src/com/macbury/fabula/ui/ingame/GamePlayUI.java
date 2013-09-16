@@ -3,42 +3,41 @@ package com.macbury.fabula.ui.ingame;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
-import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
+import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.macbury.fabula.game_objects.components.TileMovementComponent;
 import com.macbury.fabula.game_objects.system.PlayerSystem;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.screens.GamePlayScreen;
-import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
-public class GamePlayUI extends Stage {
+import com.macbury.fabula.utils.ActionTimer;
+import com.macbury.fabula.utils.ActionTimer.TimerListener;
+
+public class GamePlayUI extends Stage implements TimerListener {
   protected static final String TAG = "GamePlayUI";
   private Label statusLabel;
   private Table table;
   private Skin skin;
   private GamePlayScreen screen;
-  private Touchpad touchPad;
   private Button moveUpButton;
   private Button moveDownButton;
   private TextureAtlas guiAtlas;
   private Image centerTouchPad;
   private Button moveLeftButton;
   private Button moveRightButton;
+  private ActionTimer debugTimer;
 
   public GamePlayUI(GamePlayScreen screen) {
+    this.debugTimer = new ActionTimer(1.0f, this);
+    this.debugTimer.start();
     this.screen   = screen;
     this.skin     = G.db.getUiSkin();
     this.guiAtlas = G.db.getAtlas("gui");
@@ -86,11 +85,7 @@ public class GamePlayUI extends Stage {
   }
 
   public void update(float delta) {
-    if (screen.getScene() == null) {
-      this.statusLabel.setText("Loading... " + "FPS: " + Gdx.graphics.getFramesPerSecond());
-    } else {
-      this.statusLabel.setText("FPS: " + Gdx.graphics.getFramesPerSecond() + " Camera: " + screen.get3DCamera().position.y + " JAVA HEAP: " + (Gdx.app.getJavaHeap() / 1024) + " Kb NATIVE HEAP " + (Gdx.app.getNativeHeap() / 1024) + " Kb");
-    }
+    debugTimer.update(delta);
     act(delta);
   }
 
@@ -132,4 +127,13 @@ public class GamePlayUI extends Stage {
       }
     }
   };
+
+  @Override
+  public void onTimerTick(ActionTimer timer) {
+    if (screen.getScene() == null) {
+      this.statusLabel.setText("Loading... " + "FPS: " + Gdx.graphics.getFramesPerSecond());
+    } else {
+      this.statusLabel.setText("FPS: " + Gdx.graphics.getFramesPerSecond() + " Camera: " + screen.get3DCamera().position.y + " JAVA HEAP: " + (Gdx.app.getJavaHeap() / 1024) + " Kb NATIVE HEAP " + (Gdx.app.getNativeHeap() / 1024) + " Kb");
+    }
+  }
 }

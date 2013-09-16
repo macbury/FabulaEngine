@@ -68,6 +68,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   private BitmapFont baseFont;
   private SpriteBatch uiSpriteBatch;
   private OrthographicCamera guiCamera;
+  private ActionTimer infoTimer;
   
   public WorldEditScreen(GameManager manager) {
     super(manager);
@@ -83,6 +84,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     Gdx.app.log(TAG, "Showed screen");
     G.shaders.createFB(Scene.MAIN_FRAME_BUFFER);
     this.brushTimer    = new ActionTimer(APPLY_BRUSH_EVERY, this);
+    this.infoTimer     = new ActionTimer(1.0f, this);
     this.camera        = new TopDownCamera();
     this.baseFont      = G.db.getFont("base");
     this.uiSpriteBatch = new SpriteBatch();
@@ -100,7 +102,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     
     
     //setCurrentBrush(terrainBrush);
-    
+    this.infoTimer.start();
     this.camController = new EditorCamController(camera);
     InputMultiplexer inputMultiplexer = new InputMultiplexer(this, camController);
     Gdx.input.setInputProcessor(inputMultiplexer);
@@ -153,29 +155,22 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   public void render(float delta) {
     Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
     Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    if (isPaused) {
-      debugInfo = "Paused";
-      return;
-    }
+    
     this.brushTimer.update(delta);
+    this.infoTimer.update(delta);
     camController.update();
     camera.update();
     this.scene.render(delta);
     //modelBatch.begin(camera);
     //modelBatch.render(cursorInstance);
     //modelBatch.end();
-    if (getCurrentBrush() != null) {
-      debugInfo = "X: "+ getCurrentBrush().getPosition().x + " Y " + getCurrentBrush().getY() + " Z: " +  getCurrentBrush().getPosition().y + " " + getCurrentBrush().getStatusBarInfo() + " ";
-    } else {
-      debugInfo = "";
-    }
-    debugInfo += "FPS: "+ Gdx.graphics.getFramesPerSecond() + " Java Heap: " + (Gdx.app.getJavaHeap() / 1024) + " KB" + " Native Heap: " + (Gdx.app.getNativeHeap() / 1024);
+    
     
     guiCamera.update();
     this.uiSpriteBatch.setProjectionMatrix(guiCamera.combined);
-    uiSpriteBatch.begin();
-      baseFont.draw(uiSpriteBatch, "Font test!", 10, 30);
-    uiSpriteBatch.end();
+    //uiSpriteBatch.begin();
+    //  baseFont.draw(uiSpriteBatch, "Font test!", 10, 30);
+    //uiSpriteBatch.end();
   }
 
   @Override
@@ -283,7 +278,20 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
 
   @Override
   public void onTimerTick(ActionTimer timer) {
-    if (currentBrush != null && currentBrush.getBrushType() == BrushType.Pencil) {
+    if (timer == infoTimer) {
+      if (isPaused) {
+        debugInfo = "Paused";
+        return;
+      }
+      
+      if (getCurrentBrush() != null) {
+        debugInfo = "X: "+ getCurrentBrush().getPosition().x + " Y " + getCurrentBrush().getY() + " Z: " +  getCurrentBrush().getPosition().y + " " + getCurrentBrush().getStatusBarInfo() + " ";
+      } else {
+        debugInfo = "";
+      }
+      debugInfo += "FPS: "+ Gdx.graphics.getFramesPerSecond() + " Java Heap: " + (Gdx.app.getJavaHeap() / 1024) + " KB" + " Native Heap: " + (Gdx.app.getNativeHeap() / 1024);
+      
+    } else if (currentBrush != null && currentBrush.getBrushType() == BrushType.Pencil) {
       currentBrush.applyBrush();
     }
   }

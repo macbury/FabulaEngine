@@ -3,6 +3,7 @@ package com.macbury.fabula.editor;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
@@ -20,7 +21,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -34,13 +35,12 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -50,7 +50,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
+import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
@@ -58,7 +59,6 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
@@ -70,11 +70,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
@@ -84,19 +81,17 @@ import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+import com.l2fprod.common.propertysheet.PropertySheet;
+import com.l2fprod.common.propertysheet.PropertySheetPanel;
 import com.macbury.fabula.editor.adb.AdbManager;
 import com.macbury.fabula.editor.brushes.AutoTileBrush;
 import com.macbury.fabula.editor.brushes.AutoTileBrush.PaintMode;
-import com.macbury.fabula.editor.code.AssetEditorDialog;
 import com.macbury.fabula.editor.gamerunner.RunningGameConsoleFrame;
 import com.macbury.fabula.editor.shaders.ShaderEditorFrame;
 import com.macbury.fabula.editor.tiles.AutoTileDebugFrame;
 import com.macbury.fabula.editor.tiles.TilesetBuilderDialog;
 import com.macbury.fabula.editor.tree.GameTransferableHandler;
-import com.macbury.fabula.editor.tree.GameTreeCellRenderer;
-import com.macbury.fabula.editor.tree.GameTreeModel;
 import com.macbury.fabula.editor.tree.GameTreeModel.BaseGameFolderNode;
-import com.macbury.fabula.editor.tree.GameTreeModel.GameShaderNode;
 import com.macbury.fabula.editor.undo_redo.ChangeManager;
 import com.macbury.fabula.editor.undo_redo.ChangeManagerListener;
 import com.macbury.fabula.manager.EditorGameManager;
@@ -107,19 +102,6 @@ import com.macbury.fabula.screens.WorldEditScreen;
 import com.macbury.fabula.terrain.AutoTile;
 import com.macbury.fabula.terrain.AutoTiles;
 import com.macbury.fabula.terrain.Tileset;
-import java.awt.event.InputMethodListener;
-import java.awt.event.InputMethodEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
-import java.awt.event.KeyAdapter;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.BevelBorder;
-import javax.swing.JPopupMenu;
-import java.awt.Component;
-import java.awt.event.MouseAdapter;
-import javax.swing.JRadioButton;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.ImageIcon;
 
 public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener, MouseListener, DropTargetListener, WindowListener  {
   
@@ -364,7 +346,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     JSplitPane inspectorAndOpenGlContainerSplitPane = new JSplitPane();
     panel_9.add(inspectorAndOpenGlContainerSplitPane, BorderLayout.CENTER);
     inspectorAndOpenGlContainerSplitPane.setContinuousLayout(true);
-    inspectorAndOpenGlContainerSplitPane.setResizeWeight(0.06);
     
     JPopupMenu.setDefaultLightWeightPopupEnabled( false );
     
@@ -582,7 +563,21 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     JPanel panel_3 = new JPanel();
     tabbedInspectorPane.addTab("", new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/shaders.png")), panel_3, null);
+    
+    JPanel panel_10 = new JPanel();
+    panel_10.setBackground(Color.WHITE);
+    tabbedInspectorPane.addTab("New tab", null, panel_10, null);
     tabbedInspectorPane.addChangeListener(this);
+    panel_10.setLayout(new BorderLayout(0, 0));
+    
+    PropertySheetPanel sheet = new PropertySheetPanel();
+    sheet.setRestoreToggleStates(true);
+    sheet.setSorting(true);
+    sheet.setSortingProperties(true);
+    sheet.setSortingCategories(true);
+    sheet.setMode(PropertySheet.VIEW_AS_CATEGORIES);
+    sheet.setDescriptionVisible(true);
+    panel_10.add(sheet);
     
     DropTarget dt = new DropTarget(this.gameCanvas.getCanvas(), this);
     
