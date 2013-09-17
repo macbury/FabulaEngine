@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
@@ -26,6 +27,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -107,8 +110,10 @@ import com.macbury.fabula.terrain.AutoTiles;
 import com.macbury.fabula.terrain.Tileset;
 import javax.swing.JToolBar;
 import javax.swing.JToggleButton;
+import javax.swing.Box;
+import javax.swing.JScrollBar;
 
-public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener, MouseListener, DropTargetListener, WindowListener  {
+public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener, MouseListener, DropTargetListener, WindowListener, PropertyChangeListener  {
   
   protected static final String TAG = "WorldEditorFrame";
   private JPanel contentPane;
@@ -117,7 +122,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private EditorGameManager gameManager;
   private JList autoTileList;
   private IconListRenderer autoTileListRenderer;
-  private JComboBox paintModeComboBox;
   private JMenuItem mntmBuildTileMap;
   private AutoTileDebugFrame autoTileDebugFrame;
   private ShaderEditorFrame  shaderEditorFrame;
@@ -343,7 +347,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     panel_9.setLayout(new BorderLayout(0, 0));
     
     JSplitPane inspectorAndOpenGlContainerSplitPane = new JSplitPane();
-    inspectorAndOpenGlContainerSplitPane.setResizeWeight(0.001);
+    inspectorAndOpenGlContainerSplitPane.setResizeWeight(0.01);
     panel_9.add(inspectorAndOpenGlContainerSplitPane, BorderLayout.CENTER);
     inspectorAndOpenGlContainerSplitPane.setContinuousLayout(true);
     
@@ -372,6 +376,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     eventPopupMenu.add(mntmCancel);
     
     openGLContainerPane.setLayout(new BoxLayout(openGLContainerPane, BoxLayout.X_AXIS));
+
     
     JPanel panel_11 = new JPanel();
     inspectorAndOpenGlContainerSplitPane.setLeftComponent(panel_11);
@@ -387,24 +392,23 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     this.tglbtnTerrainEdit = new JToggleButton("");
     tglbtnTerrainEdit.addActionListener(this);
     tglbtnTerrainEdit.setSelected(true);
-    tglbtnTerrainEdit.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/map.png")));
+    tglbtnTerrainEdit.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/terrain.png")));
     toolBar.add(tglbtnTerrainEdit);
     toolbarGroup.add(tglbtnTerrainEdit);
     
     this.tglbtnAutoTileEdit = new JToggleButton("");
     tglbtnAutoTileEdit.addActionListener(this);
-    tglbtnAutoTileEdit.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/tiles.png")));
+    tglbtnAutoTileEdit.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/autotile.png")));
     toolBar.add(tglbtnAutoTileEdit);
     toolbarGroup.add(tglbtnAutoTileEdit);
     
     this.tglbtnEventEditor = new JToggleButton("");
     tglbtnEventEditor.addActionListener(this);
-    tglbtnEventEditor.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/shaders.png")));
+    tglbtnEventEditor.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/events.png")));
     toolBar.add(tglbtnEventEditor);
     toolbarGroup.add(tglbtnEventEditor);
     
     JSplitPane splitPane = new JSplitPane();
-    splitPane.setResizeWeight(0.9);
     splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
     splitPane.setContinuousLayout(true);
     panel_11.add(splitPane, BorderLayout.CENTER);
@@ -420,20 +424,18 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     inspectorSheetPanel.setSortingCategories(true);
     inspectorSheetPanel.setMode(PropertySheet.VIEW_AS_CATEGORIES);
     inspectorSheetPanel.setDescriptionVisible(true);
+    inspectorSheetPanel.addPropertyChangeListener(this);
+    inspectorSheetPanel.addPropertySheetChangeListener(this);
     inspectorPanel.add(inspectorSheetPanel);
     
     JPanel autoTilesPanel = new JPanel();
     autoTilesPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
     splitPane.setLeftComponent(autoTilesPanel);
-    
-    this.paintModeComboBox = new JComboBox();
-    paintModeComboBox.addItemListener(this);
     autoTilesPanel.setLayout(new BorderLayout(0, 0));
-    paintModeComboBox.setModel(new DefaultComboBoxModel(PaintMode.values()));
-    autoTilesPanel.add(paintModeComboBox, BorderLayout.NORTH);
     
     this.autoTileList = new JList(new Object[] { });
     JScrollPane autoTileScrollPane = new JScrollPane(autoTileList);
+    autoTileScrollPane.setViewportBorder(new EmptyBorder(0, 0, 0, 0));
     autoTilesPanel.add(autoTileScrollPane, BorderLayout.CENTER);
     autoTileList.setValueIsAdjusting(true);
     autoTileList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
@@ -522,7 +524,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   
   private void updateInfoForAutotileBrush() {
     AutoTileBrush atBrush     = this.gameManager.getWorldEditScreen().getAutoTileBrush();
-    atBrush.setPaintMode((PaintMode) this.paintModeComboBox.getSelectedItem());
     atBrush.buildAllPreviewsUnlessBuilded();
     this.autoTileListRenderer = new IconListRenderer(atBrush.getAutoTileIcons());
     autoTileList.setCellRenderer(autoTileListRenderer);
@@ -551,9 +552,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     System.gc();
     WorldEditScreen screen = this.gameManager.getWorldEditScreen();
     Scene scene            = screen.getScene();
-    if (e.getSource() == paintModeComboBox) {
-      updateInfoForAutotileBrush();
-    }
   }
 
   @Override
@@ -650,6 +648,13 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     if (tglbtnAutoTileEdit.isSelected()) {
       screen.setCurrentBrush(screen.getAutoTileBrush());
+      autoTileList.setEnabled(true);
+    } else {
+      autoTileList.setEnabled(false);
+    }
+    
+    if (tglbtnEventEditor.isSelected()) {
+      screen.setCurrentBrush(screen.getEventBrush());
     }
     
     screen.getCurrentBrush().setChangeManager(this.changeManager);
@@ -876,5 +881,16 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     		popup.show(e.getComponent(), e.getX(), e.getY());
     	}
     });
+  }
+
+  @Override
+  public void propertyChange(PropertyChangeEvent arg0) {
+    EventQueue.invokeLater(new Runnable(){
+      @Override
+      public void run() {
+        updateInfoForAutotileBrush();
+      }
+    });
+    
   }
 }

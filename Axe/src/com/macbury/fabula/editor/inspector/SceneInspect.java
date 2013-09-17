@@ -1,15 +1,9 @@
 package com.macbury.fabula.editor.inspector;
 
-import java.beans.EventSetDescriptor;
-import java.beans.IntrospectionException;
-import java.beans.SimpleBeanInfo;
-import java.io.Serializable;
-
-import com.badlogic.gdx.Gdx;
+import com.macbury.fabula.editor.brushes.AutoTileBrush.PaintMode;
 import com.macbury.fabula.screens.WorldEditScreen;
 
 public class SceneInspect {
-  private static final String TAG = "TESt";
   private WorldEditScreen screen;
 
   public SceneInspect(WorldEditScreen screen) {
@@ -30,5 +24,21 @@ public class SceneInspect {
   
   public void setShader(String shaderName) {
     screen.getScene().setFinalShader(shaderName);
+  }
+  
+  public void setTerrainHeight(float terrain) {
+    screen.getTerrainBrush().setPower(terrain);
+  }
+  
+  public float getTerrainHeight() {
+    return screen.getTerrainBrush().getPower();
+  }
+  
+  public void setPaintMode(String paintMode) {
+    screen.getAutoTileBrush().setPaintMode(PaintMode.valueOf(paintMode));
+  }
+  
+  public String getPaintMode() {
+    return screen.getAutoTileBrush().getCurrentPaintMode().toString();
   }
 }
