@@ -87,6 +87,9 @@ import com.macbury.fabula.editor.adb.AdbManager;
 import com.macbury.fabula.editor.brushes.AutoTileBrush;
 import com.macbury.fabula.editor.brushes.AutoTileBrush.PaintMode;
 import com.macbury.fabula.editor.gamerunner.RunningGameConsoleFrame;
+import com.macbury.fabula.editor.inspector.DefaultBeanBinder;
+import com.macbury.fabula.editor.inspector.SceneInspect;
+import com.macbury.fabula.editor.inspector.SceneSheetPanel;
 import com.macbury.fabula.editor.shaders.ShaderEditorFrame;
 import com.macbury.fabula.editor.tiles.AutoTileDebugFrame;
 import com.macbury.fabula.editor.tiles.TilesetBuilderDialog;
@@ -143,6 +146,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JToggleButton tglbtnTerrainEdit;
   private JToggleButton tglbtnAutoTileEdit;
   private JToggleButton tglbtnEventEditor;
+  private SceneSheetPanel inspectorSheetPanel;
   public WorldEditorFrame(EditorGameManager game) {
     PrintStream origOut = System.out;
     PrintStream interceptor = new LogInterceptor(origOut);
@@ -409,14 +413,14 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     splitPane.setRightComponent(inspectorPanel);
     inspectorPanel.setLayout(new BorderLayout(0, 0));
     
-    PropertySheetPanel sheet = new PropertySheetPanel();
-    sheet.setRestoreToggleStates(true);
-    sheet.setSorting(true);
-    sheet.setSortingProperties(true);
-    sheet.setSortingCategories(true);
-    sheet.setMode(PropertySheet.VIEW_AS_CATEGORIES);
-    sheet.setDescriptionVisible(true);
-    inspectorPanel.add(sheet);
+    this.inspectorSheetPanel = new SceneSheetPanel();
+    inspectorSheetPanel.setRestoreToggleStates(true);
+    inspectorSheetPanel.setSorting(true);
+    inspectorSheetPanel.setSortingProperties(true);
+    inspectorSheetPanel.setSortingCategories(true);
+    inspectorSheetPanel.setMode(PropertySheet.VIEW_AS_CATEGORIES);
+    inspectorSheetPanel.setDescriptionVisible(true);
+    inspectorPanel.add(inspectorSheetPanel);
     
     JPanel autoTilesPanel = new JPanel();
     autoTilesPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -461,6 +465,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
           e.printStackTrace();
         }
       }
+      
       updateInfoForInspector();
       
       while (running) {
@@ -498,10 +503,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     DefaultComboBoxModel<String> tilesetModel = new DefaultComboBoxModel<String>();
 
     ArrayList<Tileset> tilesets = G.db.getTilesets();
-    for (Tileset tileset : tilesets) {
-      tilesetModel.addElement(tileset.getName());
-    }
-    //tilesetComboBox.setModel(tilesetModel);
 
     autoTileList.setSelectedIndex(tilesets.indexOf(scene.getTerrain().getTileset()));
     
@@ -514,6 +515,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   }
   
   private void updateInfoForInspector() {
+    new DefaultBeanBinder(new SceneInspect(this.gameManager.getWorldEditScreen()), inspectorSheetPanel);
     updateInfoForAutotileBrush();
     updateSelectedBrush();
   }
