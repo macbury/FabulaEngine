@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Array;
 import com.l2fprod.common.beans.BaseBeanInfo;
 import com.l2fprod.common.beans.ExtendedPropertyDescriptor;
 import com.l2fprod.common.beans.editor.ComboBoxPropertyEditor;
+import com.l2fprod.common.beans.editor.DimensionPropertyEditor;
 import com.l2fprod.common.beans.editor.FloatPropertyEditor;
 import com.macbury.fabula.editor.brushes.AutoTileBrush.PaintMode;
 import com.macbury.fabula.manager.G;
@@ -27,6 +28,11 @@ public class SceneInspectBeanInfo extends BaseBeanInfo {
     tilesetProperty.setDisplayName("Tileset");
     tilesetProperty.setShortDescription("Change map autotiles texture");
     tilesetProperty.setPropertyEditorClass(TilesetEditor.class);
+    
+    ExtendedPropertyDescriptor sizeProperty = addProperty("mapSize").setCategory(CATEGORY_MAP);
+    sizeProperty.setDisplayName("Size");
+    sizeProperty.setShortDescription("Change map size");
+    sizeProperty.setPropertyEditorClass(DimensionPropertyEditor.class);
     
     ExtendedPropertyDescriptor shaderProperty = addProperty("shader").setCategory(CATEGORY_MAP);
     shaderProperty.setDisplayName("Shader");

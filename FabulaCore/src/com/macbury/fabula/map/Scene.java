@@ -173,7 +173,7 @@ public class Scene implements Disposable {
   public boolean save() {
     long start = System.currentTimeMillis();
     try {
-      GameDatabase.save(new ScenePersister(this), "maps/"+this.name+"."+FILE_EXT);
+      GameDatabase.save(new ScenePersister(this), getPath());
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -183,6 +183,10 @@ public class Scene implements Disposable {
     return true;
   }
   
+  public String getPath() {
+    return "maps/"+this.name+"."+FILE_EXT;
+  }
+
   @Override
   public void dispose() {
     this.terrain.dispose();

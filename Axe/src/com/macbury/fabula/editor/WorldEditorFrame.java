@@ -113,7 +113,7 @@ import javax.swing.JToggleButton;
 import javax.swing.Box;
 import javax.swing.JScrollBar;
 
-public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener, MouseListener, DropTargetListener, WindowListener, PropertyChangeListener  {
+public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener, WindowListener, PropertyChangeListener  {
   
   protected static final String TAG = "WorldEditorFrame";
   private JPanel contentPane;
@@ -211,12 +211,8 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mnMap.add(separator_1);
     
     this.mntmReloadMap = new JMenuItem("Reload");
-    mntmReloadMap.setEnabled(false);
+    mntmReloadMap.addActionListener(this);
     mnMap.add(mntmReloadMap);
-    
-    JMenuItem mntmResize = new JMenuItem("Resize");
-    mntmResize.setEnabled(false);
-    mnMap.add(mntmResize);
     
     JMenu mnGame = new JMenu("Game");
     mainMenuBar.add(mnGame);
@@ -347,7 +343,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     panel_9.setLayout(new BorderLayout(0, 0));
     
     JSplitPane inspectorAndOpenGlContainerSplitPane = new JSplitPane();
-    inspectorAndOpenGlContainerSplitPane.setResizeWeight(0.01);
+    inspectorAndOpenGlContainerSplitPane.setResizeWeight(0.001);
     panel_9.add(inspectorAndOpenGlContainerSplitPane, BorderLayout.CENTER);
     inspectorAndOpenGlContainerSplitPane.setContinuousLayout(true);
     
@@ -409,6 +405,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     toolbarGroup.add(tglbtnEventEditor);
     
     JSplitPane splitPane = new JSplitPane();
+    splitPane.setResizeWeight(0.9);
     splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
     splitPane.setContinuousLayout(true);
     panel_11.add(splitPane, BorderLayout.CENTER);
@@ -445,9 +442,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     autoTileList.setVisibleRowCount(0);
     autoTileList.setFixedCellWidth(AutoTiles.TILE_SIZE);
     autoTileList.setFixedCellHeight(AutoTiles.TILE_SIZE);
-    
-    DropTarget dt = new DropTarget(this.gameCanvas.getCanvas(), this);
-    
+
     Thread statusbarThread = new Thread(new StatusBarInfoRunnable());
     statusbarThread.start();
     
@@ -520,6 +515,8 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     new DefaultBeanBinder(new SceneInspect(this.gameManager.getWorldEditScreen()), inspectorSheetPanel);
     updateInfoForAutotileBrush();
     updateSelectedBrush();
+    updateInfoForMapSettings();
+    this.gameManager.getWorldEditScreen().setContainerFrame(this);
   }
   
   private void updateInfoForAutotileBrush() {
@@ -608,6 +605,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
       saveMap();
     }
     
+    if (e.getSource() == mntmReloadMap) {
+      reloadMap();
+    }
+    
     if (e.getSource() == mntmOpen) {
       openMap();
     }
@@ -638,6 +639,12 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     updateSelectedBrush();
   }
 
+  private void reloadMap() {
+    resetEditor();
+    
+    this.gameManager.getWorldEditScreen().openMap(G.fs(this.gameManager.getWorldEditScreen().getScene().getPath()).file());
+  }
+
   private void updateSelectedBrush() {
     WorldEditScreen screen = this.gameManager.getWorldEditScreen();
     Scene scene            = screen.getScene();
@@ -656,7 +663,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     if (tglbtnEventEditor.isSelected()) {
       screen.setCurrentBrush(screen.getEventBrush());
     }
-    
+    screen.getCurrentBrush().setWorldEditScreen(screen);
     screen.getCurrentBrush().setChangeManager(this.changeManager);
   }
 
@@ -738,89 +745,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     this.mntmRedo.setEnabled(changeManager.canRedo());
   }
 
-
-  @Override
-  public void mouseClicked(MouseEvent arg0) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public void mouseEntered(MouseEvent arg0) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public void mouseExited(MouseEvent arg0) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public void mousePressed(MouseEvent e) {
-    /*if (e.getSource() == gameTree && e.getClickCount() == 2) {
-      TreePath selPath = gameTree.getPathForLocation(e.getX(), e.getY());
-      if (selPath != null) {
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)selPath.getLastPathComponent();
-        if (GameShaderNode.class.isInstance(node)) {
-          this.shaderEditorFrame       = new ShaderEditorFrame(node.getUserObject().toString());
-          shaderEditorFrame.setVisible(true);
-        }
-        
-        if (gameTree.getModel().getRoot() == node) {
-          AssetEditorDialog editor = new AssetEditorDialog();
-          editor.setVisible(true);
-        }
-      }
-    }*/
-  }
-
-  @Override
-  public void mouseReleased(MouseEvent arg0) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public void dragEnter(DropTargetDragEvent dtde) {
-    Gdx.app.log(TAG, "dragEnter<><><><><><><");
-    //TODO: set for world screen drag element
-  }
-
-  @Override
-  public void dragExit(DropTargetEvent dtde) {
-    Gdx.app.log(TAG, "dragExit");
-    //TODO: remove drag from world screen
-  }
-
-  @Override
-  public void dragOver(DropTargetDragEvent arg0) {
-    Gdx.app.log(TAG, "dragOver");
-  }
-
-  @Override
-  public void drop(DropTargetDropEvent dtde) {
-    //TODO: apply element
-    Transferable tr = dtde.getTransferable();
-    try {
-      BaseGameFolderNode node = (BaseGameFolderNode)tr.getTransferData(GameTransferableHandler.GAME_TRANSFERABLE_FLAVOR);
-      
-      WorldEditScreen screen = this.gameManager.getWorldEditScreen();
-      screen.onDrop(node);
-      dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
-      dtde.dropComplete(true);
-    } catch (UnsupportedFlavorException | IOException e) {
-      e.printStackTrace();
-      dtde.dropComplete(false);
-    }
-  }
-
-  @Override
-  public void dropActionChanged(DropTargetDragEvent arg0) {
-    // TODO Auto-generated method stub
-    
-  }
 
   @Override
   public void windowActivated(WindowEvent arg0) {

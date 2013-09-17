@@ -1,5 +1,10 @@
 package com.macbury.fabula.editor.inspector;
 
+import java.awt.Dimension;
+import java.awt.Point;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyVetoException;
+
 import com.macbury.fabula.editor.brushes.AutoTileBrush.PaintMode;
 import com.macbury.fabula.screens.WorldEditScreen;
 
@@ -41,4 +46,16 @@ public class SceneInspect {
   public String getPaintMode() {
     return screen.getAutoTileBrush().getCurrentPaintMode().toString();
   }
+  
+  public void setMapSize(Dimension dimension) throws PropertyVetoException {
+    if (!screen.getScene().getTerrain().resize(dimension.width, dimension.height)) {
+      throw new PropertyVetoException("Error", new PropertyChangeEvent(this, "mapSize", getMapSize(), dimension));
+    }
+  }
+  
+  public Dimension getMapSize() {
+    return new Dimension(screen.getScene().getTerrain().getColumns(), screen.getScene().getTerrain().getRows());
+  }
+  
+  
 }

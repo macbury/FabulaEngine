@@ -1,6 +1,7 @@
 package com.macbury.fabula.terrain;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Stack;
 
 import org.simpleframework.xml.core.Commit;
@@ -316,5 +317,31 @@ public class Terrain implements Disposable {
       }
     }
     return false;
+  }
+
+  public boolean resize(int width, int height) {
+    if (width < columns || height < rows) {
+      return false;
+    }
+    
+    Tile[][] tempTiles = new Tile[width][height];
+    
+    for (int x = 0; x < width; x++) {
+      try {
+        tempTiles[x] = Arrays.copyOf(tiles[x], height);
+      } catch (ArrayIndexOutOfBoundsException e) {
+        tempTiles[x] = new Tile[height];
+      }
+      
+    }
+    
+    this.tiles = tempTiles;
+    
+    rows    = height;
+    columns = width;
+    fillEmptyTilesWithDebugTile();
+    buildSectors();
+    
+    return true;
   }
 }
