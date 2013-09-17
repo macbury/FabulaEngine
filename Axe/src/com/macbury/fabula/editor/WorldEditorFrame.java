@@ -102,6 +102,8 @@ import com.macbury.fabula.screens.WorldEditScreen;
 import com.macbury.fabula.terrain.AutoTile;
 import com.macbury.fabula.terrain.AutoTiles;
 import com.macbury.fabula.terrain.Tileset;
+import javax.swing.JToolBar;
+import javax.swing.JToggleButton;
 
 public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener, MouseListener, DropTargetListener, WindowListener  {
   
@@ -110,15 +112,8 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private LwjglCanvas gameCanvas;
   public JLabel statusBarLabel;
   private EditorGameManager gameManager;
-  private JTabbedPane tabbedInspectorPane;
-  private JSpinner terrainBrushAmountSpinner;
   private JList autoTileList;
   private IconListRenderer autoTileListRenderer;
-  private JTextField txtAmbientColor;
-  private JTextField txtDirectionalLightColor;
-  private JSpinner lightPositionZSpinner;
-  private JSpinner lightPositionYSpinner;
-  private JSpinner lightPositionXSpinner;
   private JComboBox paintModeComboBox;
   private JMenuItem mntmBuildTileMap;
   private AutoTileDebugFrame autoTileDebugFrame;
@@ -132,11 +127,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private ChangeManager changeManager;
   private JMenuItem mntmUndo;
   private JMenuItem mntmRedo;
-  private JComboBox shadersComboBox;
-  private JButton btnPickAmbientColor;
-  private JButton btnPickDirectionalLightColor;
   private JMenuItem mntmSaveGame;
-  private JComboBox tilesetComboBox;
   private JMenuItem mntmOpen;
   private JMenuItem mntmNew;
   private JMenuItem mntmReloadMap;
@@ -148,6 +139,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JMenuItem mntmSetStartPosition;
   private JRadioButtonMenuItem rdbtnmntmDevice;
   private JRadioButtonMenuItem rdbtnmntmEmulator;
+  private ButtonGroup toolbarGroup;
+  private JToggleButton tglbtnTerrainEdit;
+  private JToggleButton tglbtnAutoTileEdit;
+  private JToggleButton tglbtnEventEditor;
   public WorldEditorFrame(EditorGameManager game) {
     PrintStream origOut = System.out;
     PrintStream interceptor = new LogInterceptor(origOut);
@@ -344,6 +339,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     panel_9.setLayout(new BorderLayout(0, 0));
     
     JSplitPane inspectorAndOpenGlContainerSplitPane = new JSplitPane();
+    inspectorAndOpenGlContainerSplitPane.setResizeWeight(0.001);
     panel_9.add(inspectorAndOpenGlContainerSplitPane, BorderLayout.CENTER);
     inspectorAndOpenGlContainerSplitPane.setContinuousLayout(true);
     
@@ -377,198 +373,41 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     inspectorAndOpenGlContainerSplitPane.setLeftComponent(panel_11);
     panel_11.setLayout(new BorderLayout(0, 0));
     
-    this.tabbedInspectorPane = new JTabbedPane(JTabbedPane.TOP);
-    panel_11.add(tabbedInspectorPane);
     
-    tabbedInspectorPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+    this.toolbarGroup = new ButtonGroup();
     
-    JPanel panel_6 = new JPanel();
-    panel_6.setBackground(Color.WHITE);
-    tabbedInspectorPane.addTab("", new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/settings.png")), panel_6, null);
-    panel_6.setLayout(new FormLayout(new ColumnSpec[] {
-        ColumnSpec.decode("5px"),
-        FormFactory.DEFAULT_COLSPEC,
-        FormFactory.RELATED_GAP_COLSPEC,
-        ColumnSpec.decode("default:grow"),
-        ColumnSpec.decode("5px"),
-        FormFactory.DEFAULT_COLSPEC,
-        FormFactory.RELATED_GAP_COLSPEC,},
-      new RowSpec[] {
-        FormFactory.RELATED_GAP_ROWSPEC,
-        FormFactory.DEFAULT_ROWSPEC,
-        FormFactory.RELATED_GAP_ROWSPEC,
-        FormFactory.DEFAULT_ROWSPEC,
-        FormFactory.RELATED_GAP_ROWSPEC,
-        FormFactory.DEFAULT_ROWSPEC,
-        FormFactory.RELATED_GAP_ROWSPEC,
-        FormFactory.DEFAULT_ROWSPEC,
-        FormFactory.RELATED_GAP_ROWSPEC,
-        FormFactory.DEFAULT_ROWSPEC,
-        FormFactory.RELATED_GAP_ROWSPEC,
-        FormFactory.DEFAULT_ROWSPEC,
-        FormFactory.RELATED_GAP_ROWSPEC,
-        FormFactory.DEFAULT_ROWSPEC,
-        FormFactory.RELATED_GAP_ROWSPEC,
-        FormFactory.DEFAULT_ROWSPEC,}));
+    JToolBar toolBar = new JToolBar();
+    toolBar.setFloatable(false);
+    panel_11.add(toolBar, BorderLayout.NORTH);
     
-    JLabel lblPostProcessing = new JLabel("Post processing");
-    panel_6.add(lblPostProcessing, "2, 2, right, default");
+    this.tglbtnTerrainEdit = new JToggleButton("");
+    tglbtnTerrainEdit.addActionListener(this);
+    tglbtnTerrainEdit.setSelected(true);
+    tglbtnTerrainEdit.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/map.png")));
+    toolBar.add(tglbtnTerrainEdit);
+    toolbarGroup.add(tglbtnTerrainEdit);
     
-    this.shadersComboBox = new JComboBox();
-    shadersComboBox.addActionListener(this);
-    panel_6.add(shadersComboBox, "4, 2, fill, default");
+    this.tglbtnAutoTileEdit = new JToggleButton("");
+    tglbtnAutoTileEdit.addActionListener(this);
+    tglbtnAutoTileEdit.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/tiles.png")));
+    toolBar.add(tglbtnAutoTileEdit);
+    toolbarGroup.add(tglbtnAutoTileEdit);
     
-    JLabel lblNewLabel_6 = new JLabel("Tileset");
-    panel_6.add(lblNewLabel_6, "2, 4, right, default");
+    this.tglbtnEventEditor = new JToggleButton("");
+    tglbtnEventEditor.addActionListener(this);
+    tglbtnEventEditor.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/shaders.png")));
+    toolBar.add(tglbtnEventEditor);
+    toolbarGroup.add(tglbtnEventEditor);
     
-    this.tilesetComboBox = new JComboBox();
-    tilesetComboBox.addItemListener(this);
-    panel_6.add(tilesetComboBox, "4, 4, fill, default");
+    JSplitPane splitPane = new JSplitPane();
+    splitPane.setResizeWeight(0.9);
+    splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+    splitPane.setContinuousLayout(true);
+    panel_11.add(splitPane, BorderLayout.CENTER);
     
-    JLabel lblNewLabel_3 = new JLabel("Ambient Color:");
-    panel_6.add(lblNewLabel_3, "2, 6, right, default");
-    
-    txtAmbientColor = new JTextField();
-    txtAmbientColor.setText("#ffffff");
-    txtAmbientColor.setHorizontalAlignment(SwingConstants.LEFT);
-    panel_6.add(txtAmbientColor, "4, 6, fill, default");
-    txtAmbientColor.setColumns(10);
-    
-    this.btnPickAmbientColor = new JButton("...");
-    btnPickAmbientColor.addActionListener(this);
-    panel_6.add(btnPickAmbientColor, "6, 6, center, default");
-    
-    JLabel lblDirectionalLightColor = new JLabel("Directional light color");
-    panel_6.add(lblDirectionalLightColor, "2, 8, right, default");
-    
-    txtDirectionalLightColor = new JTextField();
-    txtDirectionalLightColor.setText("#ffffff");
-    panel_6.add(txtDirectionalLightColor, "4, 8, fill, default");
-    txtDirectionalLightColor.setColumns(10);
-    
-    this.btnPickDirectionalLightColor = new JButton("...");
-    btnPickDirectionalLightColor.addActionListener(this);
-    panel_6.add(btnPickDirectionalLightColor, "6, 8");
-    
-    JLabel lblLightPosition = new JLabel("Light position X:");
-    panel_6.add(lblLightPosition, "2, 10, right, default");
-    
-    this.lightPositionXSpinner = new JSpinner();
-    lightPositionXSpinner.addChangeListener(this);
-    lightPositionXSpinner.setModel(new SpinnerNumberModel(new Float(0), new Float(-1000), new Float(1000), new Float(0.010f)));
-    panel_6.add(lightPositionXSpinner, "4, 10");
-    
-    JLabel lblLightPositionY = new JLabel("Light position Y:");
-    panel_6.add(lblLightPositionY, "2, 12, right, default");
-    
-    this.lightPositionYSpinner = new JSpinner();
-    lightPositionYSpinner.addChangeListener(this);
-    lightPositionYSpinner.setModel(new SpinnerNumberModel(new Float(0), new Float(-1000), new Float(1000), new Float(0.010f)));
-    panel_6.add(lightPositionYSpinner, "4, 12");
-    
-    JLabel lblLightPositionZ = new JLabel("Light position Z:");
-    panel_6.add(lblLightPositionZ, "2, 14, right, default");
-    
-    this.lightPositionZSpinner = new JSpinner();
-    lightPositionZSpinner.addChangeListener(this);
-    lightPositionZSpinner.setModel(new SpinnerNumberModel(new Float(0), new Float(-1000), new Float(1000), new Float(0.010f)));
-    panel_6.add(lightPositionZSpinner, "4, 14");
-    
-    JPanel panel = new JPanel();
-    panel.setBackground(SystemColor.window);
-    tabbedInspectorPane.addTab("", new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/map.png")), panel, null);
-    panel.setLayout(new FormLayout(new ColumnSpec[] {
-        ColumnSpec.decode("left:4dlu"),
-        ColumnSpec.decode("left:default"),
-        FormFactory.RELATED_GAP_COLSPEC,
-        FormFactory.DEFAULT_COLSPEC,
-        FormFactory.RELATED_GAP_COLSPEC,
-        ColumnSpec.decode("default:grow"),
-        ColumnSpec.decode("right:4dlu"),},
-      new RowSpec[] {
-        FormFactory.RELATED_GAP_ROWSPEC,
-        FormFactory.DEFAULT_ROWSPEC,
-        FormFactory.RELATED_GAP_ROWSPEC,
-        FormFactory.DEFAULT_ROWSPEC,
-        FormFactory.RELATED_GAP_ROWSPEC,
-        FormFactory.DEFAULT_ROWSPEC,}));
-    
-    JLabel lblNewLabel_1 = new JLabel("Power");
-    panel.add(lblNewLabel_1, "2, 2");
-    
-    this.terrainBrushAmountSpinner = new JSpinner();
-    terrainBrushAmountSpinner.addChangeListener(this);
-    terrainBrushAmountSpinner.setModel(new SpinnerNumberModel(new Float(0), null, null, new Float(0.5f)));
-    panel.add(terrainBrushAmountSpinner, "6, 2");
-    
-    JPanel panel_1 = new JPanel();
-    tabbedInspectorPane.addTab("", new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/tiles.png")), panel_1, null);
-    panel_1.setLayout(new BorderLayout(0, 0));
-    
-    this.paintModeComboBox = new JComboBox();
-    paintModeComboBox.addItemListener(this);
-    
-    this.autoTileList = new JList(new Object[] { });
-    panel_1.add(new JScrollPane(autoTileList), BorderLayout.CENTER);
-    autoTileList.setValueIsAdjusting(true);
-    autoTileList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-    autoTileList.setBorder(new EmptyBorder(0, 0, 0, 0));
-    autoTileList.addListSelectionListener(this);
-    autoTileList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    autoTileList.setVisibleRowCount(0);
-    autoTileList.setFixedCellWidth(AutoTiles.TILE_SIZE);
-    autoTileList.setFixedCellHeight(AutoTiles.TILE_SIZE);
-    paintModeComboBox.setModel(new DefaultComboBoxModel(PaintMode.values()));
-    panel_1.add(paintModeComboBox, BorderLayout.NORTH);
-    
-    JPanel panel_7 = new JPanel();
-    tabbedInspectorPane.addTab("", new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/grass.png")), panel_7, null);
-    
-    JPanel panel_4 = new JPanel();
-    tabbedInspectorPane.addTab("", new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/liquid.png")), panel_4, null);
-    
-    JPanel panel_2 = new JPanel();
-    tabbedInspectorPane.addTab("", new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/model.png")), panel_2, null);
-    panel_2.setLayout(new FormLayout(new ColumnSpec[] {
-        ColumnSpec.decode("15px"),
-        FormFactory.RELATED_GAP_COLSPEC,
-        ColumnSpec.decode("max(19dlu;default)"),
-        ColumnSpec.decode("default:grow"),
-        ColumnSpec.decode("15px"),},
-      new RowSpec[] {
-        FormFactory.RELATED_GAP_ROWSPEC,
-        FormFactory.DEFAULT_ROWSPEC,
-        FormFactory.RELATED_GAP_ROWSPEC,
-        FormFactory.DEFAULT_ROWSPEC,
-        FormFactory.RELATED_GAP_ROWSPEC,
-        FormFactory.DEFAULT_ROWSPEC,}));
-    
-    JLabel lblNewLabel = new JLabel("X");
-    panel_2.add(lblNewLabel, "3, 2, center, default");
-    
-    JSpinner spinner = new JSpinner();
-    panel_2.add(spinner, "4, 2");
-    
-    JLabel lblNewLabel_2 = new JLabel("Y");
-    panel_2.add(lblNewLabel_2, "3, 4, center, default");
-    
-    JSpinner spinner_1 = new JSpinner();
-    panel_2.add(spinner_1, "4, 4");
-    
-    JLabel lblNewLabel_4 = new JLabel("Z");
-    panel_2.add(lblNewLabel_4, "3, 6, center, default");
-    
-    JSpinner spinner_2 = new JSpinner();
-    panel_2.add(spinner_2, "4, 6");
-    
-    JPanel panel_3 = new JPanel();
-    tabbedInspectorPane.addTab("", new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/shaders.png")), panel_3, null);
-    
-    JPanel panel_10 = new JPanel();
-    panel_10.setBackground(Color.WHITE);
-    tabbedInspectorPane.addTab("New tab", null, panel_10, null);
-    tabbedInspectorPane.addChangeListener(this);
-    panel_10.setLayout(new BorderLayout(0, 0));
+    JPanel inspectorPanel = new JPanel();
+    splitPane.setRightComponent(inspectorPanel);
+    inspectorPanel.setLayout(new BorderLayout(0, 0));
     
     PropertySheetPanel sheet = new PropertySheetPanel();
     sheet.setRestoreToggleStates(true);
@@ -577,7 +416,29 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     sheet.setSortingCategories(true);
     sheet.setMode(PropertySheet.VIEW_AS_CATEGORIES);
     sheet.setDescriptionVisible(true);
-    panel_10.add(sheet);
+    inspectorPanel.add(sheet);
+    
+    JPanel autoTilesPanel = new JPanel();
+    autoTilesPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
+    splitPane.setLeftComponent(autoTilesPanel);
+    
+    this.paintModeComboBox = new JComboBox();
+    paintModeComboBox.addItemListener(this);
+    autoTilesPanel.setLayout(new BorderLayout(0, 0));
+    paintModeComboBox.setModel(new DefaultComboBoxModel(PaintMode.values()));
+    autoTilesPanel.add(paintModeComboBox, BorderLayout.NORTH);
+    
+    this.autoTileList = new JList(new Object[] { });
+    JScrollPane autoTileScrollPane = new JScrollPane(autoTileList);
+    autoTilesPanel.add(autoTileScrollPane, BorderLayout.CENTER);
+    autoTileList.setValueIsAdjusting(true);
+    autoTileList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+    autoTileList.setBorder(null);
+    autoTileList.addListSelectionListener(this);
+    autoTileList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    autoTileList.setVisibleRowCount(0);
+    autoTileList.setFixedCellWidth(AutoTiles.TILE_SIZE);
+    autoTileList.setFixedCellHeight(AutoTiles.TILE_SIZE);
     
     DropTarget dt = new DropTarget(this.gameCanvas.getCanvas(), this);
     
@@ -600,8 +461,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
           e.printStackTrace();
         }
       }
-      
-      updateInfoForMapSettings();
+      updateInfoForInspector();
       
       while (running) {
         try {
@@ -619,49 +479,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     WorldEditScreen screen = this.gameManager.getWorldEditScreen();
     Scene scene = screen.getScene();
     DirectionalLight sun = scene.getSunLight();
-    
-    if (e.getSource() == tabbedInspectorPane) {
-      G.db.save();
-      switch (tabbedInspectorPane.getSelectedIndex()) {
-        case 0:
-          updateInfoForMapSettings();
-          screen.setCurrentBrush(null);
-        break;
-        case 1:
-          screen.setCurrentBrush(screen.getTerrainBrush());
-          updateInfoForTerrainBrush();
-        break;
-        
-        case 2:
-          screen.setCurrentBrush(screen.getAutoTileBrush());
-          updateInfoForAutotileBrush();
-        break;
-        
-        case 6:
-          screen.setCurrentBrush(screen.getEventBrush());
-        break;
-        
-        default:
-          screen.setCurrentBrush(null);
-        break;
-      }
-    }
-    
-    if (e.getSource() == lightPositionXSpinner) {
-      sun.direction.x = (float) lightPositionXSpinner.getValue();
-    }
-    
-    if (e.getSource() == lightPositionYSpinner) {
-      sun.direction.y = (float) lightPositionYSpinner.getValue();
-    }
-    
-    if (e.getSource() == lightPositionZSpinner) {
-      sun.direction.z = (float) lightPositionZSpinner.getValue();
-    }
-    
-    if (e.getSource() == terrainBrushAmountSpinner) {
-      this.gameManager.getWorldEditScreen().getTerrainBrush().setPower((float)terrainBrushAmountSpinner.getValue());
-    }
   }
 
   private void updateInfoForMapSettings() {
@@ -671,12 +488,12 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     DirectionalLight sun = scene.getSunLight();
     this.gameManager.getWorldEditScreen().setChangeManager(changeManager);
-    this.lightPositionXSpinner.setValue(sun.direction.x);
+    /*this.lightPositionXSpinner.setValue(sun.direction.x);
     this.lightPositionYSpinner.setValue(sun.direction.y);
-    this.lightPositionZSpinner.setValue(sun.direction.z);
+    this.lightPositionZSpinner.setValue(sun.direction.z);*/
     
     Array<String> shadersName = G.shaders.getAllShaderNames().toArray();
-    shadersComboBox.setModel(new DefaultComboBoxModel(shadersName.toArray(String.class)));
+    //shadersComboBox.setModel(new DefaultComboBoxModel(shadersName.toArray(String.class)));
     
     DefaultComboBoxModel<String> tilesetModel = new DefaultComboBoxModel<String>();
 
@@ -684,7 +501,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     for (Tileset tileset : tilesets) {
       tilesetModel.addElement(tileset.getName());
     }
-    tilesetComboBox.setModel(tilesetModel);
+    //tilesetComboBox.setModel(tilesetModel);
 
     autoTileList.setSelectedIndex(tilesets.indexOf(scene.getTerrain().getTileset()));
     
@@ -695,7 +512,12 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     }
     
   }
-
+  
+  private void updateInfoForInspector() {
+    updateInfoForAutotileBrush();
+    updateSelectedBrush();
+  }
+  
   private void updateInfoForAutotileBrush() {
     AutoTileBrush atBrush     = this.gameManager.getWorldEditScreen().getAutoTileBrush();
     atBrush.setPaintMode((PaintMode) this.paintModeComboBox.getSelectedItem());
@@ -719,7 +541,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   }
 
   private void updateInfoForTerrainBrush() {
-    terrainBrushAmountSpinner.setValue(this.gameManager.getWorldEditScreen().getTerrainBrush().getPower());
+    //terrainBrushAmountSpinner.setValue(this.gameManager.getWorldEditScreen().getTerrainBrush().getPower());
   }
 
   @Override
@@ -729,10 +551,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     Scene scene            = screen.getScene();
     if (e.getSource() == paintModeComboBox) {
       updateInfoForAutotileBrush();
-    }
-    
-    if (e.getSource() == tilesetComboBox) {
-      scene.getTerrain().setTileset((String)tilesetComboBox.getSelectedItem());
     }
   }
 
@@ -805,24 +623,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
       changeManager.redo();
     }
     
-    if (e.getSource() == btnPickAmbientColor) {
-      Color color = new Color(scene.getLights().ambientLight.r, scene.getLights().ambientLight.g, scene.getLights().ambientLight.b, scene.getLights().ambientLight.a);
-      color = JColorChooser.showDialog(this, "Ambient Color", color);
-      txtAmbientColor.setText("#"+Integer.toHexString(color.getRGB()).toUpperCase());
-      scene.getLights().ambientLight.set(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-    }
-    
-    if (e.getSource() == btnPickDirectionalLightColor) {
-      Color color = new Color(scene.getSunLight().color.r, scene.getSunLight().color.g, scene.getSunLight().color.b, scene.getSunLight().color.a);
-      color = JColorChooser.showDialog(this, "Directional light Color", color);
-      txtDirectionalLightColor.setText("#"+Integer.toHexString(color.getRGB()).toUpperCase());
-      scene.getSunLight().color.set(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-    }
-    
-    if (e.getSource() == shadersComboBox) {
-      screen.getScene().setFinalShader((String)shadersComboBox.getSelectedItem());
-    }
-    
     if (e.getSource() == mntmSetStartPosition) {
       screen.getEventBrush().placeStartPosition();
     }
@@ -834,6 +634,23 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     if (e.getSource() == mntmForceAppStop) {
       AdbManager.stopApplication(GameManager.ANDROID_APP_PACKAGE);
     }
+    
+    updateSelectedBrush();
+  }
+
+  private void updateSelectedBrush() {
+    WorldEditScreen screen = this.gameManager.getWorldEditScreen();
+    Scene scene            = screen.getScene();
+    AutoTileBrush brush    = screen.getAutoTileBrush();
+    if (tglbtnTerrainEdit.isSelected()) {
+      screen.setCurrentBrush(screen.getTerrainBrush());
+    }
+    
+    if (tglbtnAutoTileEdit.isSelected()) {
+      screen.setCurrentBrush(screen.getAutoTileBrush());
+    }
+    
+    screen.getCurrentBrush().setChangeManager(this.changeManager);
   }
 
   private void refreshDevices() {
@@ -856,8 +673,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   }
 
   private void resetEditor() {
-    tabbedInspectorPane.setSelectedIndex(0);
-    updateInfoForMapSettings();
+    updateInfoForInspector();
     changeManager.clear();
   }
 
