@@ -262,6 +262,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
 
   @Override
   public boolean touchUp(int x, int y, int pointer, int button) {
+    boolean result = false;
     if (button == Buttons.LEFT && currentBrush != null) {
       isDragging  = false;
       Vector3 pos = getPositionForMouse(x, y);
@@ -271,9 +272,11 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
       }
       currentBrush.setStartPosition(null);
       this.brushTimer.stop();
-      return true;
+      result = true;
     }
-    return false;
+    
+    getContainerFrame().updateInfoForInspector();
+    return result;
   }
 
   @Override

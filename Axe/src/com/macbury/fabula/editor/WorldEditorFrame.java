@@ -511,7 +511,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
   }
   
-  private void updateInfoForInspector() {
+  public void updateInfoForInspector() {
     new DefaultBeanBinder(new SceneInspect(this.gameManager.getWorldEditScreen()), inspectorSheetPanel);
     updateInfoForAutotileBrush();
     updateSelectedBrush();
@@ -816,5 +816,9 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
       }
     });
     
+  }
+
+  public SceneSheetPanel getInspector() {
+    return inspectorSheetPanel;
   }
 }

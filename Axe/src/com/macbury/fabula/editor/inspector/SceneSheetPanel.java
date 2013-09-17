@@ -13,6 +13,10 @@ import com.macbury.fabula.screens.WorldEditScreen;
 public class SceneSheetPanel extends PropertySheetPanel {
   private SceneInspect bean;
 
+  public void refresh() {
+    //getTable().
+  }
+
  
   
 }

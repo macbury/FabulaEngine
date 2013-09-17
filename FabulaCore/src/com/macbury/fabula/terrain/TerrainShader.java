@@ -46,9 +46,12 @@ public class TerrainShader implements Shader {
     context.setCullFace(GL20.GL_BACK);
     G.shaders.begin(shaderName);
     G.shaders.setUniformMatrix("u_projectionViewMatrix", camera.combined);
-    G.shaders.getCurrent().setUniformf("u_ambient_color", lights.ambientLight);
-    G.shaders.getCurrent().setUniformf("u_light_color", lights.directionalLights.get(0).color);
-    G.shaders.getCurrent().setUniformf("u_light_direction", lights.directionalLights.get(0).direction);
+    if (lights != null) {
+      G.shaders.getCurrent().setUniformf("u_ambient_color", lights.ambientLight);
+      G.shaders.getCurrent().setUniformf("u_light_color", lights.directionalLights.get(0).color);
+      G.shaders.getCurrent().setUniformf("u_light_direction", lights.directionalLights.get(0).direction);
+    }
+    
     
     TextureAttribute textureAttr = (TextureAttribute) terrainMaterial.get(TextureAttribute.Diffuse);
     G.shaders.setUniformi("u_texture0", context.textureBinder.bind(textureAttr.textureDescription));

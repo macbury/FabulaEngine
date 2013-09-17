@@ -3,6 +3,7 @@ package com.macbury.fabula.editor.brushes;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.macbury.fabula.editor.undo_redo.Changeable;
 import com.macbury.fabula.editor.undo_redo.TileChanger;
 import com.macbury.fabula.terrain.Terrain;
@@ -19,18 +20,22 @@ public class TerrainBrush extends Brush {
   
   @Override
   public void onApply() {
-    TileChanger changer = saveStateToChanger();
-    
-    for (Tile tile : brushTiles) {
-      tile.setY(power);
-    }
-    
-    for (int i = 0; i < this.borderBrushTiles.size(); i++) {
-      this.applySlope(this.borderBrushTiles.get(i));
-    }
-    
-    if (changer.haveTiles()) {
-      changeManager.addChangeable(changer);
+    if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) && brushTiles.size() > 0) {
+      setPower(brushTiles.get(0).getY());
+    } else {
+      TileChanger changer = saveStateToChanger();
+      
+      for (Tile tile : brushTiles) {
+        tile.setY(power);
+      }
+      
+      for (int i = 0; i < this.borderBrushTiles.size(); i++) {
+        this.applySlope(this.borderBrushTiles.get(i));
+      }
+      
+      if (changer.haveTiles()) {
+        changeManager.addChangeable(changer);
+      }
     }
   }
   

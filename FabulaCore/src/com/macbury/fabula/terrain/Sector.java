@@ -127,27 +127,27 @@ public class Sector extends Renderable implements Disposable {
     //bottom
     /* Top Right Vertex */
     n1 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    ////triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV());
-    triangleGrid.addNormal();
+    ////triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* Top left Vertex */
     n2 = triangleGrid.addVertex(x, tile.getY1(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* Bottom right Vertex */
     n3 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -156,9 +156,9 @@ public class Sector extends Renderable implements Disposable {
     
     /* Bottom left Vertex */
     n1 = triangleGrid.addVertex(x, tile.getY2(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -176,27 +176,27 @@ public class Sector extends Renderable implements Disposable {
     
     /* bottom right Vertex */
     n1 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* top right Vertex */
     n2 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* bottom left Vertex */
     n3 = triangleGrid.addVertex(x, tile.getY2(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -205,9 +205,9 @@ public class Sector extends Renderable implements Disposable {
     
     /* Bottom left Vertex */
     n1 = triangleGrid.addVertex(x, tile.getY1(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -225,27 +225,27 @@ public class Sector extends Renderable implements Disposable {
     
     /* bottom right Vertex */
     n1 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* top right Vertex */
     n2 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* bottom left Vertex */
     n3 = triangleGrid.addVertex(x, tile.getY2(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -254,9 +254,9 @@ public class Sector extends Renderable implements Disposable {
     
     /* Bottom left Vertex */
     n1 = triangleGrid.addVertex(x, tile.getY1(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -274,27 +274,27 @@ public class Sector extends Renderable implements Disposable {
     //bottom
     /* Top Right Vertex */
     n1 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* Top left Vertex */
     n2 = triangleGrid.addVertex(x, tile.getY1(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* Bottom right Vertex */
     n3 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -303,9 +303,9 @@ public class Sector extends Renderable implements Disposable {
     
     /* Bottom left Vertex */
     n1 = triangleGrid.addVertex(x, tile.getY2(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -323,27 +323,27 @@ public class Sector extends Renderable implements Disposable {
     //bottom
     /* Top Right Vertex */
     n1 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* Top left Vertex */
     n2 = triangleGrid.addVertex(x, tile.getY1(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* Bottom right Vertex */
     n3 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -352,9 +352,9 @@ public class Sector extends Renderable implements Disposable {
     
     /* Bottom left Vertex */
     n1 = triangleGrid.addVertex(x, tile.getY2(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -372,27 +372,27 @@ public class Sector extends Renderable implements Disposable {
     
     /* bottom right Vertex */
     n1 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* top right Vertex */
     n2 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* bottom left Vertex */
     n3 = triangleGrid.addVertex(x, tile.getY2(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -401,9 +401,9 @@ public class Sector extends Renderable implements Disposable {
     
     /* Bottom left Vertex */
     n1 = triangleGrid.addVertex(x, tile.getY1(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -421,27 +421,27 @@ public class Sector extends Renderable implements Disposable {
     
     /* bottom right Vertex */
     n1 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* top right Vertex */
     n2 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* bottom left Vertex */
     n3 = triangleGrid.addVertex(x, tile.getY2(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -450,9 +450,9 @@ public class Sector extends Renderable implements Disposable {
     
     /* Bottom left Vertex */
     n1 = triangleGrid.addVertex(x, tile.getY1(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -470,27 +470,27 @@ public class Sector extends Renderable implements Disposable {
     
     /* Top right Vertex */
     n1 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* top left Vertex */
     n2 = triangleGrid.addVertex(x, tile.getY1(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* bottom Right Vertex */
     n3 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -499,9 +499,9 @@ public class Sector extends Renderable implements Disposable {
     
     /* Bottom left Vertex */
     n1 = triangleGrid.addVertex(x, tile.getY2(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -519,27 +519,27 @@ public class Sector extends Renderable implements Disposable {
  // horizontal left
     /* bottom right Vertex */
     n1 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* top right Vertex */
     n2 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* bottom left Vertex */
     n3 = triangleGrid.addVertex(x, tile.getY2(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -548,9 +548,9 @@ public class Sector extends Renderable implements Disposable {
     
     /* top left Vertex */
     n1 = triangleGrid.addVertex(x, tile.getY1(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -568,27 +568,27 @@ public class Sector extends Renderable implements Disposable {
  // horizontal right
     /* Top left Vertex */
     n1 = triangleGrid.addVertex(x, tile.getY1(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* bottom left Vertex */
     n2 = triangleGrid.addVertex(x, tile.getY2(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* top right Vertex */
     n3 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -597,9 +597,9 @@ public class Sector extends Renderable implements Disposable {
     
     /* bottom left Vertex */
     n1 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -617,27 +617,27 @@ public class Sector extends Renderable implements Disposable {
     // Top
     /* Bottom Right Vertex */
     n1 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* Bottom left Vertex */
     n3 = triangleGrid.addVertex(x, tile.getY2(), z+1);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* Top right Vertex */
     n2 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -646,9 +646,9 @@ public class Sector extends Renderable implements Disposable {
     
     /* Top left Vertex */
     n1 = triangleGrid.addVertex(x, tile.getY1(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -666,27 +666,27 @@ public class Sector extends Renderable implements Disposable {
     //bottom
     /* Top Right Vertex */
     n1 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* Top left Vertex */
     n2 = triangleGrid.addVertex(x, tile.getY1(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* Bottom right Vertex */
     n3 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -695,9 +695,9 @@ public class Sector extends Renderable implements Disposable {
     
     /* Bottom left Vertex */
     n1 = triangleGrid.addVertex(x, tile.getY2(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -715,27 +715,27 @@ public class Sector extends Renderable implements Disposable {
     
     /* Top left Vertex */
     n1 = triangleGrid.addVertex(x, tile.getY1(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* Bottom left Vertex */
     n2 = triangleGrid.addVertex(x, tile.getY2(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
     
     /* Top Right Vertex */
     n3 = triangleGrid.addVertex(x+1f, tile.getY3(), z);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }
@@ -744,9 +744,9 @@ public class Sector extends Renderable implements Disposable {
     
     /* Bottom right Vertex */
     n1 = triangleGrid.addVertex(x+1f, tile.getY4(), z+1f);
-    triangleGrid.addColorToVertex(255, 255, 255, 255);
+    //triangleGrid.addColorToVertex(255, 255, 255, 255);
     triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV2());
-    triangleGrid.addNormal();
+    //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
     }

@@ -163,12 +163,12 @@ public class TriangleGrid implements Disposable {
       this.verties[vertexCursor++] = vertex.position.y;
       this.verties[vertexCursor++] = vertex.position.z;
       
-      vertex.normal.nor();
-      this.verties[vertexCursor++] = vertex.normal.x;
-      this.verties[vertexCursor++] = vertex.normal.y;
-      this.verties[vertexCursor++] = vertex.normal.z;
+      //vertex.normal.nor();
+      //this.verties[vertexCursor++] = vertex.normal.x;
+      //this.verties[vertexCursor++] = vertex.normal.y;
+      //this.verties[vertexCursor++] = vertex.normal.z;
       
-      this.verties[vertexCursor++] = Color.toFloatBits(vertex.color.r, vertex.color.g, vertex.color.b, vertex.color.a);
+      //this.verties[vertexCursor++] = Color.toFloatBits(vertex.color.r, vertex.color.g, vertex.color.b, vertex.color.a);
       
       this.verties[vertexCursor++] = vertex.textureCordinates.x;
       this.verties[vertexCursor++] = vertex.textureCordinates.y;

@@ -139,9 +139,8 @@ public class Terrain implements Disposable {
     setTile((int)x, (int)z, tile);
   }
   
-  public void render(Camera camera, Lights lights, ModelBatch batch) {
+  public void render(Camera camera, ModelBatch batch) {
     visibleSectors.clear();
-    terrainShader.setLights(lights);
     terrainShader.setDebugListener(debugListener);
     visibleSectorCount  = 0;
     

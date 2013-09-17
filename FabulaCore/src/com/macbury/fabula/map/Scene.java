@@ -109,7 +109,7 @@ public class Scene implements Disposable {
     
     sm.beginFB(MAIN_FRAME_BUFFER);
       getModelBatch().begin(perspectiveCamera);
-        this.terrain.render(perspectiveCamera, lights, getModelBatch());
+        this.terrain.render(perspectiveCamera, getModelBatch());
       getModelBatch().end();
       renderDebugInfo();
       this.decalRenderingSystem.process();

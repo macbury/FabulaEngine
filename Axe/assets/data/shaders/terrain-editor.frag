@@ -2,10 +2,9 @@
 precision mediump float;
 #endif 
 
-varying vec4  v_color;
-varying vec3  v_normal;
 varying vec2  v_textCords;
 varying vec2  v_tile_position;
+varying vec4  v_color;
 
 uniform sampler2D u_texture0;
 uniform vec2      u_brush_position;
@@ -31,10 +30,7 @@ bool isInRect() {
 }
 
 void main() {
-  vec3 normalized_light_direction = normalize(u_light_direction);
-  float contribution   = max(dot(v_normal,normalized_light_direction),0.0);
-  v_color              = (u_light_color * contribution) * v_color;
-  vec4 current_texture = texture2D(u_texture0, v_textCords);
+  vec4 current_texture = v_color * texture2D(u_texture0, v_textCords);
   
   if (isInRect()) {
     gl_FragColor = vec4(1.5f, 1.5f, 1.5f, 0.5f) * current_texture;
