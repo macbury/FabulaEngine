@@ -2,6 +2,7 @@ package com.macbury.fabula.manager;
 
 import com.badlogic.gdx.Screen;
 import com.macbury.fabula.screens.GamePlayScreen;
+import com.macbury.fabula.screens.SkyboxTestScreen;
 
 public class DesktopGameManager extends GameManager {
   protected static final String TAG = "DesktopGameManager";

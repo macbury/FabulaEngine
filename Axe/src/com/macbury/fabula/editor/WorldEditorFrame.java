@@ -154,6 +154,8 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JToggleButton tglbtnEventEditor;
   private SceneSheetPanel inspectorSheetPanel;
   private JMenuItem mntmCleanLogs;
+  private JMenuItem mntmPlaceStairs;
+  private JMenuItem mntmPlaceModel;
   public WorldEditorFrame(EditorGameManager game) {
     PrintStream origOut = System.out;
     PrintStream interceptor = new LogInterceptor(origOut);
@@ -370,6 +372,12 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     this.mntmSetStartPosition = new JMenuItem("Set start position");
     mntmSetStartPosition.addActionListener(this);
     eventPopupMenu.add(mntmSetStartPosition);
+    
+    mntmPlaceStairs = new JMenuItem("Place stairs");
+    eventPopupMenu.add(mntmPlaceStairs);
+    
+    mntmPlaceModel = new JMenuItem("Place model");
+    eventPopupMenu.add(mntmPlaceModel);
     
     JSeparator separator_3 = new JSeparator();
     eventPopupMenu.add(separator_3);

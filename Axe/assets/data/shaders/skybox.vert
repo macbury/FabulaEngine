@@ -1,11 +1,14 @@
-attribute vec4 a_position;
-uniform   mat4 u_model_view;
-uniform   mat4 u_world_view;
+#ifdef GL_ES
+precision highp float; 
+#endif
 
-varying   vec3 a_texCoord; 
+attribute vec4 a_position;
+
+uniform mat4 u_mvpMatrix;
+
+varying vec3 v_texCoord;
 
 void main() {
-  a_texCoord  = a_position.xyz;
-  gl_Position = u_world_view * u_model_view * a_position;
-  
+    v_texCoord = a_position.xyz;
+    gl_Position = u_mvpMatrix * a_position;
 }

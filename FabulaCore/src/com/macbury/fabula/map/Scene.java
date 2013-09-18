@@ -31,6 +31,7 @@ import com.macbury.fabula.game_objects.system.CollisionRenderingSystem;
 import com.macbury.fabula.game_objects.system.DecalRenderingSystem;
 import com.macbury.fabula.game_objects.system.PlayerSystem;
 import com.macbury.fabula.game_objects.system.TileMovementSystem;
+import com.macbury.fabula.graphics.SkyBox;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.persister.ScenePersister;
 import com.macbury.fabula.terrain.Terrain;
@@ -64,6 +65,18 @@ public class Scene implements Disposable {
   private ShapeRenderer shapeRenderer;
   private CollisionRenderingSystem collisionRenderingSystem;
   private TileMovementSystem tileMovementSystem;
+  private SkyBox skybox;
+
+  public SkyBox getSkybox() {
+    return skybox;
+  }
+
+  public void setSkybox(SkyBox skybox) {
+    if (this.skybox != null) {
+      this.skybox.dispose();
+    }
+    this.skybox = skybox;
+  }
 
   public Scene(String name, String uid, int width, int height) {
     this.name = name;
@@ -73,7 +86,7 @@ public class Scene implements Disposable {
     sunLight  = new DirectionalLight();
     sunLight.set(Color.WHITE, new Vector3(-0.008f, -0.716f, -0.108f));
     lights.add(sunLight);
-    
+
     this.terrain      = new Terrain(width, height);
     this.terrain.setTileset("outside");
     this.finalShader  = "default";
@@ -83,6 +96,7 @@ public class Scene implements Disposable {
   }
   
   public void initialize() {
+    this.setSkybox(new SkyBox("day"));
     this.decalBatch           = new DecalBatch(new CameraGroupWithCustomShaderStrategy(perspectiveCamera));
     this.shapeRenderer        = new ShapeRenderer();
     
@@ -108,6 +122,7 @@ public class Scene implements Disposable {
     this.shapeRenderer.setProjectionMatrix(perspectiveCamera.combined);
     
     sm.beginFB(MAIN_FRAME_BUFFER);
+      this.skybox.render(perspectiveCamera);
       getModelBatch().begin(perspectiveCamera);
         this.terrain.render(perspectiveCamera, getModelBatch());
       getModelBatch().end();
@@ -190,7 +205,7 @@ public class Scene implements Disposable {
   @Override
   public void dispose() {
     this.terrain.dispose();
-    //this.skyBox.dispose();
+    this.skybox.dispose();
     this.decalBatch.dispose();
     this.modelBatch.dispose();
   }

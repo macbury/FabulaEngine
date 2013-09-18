@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
+import com.macbury.fabula.graphics.SkyBox;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.manager.GameManager;
-import com.macbury.fabula.map.SkyBox;
 import com.macbury.fabula.screens.BaseScreen;
 import com.thesecretpie.shader.ShaderManager;
 

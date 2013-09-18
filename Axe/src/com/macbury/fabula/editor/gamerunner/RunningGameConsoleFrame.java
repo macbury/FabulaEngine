@@ -145,10 +145,10 @@ public class RunningGameConsoleFrame extends JDialog implements WindowListener, 
           AdbManager.startApplication(GameManager.ANDROID_APP_PACKAGE+"/.MainActivity");
         } else {
           GameRunner runner = new GameRunner();
-          runner.startProcess();
+          runner.startProcess().waitFor();
         }
         
-      } catch (IOException e) {
+      } catch (IOException | InterruptedException e) {
         e.printStackTrace();
       }
       

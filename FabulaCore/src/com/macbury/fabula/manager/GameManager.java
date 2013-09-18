@@ -7,6 +7,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.macbury.fabula.db.GameDatabase;
+import com.macbury.fabula.db.GameFileResolver;
 import com.macbury.fabula.game_objects.GameObjectFactory;
 import com.macbury.fabula.screens.SplashScreen;
 import com.thesecretpie.shader.ShaderManager;
@@ -54,6 +55,7 @@ public abstract class GameManager extends Game {
     G.game      = this;
     G.shaders   = shaderManager;
     Gdx.app.log(TAG, "Preparing game DB");
+    
     G.db        = GameDatabase.load();
     if (G.db == null) {
       onNoGameData();

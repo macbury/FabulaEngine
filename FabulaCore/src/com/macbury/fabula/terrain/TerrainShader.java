@@ -21,6 +21,8 @@ import com.macbury.fabula.terrain.Terrain.TerrainDebugListener;
 public class TerrainShader implements Shader {
   private static final String DEFAULT_SHADER = "terrain";
   private static final String EDITOR_SHADER  = "terrain-editor";
+  private static final String UNIFORM_PROJECTION_MATRIX  = "u_projectionViewMatrix";
+  private static final String UNIFORM_MAIN_TEXTURE_INDEX = "u_texture0";
   private String shaderName;
   private Lights lights;
   private Material terrainMaterial;
@@ -45,16 +47,16 @@ public class TerrainShader implements Shader {
     context.setDepthTest(GL20.GL_LEQUAL);
     context.setCullFace(GL20.GL_BACK);
     G.shaders.begin(shaderName);
-    G.shaders.setUniformMatrix("u_projectionViewMatrix", camera.combined);
-    if (lights != null) {
+    G.shaders.setUniformMatrix(UNIFORM_PROJECTION_MATRIX, camera.combined);
+    /*if (lights != null) {
       G.shaders.getCurrent().setUniformf("u_ambient_color", lights.ambientLight);
       G.shaders.getCurrent().setUniformf("u_light_color", lights.directionalLights.get(0).color);
       G.shaders.getCurrent().setUniformf("u_light_direction", lights.directionalLights.get(0).direction);
-    }
+    }*/
     
     
     TextureAttribute textureAttr = (TextureAttribute) terrainMaterial.get(TextureAttribute.Diffuse);
-    G.shaders.setUniformi("u_texture0", context.textureBinder.bind(textureAttr.textureDescription));
+    G.shaders.setUniformi(UNIFORM_MAIN_TEXTURE_INDEX, context.textureBinder.bind(textureAttr.textureDescription));
 
     if (debugListener != null) {
       debugListener.onDebugTerrainConfigureShader(G.shaders.getCurrent());

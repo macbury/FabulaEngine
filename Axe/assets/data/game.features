@@ -1,13 +1,14 @@
-<game-features game:build="1151" xmlns:game="http://macbury.pl/">
+<game-features game:build="1161" xmlns:game="http://macbury.pl/">
    <title>Brutal Crasher</title>
    <player-start-position x="40" y="13" map="f615c04a-b240-4b4a-ae28-7e742d380a80"/>
    <fonts length="1">
       <font>base</font>
    </fonts>
-   <shaders length="3">
+   <shaders length="4">
       <shader>bloom</shader>
       <shader>default</shader>
       <shader>terrain</shader>
+      <shader>skybox</shader>
    </shaders>
    <tilesets>
       <tileset name="outside" atlas="outside">

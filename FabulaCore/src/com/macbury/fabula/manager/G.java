@@ -1,6 +1,7 @@
 package com.macbury.fabula.manager;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.macbury.fabula.db.GameDatabase;
 import com.macbury.fabula.game_objects.GameObjectFactory;

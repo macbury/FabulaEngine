@@ -1,10 +1,11 @@
 #ifdef GL_ES
-precision mediump float;
+precision highp float;
 #endif
 
-varying vec3 v_texCoord;
-uniform sampler2D u_texture1;
+uniform samplerCube s_cubemap;
 
-void main() {
-  gl_FragColor = sampler2D(u_texture0, v_texCoord);
+varying vec3 v_texCoord;
+ 
+void main (void) {
+    gl_FragColor = textureCube(s_cubemap, v_texCoord);
 }
