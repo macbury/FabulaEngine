@@ -96,7 +96,10 @@ public class Scene implements Disposable {
   }
   
   public void initialize() {
-    this.setSkybox(new SkyBox("day"));
+    if (this.skybox != null) {
+      this.skybox.initialize();
+    }
+    
     this.decalBatch           = new DecalBatch(new CameraGroupWithCustomShaderStrategy(perspectiveCamera));
     this.shapeRenderer        = new ShapeRenderer();
     
@@ -122,7 +125,10 @@ public class Scene implements Disposable {
     this.shapeRenderer.setProjectionMatrix(perspectiveCamera.combined);
     
     sm.beginFB(MAIN_FRAME_BUFFER);
-      this.skybox.render(perspectiveCamera);
+      if (this.skybox != null) {
+        this.skybox.render(perspectiveCamera);
+      }
+      
       getModelBatch().begin(perspectiveCamera);
         this.terrain.render(perspectiveCamera, getModelBatch());
       getModelBatch().end();
@@ -264,5 +270,13 @@ public class Scene implements Disposable {
 
   public PlayerSystem getPlayerSystem() {
     return this.playerSystem;
+  }
+
+  public void setSkyboxName(String skyboxName) {
+    if (skyboxName != null && skyboxName.length() > 2) {
+      this.setSkybox(new SkyBox(skyboxName));
+    } else {
+      this.setSkybox(null);
+    }
   }
 }

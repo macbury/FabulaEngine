@@ -371,4 +371,11 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     return this.worldEditorFrame;
   }
 
+  public void resetCamera() {
+    int width = terrain.getColumns();
+    int height  = terrain.getRows();
+    camera.position.set(width/2, 17, height/2);
+    camera.lookAt(width/2, 0, height/2);
+  }
+
 }

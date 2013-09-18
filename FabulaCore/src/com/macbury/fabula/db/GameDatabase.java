@@ -49,6 +49,8 @@ public class GameDatabase {
   
   @ElementArray(entry="shader", required=false)
   private String[] shaders;
+  @ElementArray(entry="skybox", required=false)
+  private String[] skyboxes;
   
   @ElementList(required=false)
   private ArrayList<Tileset> tilesets;
@@ -125,6 +127,10 @@ public class GameDatabase {
       }
     } else {
       shaders = new String[0];
+    }
+    
+    if (skyboxes == null) {
+      skyboxes = new String[0];
     }
     
     if (fontsName == null) {
@@ -224,5 +230,9 @@ public class GameDatabase {
   
   public Skin getUiSkin() {
     return uiSkin;
+  }
+  
+  public String[] getSkyBoxes() {
+    return skyboxes;
   }
 }

@@ -29,6 +29,11 @@ public class SceneInspectBeanInfo extends BaseBeanInfo {
     tilesetProperty.setShortDescription("Change map autotiles texture");
     tilesetProperty.setPropertyEditorClass(TilesetEditor.class);
     
+    ExtendedPropertyDescriptor skyboxProperty = addProperty("skyBox").setCategory(CATEGORY_MAP);
+    skyboxProperty.setDisplayName("Sky Box");
+    skyboxProperty.setShortDescription("Sky Box for map and water reflection");
+    skyboxProperty.setPropertyEditorClass(SkyBoxEditor.class);
+    
     ExtendedPropertyDescriptor sizeProperty = addProperty("mapSize").setCategory(CATEGORY_MAP);
     sizeProperty.setDisplayName("Size");
     sizeProperty.setShortDescription("Change map size");
@@ -86,6 +91,21 @@ public class SceneInspectBeanInfo extends BaseBeanInfo {
       
       for (int i = 0; i < tilesets.size(); i++) {
         values[i] = tilesets.get(i).getName();
+      }
+      
+      setAvailableValues(values);
+    }
+  }
+  
+  public static class SkyBoxEditor extends ComboBoxPropertyEditor {
+    public SkyBoxEditor() {
+      super();
+      String[] skyboxes = G.db.getSkyBoxes();
+      String[] values   = new String[skyboxes.length + 1];
+      values[0] = " ";
+      
+      for (int i = 0; i < skyboxes.length; i++) {
+        values[i+1] = skyboxes[i];
       }
       
       setAvailableValues(values);

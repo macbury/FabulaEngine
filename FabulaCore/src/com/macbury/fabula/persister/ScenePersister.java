@@ -28,6 +28,8 @@ import com.macbury.fabula.terrain.Tile;
 public class ScenePersister {
   @Element
   private String           name;
+  @Element(required=false)
+  private String           skybox;
   @Element
   private String           uid;
   @Element
@@ -63,6 +65,7 @@ public class ScenePersister {
     this.name    = scene.getName();
     this.finalShader = scene.getFinalShader();
     this.uid     = scene.getUID();
+    this.skybox  = scene.getSkybox().getName();
     
     tilesetName     = terrain.getTileset().getName();
     ambientColor    = scene.getLights().ambientLight.toIntBits();
@@ -80,6 +83,7 @@ public class ScenePersister {
     
     this.scene = new Scene(this.name, this.uid, this.columns, this.rows);
     this.scene.setFinalShader(finalShader);
+    this.scene.setSkyboxName(skybox);
     this.terrain = this.scene.getTerrain();
     this.terrain.setTileset(tilesetName);
     

@@ -156,6 +156,9 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JMenuItem mntmCleanLogs;
   private JMenuItem mntmPlaceStairs;
   private JMenuItem mntmPlaceModel;
+  private JToggleButton tglbtnFoliagebrushbutton;
+  private JToggleButton tglbtnLiquidbrushbutton;
+  private JMenuItem mntmResetCamera;
   public WorldEditorFrame(EditorGameManager game) {
     PrintStream origOut = System.out;
     PrintStream interceptor = new LogInterceptor(origOut);
@@ -218,6 +221,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mntmReloadMap.addActionListener(this);
     mnMap.add(mntmReloadMap);
     
+    mntmResetCamera = new JMenuItem("Reset Camera");
+    mntmResetCamera.addActionListener(this);
+    mnMap.add(mntmResetCamera);
+    
     JMenu mnGame = new JMenu("Game");
     mainMenuBar.add(mnGame);
     
@@ -246,7 +253,8 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     mnGame.add(mntmForceAppStop);
     
-    this.mntmCleanLogs = new JMenuItem("Clean logs");
+    this.mntmCleanLogs = new JMenuItem("Clear logs");
+    mntmCleanLogs.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, InputEvent.SHIFT_MASK));
     mntmCleanLogs.addActionListener(this);
     mnGame.add(mntmCleanLogs);
     
@@ -329,8 +337,9 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     panel_8.add(scrollPane_1, BorderLayout.CENTER);
     
     this.logArea = new JTextArea();
+    logArea.setText("Test");
     logArea.setRows(2);
-    logArea.setForeground(Color.GREEN);
+    logArea.setForeground(Color.LIGHT_GRAY);
     logArea.setBackground(Color.BLACK);
     logArea.setFont(new Font("Consolas", Font.PLAIN, 14));
     logArea.setEditable(false);
@@ -412,6 +421,14 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     toolBar.add(tglbtnAutoTileEdit);
     toolbarGroup.add(tglbtnAutoTileEdit);
     
+    tglbtnLiquidbrushbutton = new JToggleButton("");
+    tglbtnLiquidbrushbutton.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/injection.png")));
+    toolBar.add(tglbtnLiquidbrushbutton);
+    
+    tglbtnFoliagebrushbutton = new JToggleButton("");
+    tglbtnFoliagebrushbutton.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/grass.png")));
+    toolBar.add(tglbtnFoliagebrushbutton);
+    
     this.tglbtnEventEditor = new JToggleButton("");
     tglbtnEventEditor.addActionListener(this);
     tglbtnEventEditor.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/events.png")));
@@ -445,6 +462,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     autoTilesPanel.setLayout(new BorderLayout(0, 0));
     
     this.autoTileList = new JList(new Object[] { });
+    autoTileList.setBackground(Color.BLACK);
     JScrollPane autoTileScrollPane = new JScrollPane(autoTileList);
     autoTileScrollPane.setViewportBorder(new EmptyBorder(0, 0, 0, 0));
     autoTilesPanel.add(autoTileScrollPane, BorderLayout.CENTER);
@@ -642,6 +660,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     if (e.getSource() == mntmDebugFrameBuffer) {
     }
     
+    if (e.getSource() == mntmResetCamera) {
+      resetCamera();
+    }
+    
     if (e.getSource() == mntmUndo) {
       changeManager.undo();
     }
@@ -663,6 +685,11 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     }
     
     updateSelectedBrush();
+  }
+
+  private void resetCamera() {
+    WorldEditScreen screen = this.gameManager.getWorldEditScreen();
+    screen.resetCamera();
   }
 
   private void reloadMap() {

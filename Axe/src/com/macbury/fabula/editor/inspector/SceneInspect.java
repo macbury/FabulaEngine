@@ -20,7 +20,7 @@ public class SceneInspect {
   }
   
   public void setTileset(String tilesetName) {
-    
+    screen.getScene().getTerrain().setTileset(tilesetName);
   }
   
   public String getShader() {
@@ -57,5 +57,20 @@ public class SceneInspect {
     return new Dimension(screen.getScene().getTerrain().getColumns(), screen.getScene().getTerrain().getRows());
   }
   
+  public String getSkyBox() {
+    if (screen.getScene().getSkybox() == null) {
+      return "";
+    } else {
+      return screen.getScene().getSkybox().getName();
+    }
+  }
   
+  public void setSkyBox(String name) {
+    if (name == null || name.length() <= 2) {
+      screen.getScene().setSkyboxName(null);
+    } else {
+      screen.getScene().setSkyboxName(name);
+      screen.getScene().getSkybox().initialize();
+    }
+  }
 }

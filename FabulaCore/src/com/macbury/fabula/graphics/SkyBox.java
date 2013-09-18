@@ -18,12 +18,10 @@ public class SkyBox implements Disposable {
   private Mesh mesh;
   private Matrix4 invView;
   private Matrix4 mvp;
+  private String name;
   
   public SkyBox(String name) {
-    cubeMap = new CubeMap("textures/skybox/"+name);
-    mesh    = SkyBox.genSkyBoxMesh();
-    invView = new Matrix4();
-    mvp     = new Matrix4();
+    this.name = name;
   }
  
   public static Mesh genSkyBoxMesh() {
@@ -81,5 +79,16 @@ public class SkyBox implements Disposable {
   public void dispose() {
     this.mesh.dispose();
     this.cubeMap.dispose();
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void initialize() {
+    cubeMap = new CubeMap("textures/skybox/"+name);
+    mesh    = SkyBox.genSkyBoxMesh();
+    invView = new Matrix4();
+    mvp     = new Matrix4();
   }
 }
