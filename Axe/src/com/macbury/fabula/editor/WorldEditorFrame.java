@@ -63,6 +63,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
@@ -95,6 +96,7 @@ import com.macbury.fabula.editor.inspector.SceneInspect;
 import com.macbury.fabula.editor.inspector.SceneSheetPanel;
 import com.macbury.fabula.editor.shaders.ShaderEditorFrame;
 import com.macbury.fabula.editor.tiles.AutoTileDebugFrame;
+import com.macbury.fabula.editor.tiles.FocusedTileListCellRenderer;
 import com.macbury.fabula.editor.tiles.TilesetBuilderDialog;
 import com.macbury.fabula.editor.tree.GameTransferableHandler;
 import com.macbury.fabula.editor.tree.GameTreeModel.BaseGameFolderNode;
@@ -151,6 +153,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JToggleButton tglbtnAutoTileEdit;
   private JToggleButton tglbtnEventEditor;
   private SceneSheetPanel inspectorSheetPanel;
+  private JMenuItem mntmCleanLogs;
   public WorldEditorFrame(EditorGameManager game) {
     PrintStream origOut = System.out;
     PrintStream interceptor = new LogInterceptor(origOut);
@@ -182,8 +185,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     //setExtendedState(Frame.MAXIMIZED_BOTH); 
     
     this.mainMenuBar = new JMenuBar();
-    setJMenuBar(mainMenuBar);
-    
+    JPopupMenu.setDefaultLightWeightPopupEnabled(false);
     JMenu mnMap = new JMenu("Map");
     mainMenuBar.add(mnMap);
     
@@ -241,6 +243,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     group.add(rdbtnmntmDevice);
     
     mnGame.add(mntmForceAppStop);
+    
+    this.mntmCleanLogs = new JMenuItem("Clean logs");
+    mntmCleanLogs.addActionListener(this);
+    mnGame.add(mntmCleanLogs);
     
     JSeparator separator_2 = new JSeparator();
     mnGame.add(separator_2);
@@ -346,7 +352,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     inspectorAndOpenGlContainerSplitPane.setResizeWeight(0.001);
     panel_9.add(inspectorAndOpenGlContainerSplitPane, BorderLayout.CENTER);
     inspectorAndOpenGlContainerSplitPane.setContinuousLayout(true);
-    
+    inspectorAndOpenGlContainerSplitPane.setDividerLocation(229);
     JPopupMenu.setDefaultLightWeightPopupEnabled( false );
     
     JPanel openGLContainerPane = new JPanel();
@@ -405,7 +411,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     toolbarGroup.add(tglbtnEventEditor);
     
     JSplitPane splitPane = new JSplitPane();
-    splitPane.setResizeWeight(0.9);
+    splitPane.setDividerLocation(320);
     splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
     splitPane.setContinuousLayout(true);
     panel_11.add(splitPane, BorderLayout.CENTER);
@@ -450,6 +456,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     addWindowListener(this);
     
     refreshDevices();
+    setJMenuBar(mainMenuBar);
   }
   
   private class StatusBarInfoRunnable implements Runnable {
@@ -512,32 +519,39 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   }
   
   public void updateInfoForInspector() {
-    new DefaultBeanBinder(new SceneInspect(this.gameManager.getWorldEditScreen()), inspectorSheetPanel);
+    updateInspectorBean();
     updateInfoForAutotileBrush();
     updateSelectedBrush();
     updateInfoForMapSettings();
     this.gameManager.getWorldEditScreen().setContainerFrame(this);
   }
   
-  private void updateInfoForAutotileBrush() {
-    AutoTileBrush atBrush     = this.gameManager.getWorldEditScreen().getAutoTileBrush();
-    atBrush.buildAllPreviewsUnlessBuilded();
-    this.autoTileListRenderer = new IconListRenderer(atBrush.getAutoTileIcons());
-    autoTileList.setCellRenderer(autoTileListRenderer);
+  public void updateInspectorBean() {
+    DefaultBeanBinder binder = new DefaultBeanBinder(new SceneInspect(this.gameManager.getWorldEditScreen()), inspectorSheetPanel);
+  }
 
-    DefaultListModel listModel = new DefaultListModel();
-    
-    if (atBrush.getCurrentPaintMode() == PaintMode.AutoTile) {
-      for (String key : atBrush.getOrderedTileNames()) {
-        listModel.addElement(key);
+  private void updateInfoForAutotileBrush() {
+    if (!WorldEditorFrame.this.gameManager.loading()) {
+      AutoTileBrush atBrush     = this.gameManager.getWorldEditScreen().getAutoTileBrush();
+      atBrush.buildAllPreviewsUnlessBuilded();
+      this.autoTileListRenderer = new IconListRenderer(atBrush.getAutoTileIcons());
+      autoTileList.setCellRenderer(autoTileListRenderer);
+
+      DefaultListModel listModel = new DefaultListModel();
+      
+      if (atBrush.getCurrentPaintMode() == PaintMode.AutoTile) {
+        for (String key : atBrush.getOrderedTileNames()) {
+          listModel.addElement(key);
+        }
+      } else {
+        for (String key : atBrush.getAllOrderedTileNames()) {
+          listModel.addElement(key);
+        }
       }
-    } else {
-      for (String key : atBrush.getAllOrderedTileNames()) {
-        listModel.addElement(key);
-      }
+      
+      autoTileList.setModel(listModel);
     }
     
-    autoTileList.setModel(listModel);
   }
 
   private void updateInfoForTerrainBrush() {
@@ -590,6 +604,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
       }
       
       runningGameConsoleFrame.runGame(this, gameManager);
+    }
+    
+    if (e.getSource() == mntmCleanLogs) {
+      this.logArea.setText("");
     }
     
     if (e.getSource() == this.mntmRebuildTilesets) {
@@ -760,7 +778,11 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
 
   @Override
   public void windowClosing(WindowEvent arg0) {
-    saveMap();
+    try {
+      saveMap();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
@@ -812,7 +834,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     EventQueue.invokeLater(new Runnable(){
       @Override
       public void run() {
-        updateInfoForAutotileBrush();
+        if (!WorldEditorFrame.this.gameManager.loading()) {
+          updateInfoForAutotileBrush();
+        }
+        
       }
     });
     

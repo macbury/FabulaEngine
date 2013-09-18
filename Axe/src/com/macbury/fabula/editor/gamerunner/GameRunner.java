@@ -94,7 +94,7 @@ public class GameRunner {
   public GameRunner() {
     this.addClasspathEntry(System.getProperty("java.class.path"));
     this.setWorkingDirectory(".");
-    this.setMainClass("com.macbury.fabula.DesktopGame");
+    this.setMainClass("com.macbury.game.editor.DesktopGame");
     this.addArgument("--play");
   }
 }

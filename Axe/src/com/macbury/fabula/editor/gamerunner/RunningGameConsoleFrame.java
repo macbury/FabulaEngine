@@ -139,9 +139,15 @@ public class RunningGameConsoleFrame extends JDialog implements WindowListener, 
     @Override
     public void run() {
       try {
-        AdbManager.adbPush(G.fs("").file().getAbsolutePath(), "/sdcard/"+GameManager.ANDROID_GAME_DIRECTORY_NAME);
-        AdbManager.stopApplication(GameManager.ANDROID_APP_PACKAGE);
-        AdbManager.startApplication(GameManager.ANDROID_APP_PACKAGE+"/.MainActivity");
+        if (target == TargetType.Device) {
+          AdbManager.adbPush(G.fs("").file().getAbsolutePath(), "/sdcard/"+GameManager.ANDROID_GAME_DIRECTORY_NAME);
+          AdbManager.stopApplication(GameManager.ANDROID_APP_PACKAGE);
+          AdbManager.startApplication(GameManager.ANDROID_APP_PACKAGE+"/.MainActivity");
+        } else {
+          GameRunner runner = new GameRunner();
+          runner.startProcess();
+        }
+        
       } catch (IOException e) {
         e.printStackTrace();
       }
