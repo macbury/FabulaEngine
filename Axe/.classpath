@@ -12,5 +12,10 @@
 	<classpathentry kind="lib" path="jars/rsyntaxtextarea.jar"/>
 	<classpathentry kind="lib" path="jars/gdx-natives.jar"/>
 	<classpathentry kind="lib" path="jars/l2fprod-common.jar"/>
+	<classpathentry kind="lib" path="jars/jnotify-0.94.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Axe/libs"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

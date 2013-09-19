@@ -698,6 +698,7 @@ public class ShaderManager {
 	 * Should be used for development purposes only!
 	 */
 	public void reload() {
+	  Gdx.app.log("ShaderManager", "Begining reloading");
 		float t = System.currentTimeMillis();
 		Keys keys = shaderPaths.keys();
 		while (keys.hasNext) {

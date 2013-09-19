@@ -2,9 +2,13 @@
 precision mediump float;
 #endif 
 
+attribute vec2   a_textCords;
+
 varying vec2  v_textCords;
 varying vec2  v_tile_position;
 varying vec4  v_color;
+
+varying vec2  v_position;
 
 uniform sampler2D u_texture0;
 uniform vec2      u_brush_position;
@@ -30,7 +34,9 @@ bool isInRect() {
 }
 
 void main() {
-  vec4 current_texture = v_color * texture2D(u_texture0, v_textCords);
+  //v_color.r = glFragCord.x;
+  //v_color   = clamp(v_color, 0;, 1.0);
+  vec4 current_texture = v_color * texture2D(u_texture0, a_textCords);
   
   if (isInRect()) {
     gl_FragColor = vec4(1.5f, 1.5f, 1.5f, 0.5f) * current_texture;

@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.SystemColor;
@@ -79,6 +80,7 @@ import javax.swing.text.BadLocationException;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
 import com.badlogic.gdx.utils.Array;
 import com.jgoodies.forms.factories.FormFactory;
@@ -114,6 +116,10 @@ import javax.swing.JToolBar;
 import javax.swing.JToggleButton;
 import javax.swing.Box;
 import javax.swing.JScrollBar;
+
+import net.contentobjects.jnotify.JNotify;
+import net.contentobjects.jnotify.JNotifyException;
+import javax.swing.JInternalFrame;
 
 public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener, WindowListener, PropertyChangeListener  {
   
@@ -159,6 +165,8 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JToggleButton tglbtnFoliagebrushbutton;
   private JToggleButton tglbtnLiquidbrushbutton;
   private JMenuItem mntmResetCamera;
+  private int shaderWatchID;
+  private JMenu mnAssets;
   public WorldEditorFrame(EditorGameManager game) {
     PrintStream origOut = System.out;
     PrintStream interceptor = new LogInterceptor(origOut);
@@ -295,6 +303,9 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mntmPaste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_MASK));
     mntmPaste.setEnabled(false);
     mnEdit.add(mntmPaste);
+    
+    mnAssets = new JMenu("Assets");
+    mainMenuBar.add(mnAssets);
     
     JMenu mnDeveloper = new JMenu("Developer");
     mainMenuBar.add(mnDeveloper);
@@ -496,8 +507,8 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
         }
       }
       
-      updateInfoForInspector();
-      
+      onGameFinishedStarting();
+
       while (running) {
         try {
           Thread.sleep(50);
@@ -507,8 +518,40 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
         }
       }
     }
-  }
 
+    
+  }
+  
+  private void onGameFinishedStarting() {
+    updateInfoForInspector();
+    
+    for (final FileHandle fh : G.fs("").list()) {
+      if (fh.isDirectory()) {
+        JMenuItem openItemFolder = new JMenuItem(fh.nameWithoutExtension()+"/");
+        openItemFolder.addActionListener(new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent arg0) {
+            try {
+              Desktop.getDesktop().open(fh.file());
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
+          }
+        });
+        mnAssets.add(openItemFolder);
+      }
+      
+    }
+    
+    try {
+      String path = G.fs("shaders/").file().getAbsolutePath();
+      Gdx.app.log(TAG, "Watching: " + path);
+      this.shaderWatchID = JNotify.addWatch(path, JNotify.FILE_CREATED | JNotify.FILE_DELETED | JNotify.FILE_MODIFIED | JNotify.FILE_RENAMED, true, new ShaderFileChangeListener());
+    } catch (JNotifyException e) {
+      e.printStackTrace();
+    }
+  }
+  
   @Override
   public void stateChanged(ChangeEvent e) {
     WorldEditScreen screen = this.gameManager.getWorldEditScreen();
@@ -815,6 +858,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   public void windowClosing(WindowEvent arg0) {
     try {
       saveMap();
+      JNotify.removeWatch(shaderWatchID);
     } catch (Exception e) {
       e.printStackTrace();
     }

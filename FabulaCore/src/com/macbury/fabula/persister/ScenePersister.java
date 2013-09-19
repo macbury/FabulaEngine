@@ -52,6 +52,8 @@ public class ScenePersister {
   private Terrain terrain;
   
   private boolean skipLoadingTerrainData;
+  private int uncompressedSize;
+  private int compressedSize;
   
   public ScenePersister() {
     
@@ -65,7 +67,9 @@ public class ScenePersister {
     this.name    = scene.getName();
     this.finalShader = scene.getFinalShader();
     this.uid     = scene.getUID();
-    this.skybox  = scene.getSkybox().getName();
+    if (scene.getSkybox() != null) {
+      this.skybox  = scene.getSkybox().getName();
+    }
     
     tilesetName     = terrain.getTileset().getName();
     ambientColor    = scene.getLights().ambientLight.toIntBits();
@@ -161,6 +165,7 @@ public class ScenePersister {
         }
       }
       
+      this.uncompressedSize = dos.size();
       dos.close();
       byteOutputStream.close();
       
@@ -175,6 +180,8 @@ public class ScenePersister {
         int bytesCompressed = deflater.deflate(buffer);
         byteOutputStream.write(buffer,0,bytesCompressed);
       }
+      
+      this.compressedSize = byteOutputStream.size();
       byteOutputStream.close();
       
       terrainData = new String(Base64Coder.encode(byteOutputStream.toByteArray()));
@@ -203,5 +210,21 @@ public class ScenePersister {
 
   public String getUID() {
     return this.uid;
+  }
+
+  public int getUncompressedSize() {
+    return uncompressedSize;
+  }
+
+  public int getCompressedSize() {
+    return compressedSize;
+  }
+
+  public void setUncompressedSize(int uncompressedSize) {
+    this.uncompressedSize = uncompressedSize;
+  }
+
+  public void setCompressedSize(int compressedSize) {
+    this.compressedSize = compressedSize;
   }
 }

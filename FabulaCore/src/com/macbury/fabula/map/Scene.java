@@ -193,14 +193,17 @@ public class Scene implements Disposable {
   
   public boolean save() {
     long start = System.currentTimeMillis();
+    ScenePersister persister = null;
     try {
-      GameDatabase.save(new ScenePersister(this), getPath());
+      persister = new ScenePersister(this);
+      GameDatabase.save(persister, getPath());
     } catch (Exception e) {
       e.printStackTrace();
     }
     
     long time = (System.currentTimeMillis() - start);
     Gdx.app.log(TAG, "Saved in: "+time + " miliseconds");
+    Gdx.app.log(TAG, "Compressed from: "+persister.getUncompressedSize()/1024+ " KB to " + persister.getCompressedSize() / 1024 + " KB");
     return true;
   }
   
