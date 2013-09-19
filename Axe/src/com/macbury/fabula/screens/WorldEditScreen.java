@@ -1,8 +1,10 @@
 package com.macbury.fabula.screens;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.UUID;
 
+import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
@@ -31,6 +33,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
+import com.macbury.fabula.db.PlayerStartPosition;
 import com.macbury.fabula.editor.WorldEditorFrame;
 import com.macbury.fabula.editor.brushes.AutoTileBrush;
 import com.macbury.fabula.editor.brushes.Brush;
@@ -110,7 +113,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   }
   
   public void newMap(int width, int height) {
-    String uuid = UUID.randomUUID().toString();
+    String uuid  = UUID.randomUUID().toString();
     this.scene   = new Scene(null, uuid, width, height);
     this.scene.setCamera(camera);
     this.scene.setDebug(true);
@@ -132,15 +135,34 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
 
   public void openMap(File file) {
     this.scene = Scene.open(file);
-    this.terrain = scene.getTerrain();
+    
+    if (this.scene == null) {
+      Gdx.app.log(TAG, "Could not load file " + file.getAbsolutePath());
+      newMap(100, 100);
+      return;
+    }
+    
     this.scene.setCamera(camera);
     this.scene.setDebug(true);
+    this.terrain = scene.getTerrain();
     terrain.setDebugListener(this);
     terrain.buildSectors();
     camera.position.set(terrain.getColumns()/2, 17, terrain.getRows()/2);
     camera.lookAt(terrain.getColumns()/2, 0, terrain.getRows()/2);
     this.scene.initialize();
     createBrushes();
+    
+    Gdx.app.postRunnable(new Runnable() {
+      @Override
+      public void run() {
+        // TODO not working why i dont now
+        PlayerStartPosition psp = G.db.getPlayerStartPosition(); 
+        if (psp != null && psp.getUUID().equals(scene.getUID())) {
+          Entity e = G.factory.buildStartPosition(G.db.getPlayerStartPosition());
+          e.addToWorld();
+        }
+      }
+    });
   }
 
   @Override

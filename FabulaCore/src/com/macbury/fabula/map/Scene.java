@@ -29,6 +29,7 @@ import com.macbury.fabula.game_objects.components.DecalComponent;
 import com.macbury.fabula.game_objects.components.PositionComponent;
 import com.macbury.fabula.game_objects.system.CollisionRenderingSystem;
 import com.macbury.fabula.game_objects.system.DecalRenderingSystem;
+import com.macbury.fabula.game_objects.system.EditorEntityManagmentSystem;
 import com.macbury.fabula.game_objects.system.PlayerSystem;
 import com.macbury.fabula.game_objects.system.TileMovementSystem;
 import com.macbury.fabula.graphics.SkyBox;
@@ -56,7 +57,6 @@ public class Scene implements Disposable {
   private boolean debug;
   private DecalBatch decalBatch;
   private PerspectiveCamera perspectiveCamera;
-  private Decal startPositionDecal;
   private ModelBatch modelBatch;
   private World objectsWorld;
   private DecalRenderingSystem decalRenderingSystem;
@@ -66,6 +66,7 @@ public class Scene implements Disposable {
   private CollisionRenderingSystem collisionRenderingSystem;
   private TileMovementSystem tileMovementSystem;
   private SkyBox skybox;
+  private EditorEntityManagmentSystem editorEntityManagmentSystem;
 
   public SkyBox getSkybox() {
     return skybox;
@@ -107,7 +108,10 @@ public class Scene implements Disposable {
     this.tileMovementSystem       = this.objectsWorld.setSystem(new TileMovementSystem(terrain));
     
     this.decalRenderingSystem     = this.objectsWorld.setSystem(new DecalRenderingSystem(decalBatch, perspectiveCamera, this.terrain), true);
-    this.collisionRenderingSystem = this.objectsWorld.setSystem(new CollisionRenderingSystem(shapeRenderer), true);
+    
+    if (debug) {
+      this.editorEntityManagmentSystem = this.objectsWorld.setSystem(new EditorEntityManagmentSystem(this.shapeRenderer, this.terrain), true);
+    }
     
     this.objectsWorld.setManager(new TagManager());
     this.objectsWorld.setManager(new GroupManager());
@@ -132,35 +136,19 @@ public class Scene implements Disposable {
       getModelBatch().begin(perspectiveCamera);
         this.terrain.render(perspectiveCamera, getModelBatch());
       getModelBatch().end();
-      renderDebugInfo();
-      this.decalRenderingSystem.process();
       
-      if (collisionRenderingSystem != null) {
-        this.collisionRenderingSystem.process();
+      if (this.editorEntityManagmentSystem != null) {
+        editorEntityManagmentSystem.process();
       }
+      
+      this.decalRenderingSystem.process();
     sm.endFB();
     
     sm.begin(finalShader); 
       sm.renderFB(MAIN_FRAME_BUFFER);
     sm.end();
   }
-  
-  private void renderDebugInfo() {
-    if (debug) {
-      PlayerStartPosition psp = G.db.getPlayerStartPosition();
-      if (psp != null && psp.getUUID().equalsIgnoreCase(uid)) {
-        Tile tile = terrain.getTile(psp.getTileX(), psp.getTileY());
-        startPositionDecal.getPosition().set(psp.getTileX()+0.5f, tile.getY()+0.5f, psp.getTileY()+0.5f);
-        startPositionDecal.lookAt(perspectiveCamera.position, perspectiveCamera.up.cpy().nor());
-        this.decalBatch.add(startPositionDecal);
-        
-        shapeRenderer.begin(ShapeType.Line);
-          shapeRenderer.setColor(Color.WHITE);
-          shapeRenderer.box(psp.getTileX(), tile.getY(), psp.getTileY()+1, 1, 1, 1);
-        shapeRenderer.end();
-      }
-    }
-  }
+
 
   public void setCamera(PerspectiveCamera camera) {
     this.perspectiveCamera = camera;
@@ -183,7 +171,6 @@ public class Scene implements Disposable {
     try {
       ScenePersister scenePersister = serializer.read(ScenePersister.class, file);
       Scene scene  = scenePersister.getScene();
-      scene.initialize();
       return scene;
     } catch (Exception e) {
       e.printStackTrace();
@@ -242,13 +229,6 @@ public class Scene implements Disposable {
 
   public void setDebug(boolean debug) {
     this.debug = debug;
-    Texture startPositionTexture = new Texture(Gdx.files.classpath("com/macbury/icon/start_position.png"));
-    this.startPositionDecal = Decal.newDecal(1,1,new TextureRegion(startPositionTexture), true);
-    this.startPositionDecal.setWidth(1);
-    this.startPositionDecal.setHeight(1);
-    //this.startPositionDecal.setBlending(GL10.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-    
-    startPositionDecal.getPosition().set(15, 0.5f, 20);
   }
   
   public ModelBatch getModelBatch() {

@@ -34,9 +34,14 @@ bool isInRect() {
 }
 
 void main() {
+  //v_color   = vec4(0,0,0,1);
+  //v_color.r = clamp(v_textCords.y, 0.0, 1.03);
+  //if (mod(v_color.b, 0.2) == 0.0) {
+    //v_color   = vec4(1,1,1,1);
+  //}
   //v_color.r = glFragCord.x;
   //v_color   = clamp(v_color, 0;, 1.0);
-  vec4 current_texture = v_color * texture2D(u_texture0, a_textCords);
+  vec4 current_texture = v_color * texture2D(u_texture0, v_textCords);
   
   if (isInRect()) {
     gl_FragColor = vec4(1.5f, 1.5f, 1.5f, 0.5f) * current_texture;

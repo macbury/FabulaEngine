@@ -387,17 +387,21 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     addPopup(openGLContainerPane, eventPopupMenu);
     
     this.mntmNewEvent = new JMenuItem("New event");
+    mntmNewEvent.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/event.png")));
     eventPopupMenu.add(mntmNewEvent);
     
-    this.mntmSetStartPosition = new JMenuItem("Set start position");
-    mntmSetStartPosition.addActionListener(this);
-    eventPopupMenu.add(mntmSetStartPosition);
-    
     mntmPlaceStairs = new JMenuItem("Place stairs");
+    mntmPlaceStairs.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/stairs.png")));
     eventPopupMenu.add(mntmPlaceStairs);
     
     mntmPlaceModel = new JMenuItem("Place model");
+    mntmPlaceModel.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/model.png")));
     eventPopupMenu.add(mntmPlaceModel);
+    
+    this.mntmSetStartPosition = new JMenuItem("Set start position");
+    mntmSetStartPosition.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/icon/start_position.png")));
+    mntmSetStartPosition.addActionListener(this);
+    eventPopupMenu.add(mntmSetStartPosition);
     
     JSeparator separator_3 = new JSeparator();
     eventPopupMenu.add(separator_3);

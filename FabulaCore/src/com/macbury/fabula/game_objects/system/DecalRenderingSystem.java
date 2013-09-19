@@ -33,11 +33,11 @@ public class DecalRenderingSystem extends EntitySystem {
   private Terrain terrain;
   
   public DecalRenderingSystem(DecalBatch batch, PerspectiveCamera perspectiveCamera, Terrain terrain) {
-    super(Aspect.getAspectForAll(PositionComponent.class, DecalComponent.class));
-    this.decalBatch = batch;
-    this.camera     = perspectiveCamera;
+    super(Aspect.getAspectForAll(DecalComponent.class, PositionComponent.class));
+    this.decalBatch             = batch;
+    this.camera                 = perspectiveCamera;
     this.normalizedCameraVector = new Vector3();
-    this.terrain    = terrain;
+    this.terrain                = terrain;
   }
 
   @Override
@@ -63,7 +63,6 @@ public class DecalRenderingSystem extends EntitySystem {
         renderEntity(entity);
       }
     }
-    
   }
 
   private void renderEntity(Entity entity) {
