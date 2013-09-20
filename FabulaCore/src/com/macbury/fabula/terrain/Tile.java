@@ -83,7 +83,6 @@ public class Tile implements Cloneable, Comparable<Tile> {
   
   public void calculateHeight() {
     this.position.y = (y1 + y2 + y3 + y4 + this.position.y) / 5;
-    
     maskSlope();
   }
   
@@ -292,4 +291,17 @@ public class Tile implements Cloneable, Comparable<Tile> {
   public boolean isPassable() {
     return this.passable;
   }
+
+  public float getMinY() {
+    return Math.min(y1, Math.min(y2, Math.min(y3, y4)));
+  }
+  
+  public float getMaxY() {
+    return Math.max(y1, Math.max(y2, Math.max(y3, y4)));
+  }
+  
+  public float getHeight() {
+    return Math.abs(getMaxY() - getMinY());
+  }
+  
 }

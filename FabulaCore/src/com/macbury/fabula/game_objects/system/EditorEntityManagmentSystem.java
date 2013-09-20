@@ -26,9 +26,9 @@ import com.macbury.fabula.terrain.Terrain;
 import com.macbury.fabula.terrain.Tile;
 
 public class EditorEntityManagmentSystem extends EntitySystem {
-  private static final Color TILE_DEBUG_COLOR             = new Color(0f, 0f, 0f, 0.3f);
+  private static final Color TILE_DEBUG_COLOR             = new Color(0f, 0f, 0f, 0.2f);
   private static final float WIREFRAME_LINE_RENDER_OFFSET = 0.001f;
-  private static final Color TILE_DEBUG_BLOCK_COLOR       = new Color(1f, 0f, 0f, 0.5f);
+  private static final Color TILE_DEBUG_BLOCK_COLOR       = new Color(1f, 0f, 0f, 1f);
   @Mapper ComponentMapper<PositionComponent> pm;
   @Mapper ComponentMapper<BoundingBoxComponent> bbm;
   @Mapper ComponentMapper<StartPositionComponent> spm;
@@ -39,6 +39,7 @@ public class EditorEntityManagmentSystem extends EntitySystem {
   private EditorEntityManagmentSystemListener callback;
   private Vector2 position;
   private boolean showWireframe = true;
+  private boolean showColliders = true;
   
   public EditorEntityManagmentSystem(ShapeRenderer shapeRenderer, Terrain terrain) {
     super(Aspect.getAspectForAll(PositionComponent.class));
@@ -87,18 +88,22 @@ public class EditorEntityManagmentSystem extends EntitySystem {
               shapeRenderer.setColor(TILE_DEBUG_COLOR);
               shapeRenderer.line(x, tile.getY1()+WIREFRAME_LINE_RENDER_OFFSET, z, x+1, tile.getY3()+WIREFRAME_LINE_RENDER_OFFSET, z); // top
               shapeRenderer.line(x+1, tile.getY3()+WIREFRAME_LINE_RENDER_OFFSET, z, x+1, tile.getY4()+WIREFRAME_LINE_RENDER_OFFSET, z+1); // right
-              
+              shapeRenderer.line(x, tile.getY1()+WIREFRAME_LINE_RENDER_OFFSET, z, x+1, tile.getY4()+WIREFRAME_LINE_RENDER_OFFSET, z+1);
+            }
+            
+            if (showColliders) {
               if (!tile.isPassable()) {
                 shapeRenderer.setColor(TILE_DEBUG_BLOCK_COLOR);
-                shapeRenderer.line(x, tile.getY1()+WIREFRAME_LINE_RENDER_OFFSET, z, x+1, tile.getY4()+WIREFRAME_LINE_RENDER_OFFSET, z+1); // cross top left right bottom
-                shapeRenderer.line(x+1, tile.getY3()+WIREFRAME_LINE_RENDER_OFFSET, z, x, tile.getY2()+WIREFRAME_LINE_RENDER_OFFSET, z+1); // cross top right left bottom
-                
+                shapeRenderer.box(x, tile.getMinY(), z+1, 1,tile.getHeight(),1);
               }
             }
           }
+          
+          shapeRenderer.flush();
         }
       }
     shapeRenderer.end();
+
   }
 
   protected void process(Entity entity) {
@@ -150,5 +155,13 @@ public class EditorEntityManagmentSystem extends EntitySystem {
 
   public void setShowWireframe(boolean showWireframe) {
     this.showWireframe = showWireframe;
+  }
+
+  public boolean isShowColliders() {
+    return showColliders;
+  }
+
+  public void setShowColliders(boolean showColliders) {
+    this.showColliders = showColliders;
   }
 }

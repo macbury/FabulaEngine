@@ -50,6 +50,9 @@ public class SceneInspectBeanInfo extends BaseBeanInfo {
     terrainHeightProperty.setShortDescription("Set terrain height");
     terrainHeightProperty.setPropertyEditorClass(TerrainSpinnerEditor.class);
     
+    ExtendedPropertyDescriptor terrainPassableHeightProperty = addProperty("terrainPassable").setCategory(CATEGORY_BRUSH);
+    terrainPassableHeightProperty.setDisplayName("Passable");
+    
     ExtendedPropertyDescriptor terrainAutoTileTypeProperty = addProperty("paintMode").setCategory(CATEGORY_BRUSH);
     terrainAutoTileTypeProperty.setDisplayName("Paint mode");
     terrainAutoTileTypeProperty.setShortDescription("How you place blocks");
@@ -57,6 +60,9 @@ public class SceneInspectBeanInfo extends BaseBeanInfo {
     
     ExtendedPropertyDescriptor wireframeProperty = addProperty("showWireframe").setCategory(CATEGORY_VIEW);
     wireframeProperty.setDisplayName("Show wireframe");
+    
+    ExtendedPropertyDescriptor collidersProperty = addProperty("showColliders").setCategory(CATEGORY_VIEW);
+    collidersProperty.setDisplayName("Show colliders");
   }
   
   public static class AutoTileEditor extends ComboBoxPropertyEditor {

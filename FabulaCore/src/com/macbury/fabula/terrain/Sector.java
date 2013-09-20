@@ -148,6 +148,7 @@ public class Sector extends Renderable implements Disposable {
     ////triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* Top left Vertex */
@@ -157,6 +158,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* Bottom right Vertex */
@@ -166,6 +168,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n1,n2,n3);
@@ -177,6 +180,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n3,n2,n1);
@@ -197,6 +201,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* top right Vertex */
@@ -206,6 +211,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* bottom left Vertex */
@@ -215,6 +221,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n1,n2,n3);
@@ -226,6 +233,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n3,n2,n1);
@@ -246,6 +254,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* top right Vertex */
@@ -255,6 +264,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* bottom left Vertex */
@@ -264,6 +274,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n1,n2,n3);
@@ -275,6 +286,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n3,n2,n1);
@@ -295,6 +307,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* Top left Vertex */
@@ -304,6 +317,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* Bottom right Vertex */
@@ -313,6 +327,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n1,n2,n3);
@@ -324,6 +339,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n3,n2,n1);
@@ -344,6 +360,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* Top left Vertex */
@@ -353,6 +370,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* Bottom right Vertex */
@@ -362,6 +380,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n1,n2,n3);
@@ -373,6 +392,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n3,n2,n1);
@@ -393,6 +413,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* top right Vertex */
@@ -402,6 +423,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* bottom left Vertex */
@@ -411,6 +433,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n1,n2,n3);
@@ -422,6 +445,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n3,n2,n1);
@@ -442,6 +466,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* top right Vertex */
@@ -451,6 +476,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* bottom left Vertex */
@@ -460,6 +486,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n1,n2,n3);
@@ -471,6 +498,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n3,n2,n1);
@@ -491,6 +519,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* top left Vertex */
@@ -500,6 +529,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* bottom Right Vertex */
@@ -509,6 +539,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n1,n2,n3);
@@ -520,6 +551,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n3,n2,n1);
@@ -540,6 +572,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* top right Vertex */
@@ -549,6 +582,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* bottom left Vertex */
@@ -558,6 +592,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n1,n2,n3);
@@ -569,6 +604,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n2,n1,n3);
@@ -589,6 +625,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* bottom left Vertex */
@@ -598,6 +635,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* top right Vertex */
@@ -607,6 +645,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n1,n2,n3);
@@ -618,6 +657,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n3,n2,n1);
@@ -638,6 +678,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* Bottom left Vertex */
@@ -647,6 +688,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* Top right Vertex */
@@ -656,6 +698,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n1,n2,n3);
@@ -667,6 +710,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n3,n2,n1);
@@ -687,6 +731,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* Top left Vertex */
@@ -696,6 +741,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* Bottom right Vertex */
@@ -705,6 +751,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n1,n2,n3);
@@ -716,6 +763,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n3,n2,n1);
@@ -736,6 +784,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* Bottom left Vertex */
@@ -745,6 +794,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     /* Top Right Vertex */
@@ -754,6 +804,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n1,n2,n3);
@@ -765,6 +816,7 @@ public class Sector extends Renderable implements Disposable {
     //triangleGrid.addNormal();
     if (terrain.isDebuging()) {
       triangleGrid.addTilePos(tile.getX(), tile.getZ());
+      triangleGrid.addPassableInfo(tile.isPassable());
     }
     
     triangleGrid.addIndices(n3,n2,n1);

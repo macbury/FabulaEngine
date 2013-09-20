@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.Disposable;
 
 public class TriangleGrid implements Disposable {
   public static enum AttributeType {
-    Position, Normal, Color, TextureCord, TilePosition
+    Position, Normal, Color, TextureCord, TilePosition, Passable
   }
   
   private static final int VERTEXT_PER_COL        = 4;
@@ -132,6 +132,11 @@ public class TriangleGrid implements Disposable {
     currentVertex.color.set(r, g, b, a);
   }
   
+  public void addPassableInfo(boolean passable) {
+    //using(AttributeType.Passable);
+    //currentVertex.passable = passable;
+  }
+  
   public void addUVMap(float u, float v) {
     using(AttributeType.TextureCord);
     currentVertex.textureCordinates.set(u, v);
@@ -157,6 +162,7 @@ public class TriangleGrid implements Disposable {
     calculateNormals();
     this.verties       = new float[vertextCount * getAttributesPerVertex()];
     boolean usingTilePos = isUsing(AttributeType.TilePosition);
+    boolean passable     = isUsing(AttributeType.Passable);
     vertexCursor = 0;
     for (GridVertex vertex : this.vertexsList) {
       this.verties[vertexCursor++] = vertex.position.x;
@@ -177,6 +183,10 @@ public class TriangleGrid implements Disposable {
         this.verties[vertexCursor++] = vertex.tilePosition.x;
         this.verties[vertexCursor++] = vertex.tilePosition.y;
       }
+      
+      //if (passable) {
+      //  this.verties[vertexCursor++] = vertex.passable ? 1.0f : 0.0f;
+      //}
     }
     
     this.mesh = null;
@@ -222,6 +232,10 @@ public class TriangleGrid implements Disposable {
       attributes.add(new VertexAttribute(Usage.Generic, 2, "a_tile_position"));
     }
     
+    if (isUsing(AttributeType.Passable)) {
+//      attributes.add(new VertexAttribute(Usage.Generic, 1, "a_is_passable"));
+    }
+    
     return attributes.toArray(new VertexAttribute[attributes.size()]);
   }
 
@@ -233,5 +247,7 @@ public class TriangleGrid implements Disposable {
     this.mesh   = null;
     vertexsList = null;
   }
+
+  
   
 }

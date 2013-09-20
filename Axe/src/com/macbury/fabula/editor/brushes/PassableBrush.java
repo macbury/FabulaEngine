@@ -1,11 +1,11 @@
 package com.macbury.fabula.editor.brushes;
 
-import com.macbury.fabula.editor.brushes.Brush.BrushType;
 import com.macbury.fabula.editor.undo_redo.TileChanger;
 import com.macbury.fabula.terrain.Terrain;
 import com.macbury.fabula.terrain.Tile;
 
 public class PassableBrush extends Brush {
+  private boolean passable = false;
   
   public PassableBrush(Terrain terrain) {
     super(terrain);
@@ -23,7 +23,8 @@ public class PassableBrush extends Brush {
     TileChanger changer = new TileChanger(terrain);
     
     for (Tile tile : brushTiles) {
-      tile.setPassable(false);
+      tile.setPassable(passable);
+      this.terrain.addSectorToRebuildFromTile(tile);
       changer.add(tile);
     }
     
@@ -32,4 +33,11 @@ public class PassableBrush extends Brush {
     }
   }
   
+  public boolean getMode() {
+    return passable;
+  }
+  
+  public void setMode(boolean p) {
+    this.passable = p;
+  }
 }

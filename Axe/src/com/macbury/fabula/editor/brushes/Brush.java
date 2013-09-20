@@ -150,6 +150,6 @@ public abstract class Brush {
   public void setWorldEditScreen(WorldEditScreen worldEditScreen) {
     this.screen = worldEditScreen;
   }
-  
+
   
 }

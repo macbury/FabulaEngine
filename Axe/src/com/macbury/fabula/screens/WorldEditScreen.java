@@ -403,7 +403,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     camera.lookAt(width/2, 0, height/2);
   }
 
-  public Brush getPassableBrush() {
+  public PassableBrush getPassableBrush() {
     return this.passableTileBrush;
   }
 

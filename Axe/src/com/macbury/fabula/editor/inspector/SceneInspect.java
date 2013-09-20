@@ -65,6 +65,22 @@ public class SceneInspect {
     this.screen.getScene().getEditorEntityManagmentSystem().setShowWireframe(show);
   }
   
+  public boolean getShowColliders() {
+    return this.screen.getScene().getEditorEntityManagmentSystem().isShowColliders();
+  }
+  
+  public void setShowColliders(boolean show) {
+    this.screen.getScene().getEditorEntityManagmentSystem().setShowColliders(show);
+  }
+  
+  public boolean getTerrainPassable() {
+    return this.screen.getPassableBrush().getMode();
+  }
+  
+  public void setTerrainPassable(boolean p) {
+    this.screen.getPassableBrush().setMode(p);
+  }
+  
   public String getSkyBox() {
     if (screen.getScene().getSkybox() == null) {
       return "";
