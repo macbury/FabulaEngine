@@ -238,9 +238,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mntmResetCamera.addActionListener(this);
     mnMap.add(mntmResetCamera);
     
-    mntmGeneratePassableMap = new JMenuItem("Generate passable map");
-    mnMap.add(mntmGeneratePassableMap);
-    
     JMenu mnEdit = new JMenu("Edit");
     mainMenuBar.add(mnEdit);
     
@@ -313,16 +310,20 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mnAssets = new JMenu("Assets");
     mainMenuBar.add(mnAssets);
     
-    JMenu mnDeveloper = new JMenu("Developer");
+    JMenu mnDeveloper = new JMenu("Tools");
     mainMenuBar.add(mnDeveloper);
     
     this.mntmBuildTileMap = new JMenuItem("Auto Tile Hash Map");
     mntmBuildTileMap.addActionListener(this);
-    mnDeveloper.add(mntmBuildTileMap);
+    
+    mntmGeneratePassableMap = new JMenuItem("Generate passable map");
+    mnDeveloper.add(mntmGeneratePassableMap);
+    mnDeveloper.addSeparator();
     
     this.mntmRebuildTilesets = new JMenuItem("Rebuild tilesets");
     mntmRebuildTilesets.addActionListener(this);
     mnDeveloper.add(mntmRebuildTilesets);
+    mnDeveloper.add(mntmBuildTileMap);
     
     this.mntmDebugFrameBuffer = new JMenuItem("Debug frame buffer");
     mntmDebugFrameBuffer.addActionListener(this);

@@ -806,4 +806,8 @@ public class Sector extends Renderable implements Disposable {
   public BoundingBox getBounds() {
     return boundingBox;
   }
+
+  public boolean containsTilePosition(float x, float z) {
+    return (x >= getStartX() && x <= getEndX() && z >= getStartZ() && z <= getEndZ());
+  }
 }

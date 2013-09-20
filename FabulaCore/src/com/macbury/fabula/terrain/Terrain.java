@@ -300,6 +300,16 @@ public class Terrain implements Disposable {
      //encoded = null;
   }
 
+  public boolean isVisibleTile(int x, int z) {
+    for (Sector sector : visibleSectors) {
+      if (sector.containsTilePosition(x, z)){
+        return true;
+      }
+    }
+    
+    return false;
+  }
+  
   public boolean isVisible(Vector3 vector) {
     for (Sector sector : visibleSectors) {
       if (sector.getBounds().contains(vector)) {

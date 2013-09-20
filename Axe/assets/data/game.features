@@ -1,6 +1,6 @@
-<game-features game:build="1530" xmlns:game="http://macbury.pl/">
+<game-features game:build="1553" xmlns:game="http://macbury.pl/">
    <title>Brutal Crasher</title>
-   <player-start-position x="40" y="53" map="fc3f3dc5-32ae-434a-b21f-5a4f22342ce3"/>
+   <player-start-position x="28" y="40" map="fc3f3dc5-32ae-434a-b21f-5a4f22342ce3"/>
    <fonts length="1">
       <font>base</font>
    </fonts>
@@ -61,17 +61,17 @@
    <corner combination="C0FF000">PathHorizontal</corner>
    <corner combination="F0000">PathHorizontalRight</corner>
    <corner combination="EFDFFFFF">InnerReapeating</corner>
-   <corner combination="F0003FF">PathVerticalBottom</corner>
    <corner combination="800FF000">PathHorizontal</corner>
+   <corner combination="F0003FF">PathVerticalBottom</corner>
    <corner combination="CFC00000">PathVerticalBottom</corner>
    <corner combination="F00F0F0">PathCrossRightTopBottom</corner>
    <corner combination="F00003F">PathVertical</corner>
-   <corner combination="FFDFFFFF">InnerReapeating</corner>
    <corner combination="400200">Start</corner>
+   <corner combination="FFDFFFFF">InnerReapeating</corner>
    <corner combination="CF000000">PathVerticalBottom</corner>
    <corner combination="FF0F0000">CornerBottomRight</corner>
    <corner combination="F000333">PathVerticalBottom</corner>
-   <corner combination="F0">PathVerticalTop</corner>
+   <corner combination="F0">PathVertical</corner>
    <corner combination="0">Start</corner>
    <corner combination="A00FF000">PathHorizontal</corner>
    <corner combination="F0FF">CornerTopLeft</corner>
@@ -81,6 +81,7 @@
    <corner combination="FF0F0FF">EdgeLeft</corner>
    <corner combination="FF0F200">CornerBottomLeft</corner>
    <corner combination="FC000F0">PathVertical</corner>
+   <corner combination="F000F0">PathVertical</corner>
    <corner combination="5FF005">PathHorizontal</corner>
    <corner combination="FF0000F0">PathVertical</corner>
    <corner combination="50F005">PathHorizontalLeft</corner>
@@ -95,7 +96,7 @@
    <corner combination="5FF00F">PathHorizontal</corner>
    <corner combination="FD0F0FF">EdgeLeft</corner>
    <corner combination="F0003F0">PathVertical</corner>
-   <corner combination="F000">PathHorizontalLeft</corner>
+   <corner combination="F000">PathHorizontal</corner>
    <corner combination="FFFFFFFF">InnerReapeating</corner>
    <corner combination="F000000">PathVerticalBottom</corner>
    <corner combination="FFFFF000">EdgeBottom</corner>
@@ -106,5 +107,6 @@
    <corner combination="5FF000">PathHorizontal</corner>
    <corner combination="F000200">PathVerticalBottom</corner>
    <corner combination="F0F0000">PathCornerBottomRight</corner>
+   <corner combination="FA00">InnerReapeating</corner>
    <corner combination="A00AF000">InnerReapeating</corner>
 </game-features>
