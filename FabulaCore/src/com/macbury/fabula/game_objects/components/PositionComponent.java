@@ -16,5 +16,9 @@ public class PositionComponent extends VectorComponent {
   public void setPosition(Vector2 spawnPosition) {
     this.vector.set(spawnPosition.x, 0.0f, spawnPosition.y);
   }
+
+  public boolean equalsTile(Vector2 tile) {
+    return (int)this.vector.x == (int)tile.x && (int)this.vector.z == (int)tile.y;
+  }
   
 }

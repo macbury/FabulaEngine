@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.macbury.fabula.game_objects.components.PositionComponent;
 import com.macbury.fabula.game_objects.components.TileMovementComponent;
+import com.macbury.fabula.terrain.Terrain;
 
 public class PlayerSystem extends VoidEntitySystem {
   private static final float PLAYER_SPEED = 2.2f;

@@ -20,6 +20,7 @@ import de.matthiasmann.twlthemeeditor.properties.EnumProperty;
 public class SceneInspectBeanInfo extends BaseBeanInfo {
   private static final String CATEGORY_MAP = "Map";
   private static final String CATEGORY_BRUSH = "Brush";
+  private static final String CATEGORY_VIEW = "View";
   
   public SceneInspectBeanInfo() {
     super(SceneInspect.class);
@@ -53,6 +54,9 @@ public class SceneInspectBeanInfo extends BaseBeanInfo {
     terrainAutoTileTypeProperty.setDisplayName("Paint mode");
     terrainAutoTileTypeProperty.setShortDescription("How you place blocks");
     terrainAutoTileTypeProperty.setPropertyEditorClass(AutoTileEditor.class);
+    
+    ExtendedPropertyDescriptor wireframeProperty = addProperty("showWireframe").setCategory(CATEGORY_VIEW);
+    wireframeProperty.setDisplayName("Show wireframe");
   }
   
   public static class AutoTileEditor extends ComboBoxPropertyEditor {

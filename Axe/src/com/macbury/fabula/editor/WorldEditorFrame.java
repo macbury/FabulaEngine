@@ -120,6 +120,7 @@ import javax.swing.JScrollBar;
 import net.contentobjects.jnotify.JNotify;
 import net.contentobjects.jnotify.JNotifyException;
 import javax.swing.JInternalFrame;
+import javax.swing.JCheckBoxMenuItem;
 
 public class WorldEditorFrame extends JFrame implements ChangeListener, ItemListener, ListSelectionListener, ActionListener, ChangeManagerListener, WindowListener, PropertyChangeListener  {
   
@@ -160,13 +161,18 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
   private JToggleButton tglbtnEventEditor;
   private SceneSheetPanel inspectorSheetPanel;
   private JMenuItem mntmCleanLogs;
-  private JMenuItem mntmPlaceStairs;
   private JMenuItem mntmPlaceModel;
   private JToggleButton tglbtnFoliagebrushbutton;
   private JToggleButton tglbtnLiquidbrushbutton;
   private JMenuItem mntmResetCamera;
   private int shaderWatchID;
   private JMenu mnAssets;
+  public JPopupMenu editEventPopupMenu;
+  private JMenuItem mntmEditEvent;
+  private JMenuItem mntmDeleteEvent;
+  private JMenuItem mntmCancel_1;
+  private JToggleButton tglbtnPassablebrush;
+  private JMenuItem mntmGeneratePassableMap;
   public WorldEditorFrame(EditorGameManager game) {
     PrintStream origOut = System.out;
     PrintStream interceptor = new LogInterceptor(origOut);
@@ -222,8 +228,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mntmOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
     mnMap.add(mntmOpen);
     
-    JSeparator separator_1 = new JSeparator();
-    mnMap.add(separator_1);
+    mnMap.addSeparator();
     
     this.mntmReloadMap = new JMenuItem("Reload");
     mntmReloadMap.addActionListener(this);
@@ -232,6 +237,39 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mntmResetCamera = new JMenuItem("Reset Camera");
     mntmResetCamera.addActionListener(this);
     mnMap.add(mntmResetCamera);
+    
+    mntmGeneratePassableMap = new JMenuItem("Generate passable map");
+    mnMap.add(mntmGeneratePassableMap);
+    
+    JMenu mnEdit = new JMenu("Edit");
+    mainMenuBar.add(mnEdit);
+    
+    this.mntmUndo = new JMenuItem("Undo");
+    mntmUndo.addActionListener(this);
+    mntmUndo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK));
+    mnEdit.add(mntmUndo);
+    
+    this.mntmRedo = new JMenuItem("Redo");
+    mntmRedo.addActionListener(this);
+    mntmRedo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.CTRL_MASK));
+    mnEdit.add(mntmRedo);
+    
+     mnEdit.addSeparator();
+     
+     JMenuItem mntmNewMenuItem = new JMenuItem("Cut");
+     mntmNewMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_MASK));
+     mntmNewMenuItem.setEnabled(false);
+     mnEdit.add(mntmNewMenuItem);
+     
+     JMenuItem mntmCopy = new JMenuItem("Copy");
+     mntmCopy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK));
+     mntmCopy.setEnabled(false);
+     mnEdit.add(mntmCopy);
+     
+     JMenuItem mntmPaste = new JMenuItem("Paste");
+     mntmPaste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_MASK));
+     mntmPaste.setEnabled(false);
+     mnEdit.add(mntmPaste);
     
     JMenu mnGame = new JMenu("Game");
     mainMenuBar.add(mnGame);
@@ -266,43 +304,11 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mntmCleanLogs.addActionListener(this);
     mnGame.add(mntmCleanLogs);
     
-    JSeparator separator_2 = new JSeparator();
-    mnGame.add(separator_2);
+    mnGame.addSeparator();
     
     JMenuItem mntmBuildAssetBundle = new JMenuItem("Build Asset Bundle");
     mntmBuildAssetBundle.setEnabled(false);
     mnGame.add(mntmBuildAssetBundle);
-    
-    JMenu mnEdit = new JMenu("Edit");
-    mainMenuBar.add(mnEdit);
-    
-    this.mntmUndo = new JMenuItem("Undo");
-    mntmUndo.addActionListener(this);
-    mntmUndo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK));
-    mnEdit.add(mntmUndo);
-    
-    this.mntmRedo = new JMenuItem("Redo");
-    mntmRedo.addActionListener(this);
-    mntmRedo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.CTRL_MASK));
-    mnEdit.add(mntmRedo);
-    
-    JSeparator separator = new JSeparator();
-    mnEdit.add(separator);
-    
-    JMenuItem mntmNewMenuItem = new JMenuItem("Cut");
-    mntmNewMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_MASK));
-    mntmNewMenuItem.setEnabled(false);
-    mnEdit.add(mntmNewMenuItem);
-    
-    JMenuItem mntmCopy = new JMenuItem("Copy");
-    mntmCopy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK));
-    mntmCopy.setEnabled(false);
-    mnEdit.add(mntmCopy);
-    
-    JMenuItem mntmPaste = new JMenuItem("Paste");
-    mntmPaste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_MASK));
-    mntmPaste.setEnabled(false);
-    mnEdit.add(mntmPaste);
     
     mnAssets = new JMenu("Assets");
     mainMenuBar.add(mnAssets);
@@ -374,7 +380,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     inspectorAndOpenGlContainerSplitPane.setResizeWeight(0.001);
     panel_9.add(inspectorAndOpenGlContainerSplitPane, BorderLayout.CENTER);
     inspectorAndOpenGlContainerSplitPane.setContinuousLayout(true);
-    inspectorAndOpenGlContainerSplitPane.setDividerLocation(229);
+    inspectorAndOpenGlContainerSplitPane.setDividerLocation(260);
     JPopupMenu.setDefaultLightWeightPopupEnabled( false );
     
     JPanel openGLContainerPane = new JPanel();
@@ -390,10 +396,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mntmNewEvent.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/event.png")));
     eventPopupMenu.add(mntmNewEvent);
     
-    mntmPlaceStairs = new JMenuItem("Place stairs");
-    mntmPlaceStairs.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/stairs.png")));
-    eventPopupMenu.add(mntmPlaceStairs);
-    
     mntmPlaceModel = new JMenuItem("Place model");
     mntmPlaceModel.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/model.png")));
     eventPopupMenu.add(mntmPlaceModel);
@@ -403,14 +405,28 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     mntmSetStartPosition.addActionListener(this);
     eventPopupMenu.add(mntmSetStartPosition);
     
-    JSeparator separator_3 = new JSeparator();
-    eventPopupMenu.add(separator_3);
+    eventPopupMenu.addSeparator();
     
     JMenuItem mntmCancel = new JMenuItem("Cancel");
+    mntmCancel.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
     eventPopupMenu.add(mntmCancel);
     
     openGLContainerPane.setLayout(new BoxLayout(openGLContainerPane, BoxLayout.X_AXIS));
-
+    
+    editEventPopupMenu = new JPopupMenu();
+    openGLContainerPane.add(editEventPopupMenu);
+    
+    mntmEditEvent = new JMenuItem("Edit");
+    editEventPopupMenu.add(mntmEditEvent);
+    
+    mntmDeleteEvent = new JMenuItem("Delete");
+    editEventPopupMenu.add(mntmDeleteEvent);
+    editEventPopupMenu.addSeparator();
+    
+    mntmCancel_1 = new JMenuItem("Cancel");
+    mntmCancel_1.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
+    editEventPopupMenu.add(mntmCancel_1);
+    
     
     JPanel panel_11 = new JPanel();
     inspectorAndOpenGlContainerSplitPane.setLeftComponent(panel_11);
@@ -432,17 +448,27 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     
     this.tglbtnAutoTileEdit = new JToggleButton("");
     tglbtnAutoTileEdit.addActionListener(this);
+    
+    tglbtnPassablebrush = new JToggleButton("");
+    tglbtnPassablebrush.addActionListener(this);
+    tglbtnPassablebrush.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/passable.png")));
+    toolBar.add(tglbtnPassablebrush);
     tglbtnAutoTileEdit.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/autotile.png")));
     toolBar.add(tglbtnAutoTileEdit);
+    toolbarGroup.add(tglbtnPassablebrush);
     toolbarGroup.add(tglbtnAutoTileEdit);
     
     tglbtnLiquidbrushbutton = new JToggleButton("");
+    tglbtnLiquidbrushbutton.addActionListener(this);
     tglbtnLiquidbrushbutton.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/injection.png")));
     toolBar.add(tglbtnLiquidbrushbutton);
+    toolbarGroup.add(tglbtnLiquidbrushbutton);
     
     tglbtnFoliagebrushbutton = new JToggleButton("");
+    tglbtnFoliagebrushbutton.addActionListener(this);
     tglbtnFoliagebrushbutton.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/grass.png")));
     toolBar.add(tglbtnFoliagebrushbutton);
+    toolbarGroup.add(tglbtnFoliagebrushbutton);
     
     this.tglbtnEventEditor = new JToggleButton("");
     tglbtnEventEditor.addActionListener(this);
@@ -662,6 +688,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     WorldEditScreen screen = this.gameManager.getWorldEditScreen();
     Scene scene            = screen.getScene();
     AutoTileBrush brush = screen.getAutoTileBrush();
+    
     if (e.getSource() == mntmBuildTileMap) {
       autoTileDebugFrame.setBrush(brush);
       autoTileDebugFrame.updateRows();
@@ -749,9 +776,14 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     WorldEditScreen screen = this.gameManager.getWorldEditScreen();
     Scene scene            = screen.getScene();
     AutoTileBrush brush    = screen.getAutoTileBrush();
+    
+    if (tglbtnPassablebrush.isSelected()) {
+      screen.setCurrentBrush(screen.getPassableBrush());
+    }
+    
     if (tglbtnTerrainEdit.isSelected()) {
       screen.setCurrentBrush(screen.getTerrainBrush());
-    }
+    } 
     
     if (tglbtnAutoTileEdit.isSelected()) {
       screen.setCurrentBrush(screen.getAutoTileBrush());
@@ -763,6 +795,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     if (tglbtnEventEditor.isSelected()) {
       screen.setCurrentBrush(screen.getEventBrush());
     }
+    
     screen.getCurrentBrush().setWorldEditScreen(screen);
     screen.getCurrentBrush().setChangeManager(this.changeManager);
   }

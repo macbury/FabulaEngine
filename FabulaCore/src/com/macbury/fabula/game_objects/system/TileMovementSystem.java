@@ -33,9 +33,10 @@ public class TileMovementSystem extends EntityProcessingSystem {
     
     if (mc.isMoving()) {
       Tile futureTile = terrain.getTile((int)mc.getFinalPosition().x, (int)mc.getFinalPosition().z);
-      if (futureTile.getY() != currentTile.getY()) {
+      if (!futureTile.isPassable()) {
         mc.setMoving(false);
       } else {
+        mc.setFinalTileY(futureTile.getY());
         mc.addDelta(world.getDelta());
         pc.setVector(mc.getCurrentPosition());
         

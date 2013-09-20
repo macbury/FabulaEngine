@@ -150,6 +150,10 @@ public class GameDatabase {
       maps = new HashMap<String, String>();
     }
     
+    if (CORNER_MAP == null) {
+      CORNER_MAP = new HashMap<String, AutoTiles.Types>();
+    }
+    
     uiSkin = new Skin(G.fs("ui/uiskin.json"));
   }
   

@@ -19,6 +19,7 @@ import org.simpleframework.xml.core.Complete;
 import org.simpleframework.xml.core.Persist;
 
 import com.badlogic.gdx.utils.Base64Coder;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.terrain.AutoTiles;
 import com.macbury.fabula.terrain.Terrain;
@@ -26,6 +27,9 @@ import com.macbury.fabula.terrain.Tile;
 
 @Root(name="scene")
 public class ScenePersister {
+  public static final int VERSION = 1;  
+  @Element(required=false)
+  private int version;
   @Element
   private String           name;
   @Element(required=false)
@@ -74,6 +78,7 @@ public class ScenePersister {
     tilesetName     = terrain.getTileset().getName();
     ambientColor    = scene.getLights().ambientLight.toIntBits();
     sunLightColor   = scene.getSunLight().color.toIntBits();
+    this.version    = VERSION;
   }
   
   @Commit
@@ -82,6 +87,11 @@ public class ScenePersister {
       terrainData = null;
       return;
     }
+    
+    if (version != VERSION) {
+      throw new GdxRuntimeException("Map is old! Map version is " + version + " but required is " + VERSION);
+    }
+    
     Inflater inflater = new Inflater();
     //inflater.setStrategy(Deflater.BEST_SPEED);
     
@@ -126,6 +136,8 @@ public class ScenePersister {
           String aid = dis.readUTF();
           int ord = dis.readInt();
           
+          tile.setPassable(dis.readBoolean());
+          
           AutoTiles autoTiles  = terrain.getTileset().getAutoTiles(aid);
           AutoTiles.Types type = AutoTiles.Types.values()[ord];
           
@@ -162,6 +174,7 @@ public class ScenePersister {
           dos.writeFloat(tile.getY4());
           dos.writeUTF(tile.getAutoTile().getAutoTiles().getName());
           dos.writeInt(tile.getAutoType().ordinal());
+          dos.writeBoolean(tile.isPassable());
         }
       }
       

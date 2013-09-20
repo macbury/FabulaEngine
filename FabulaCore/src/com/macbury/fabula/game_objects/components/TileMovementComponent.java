@@ -98,4 +98,8 @@ public class TileMovementComponent extends VectorComponent {
     }
   }
 
+  public void setFinalTileY(float y) {
+    this.finalPosition.y = y;
+  }
+
 }

@@ -39,6 +39,7 @@ import com.macbury.fabula.editor.brushes.AutoTileBrush;
 import com.macbury.fabula.editor.brushes.Brush;
 import com.macbury.fabula.editor.brushes.EventBrush;
 import com.macbury.fabula.editor.brushes.Brush.BrushType;
+import com.macbury.fabula.editor.brushes.PassableBrush;
 import com.macbury.fabula.editor.brushes.TerrainBrush;
 import com.macbury.fabula.editor.tiles.AutoTileDebugFrame;
 import com.macbury.fabula.editor.tree.GameTreeModel.BaseGameFolderNode;
@@ -73,6 +74,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   private SpriteBatch uiSpriteBatch;
   private OrthographicCamera guiCamera;
   private ActionTimer infoTimer;
+  private PassableBrush passableTileBrush;
   
   public WorldEditScreen(GameManager manager) {
     super(manager);
@@ -128,9 +130,10 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   }
   
   private void createBrushes() {
-    terrainBrush  = new TerrainBrush(terrain);
-    autoTileBrush = new AutoTileBrush(terrain);
-    eventBrush    = new EventBrush(terrain);
+    terrainBrush      = new TerrainBrush(terrain);
+    autoTileBrush     = new AutoTileBrush(terrain);
+    passableTileBrush = new PassableBrush(terrain);
+    eventBrush        = new EventBrush(terrain);
   }
 
   public void openMap(File file) {
@@ -398,6 +401,10 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     int height  = terrain.getRows();
     camera.position.set(width/2, 17, height/2);
     camera.lookAt(width/2, 0, height/2);
+  }
+
+  public Brush getPassableBrush() {
+    return this.passableTileBrush;
   }
 
 }

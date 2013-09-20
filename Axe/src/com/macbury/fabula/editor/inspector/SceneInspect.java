@@ -57,6 +57,14 @@ public class SceneInspect {
     return new Dimension(screen.getScene().getTerrain().getColumns(), screen.getScene().getTerrain().getRows());
   }
   
+  public boolean getShowWireframe() {
+    return this.screen.getScene().getEditorEntityManagmentSystem().isShowWireframe();
+  }
+  
+  public void setShowWireframe(boolean show) {
+    this.screen.getScene().getEditorEntityManagmentSystem().setShowWireframe(show);
+  }
+  
   public String getSkyBox() {
     if (screen.getScene().getSkybox() == null) {
       return "";

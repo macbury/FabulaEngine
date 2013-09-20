@@ -262,4 +262,8 @@ public class Scene implements Disposable {
       this.setSkybox(null);
     }
   }
+
+  public EditorEntityManagmentSystem getEditorEntityManagmentSystem() {
+    return editorEntityManagmentSystem;
+  }
 }

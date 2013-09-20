@@ -34,6 +34,22 @@ public class Sector extends Renderable implements Disposable {
     this.primitiveType     = GL20.GL_TRIANGLES;
   }
 
+  public int getStartX() {
+    return (int)this.topLeftCorner.x;
+  }
+  
+  public int getStartZ() {
+    return (int)this.topLeftCorner.z;
+  }
+  
+  public int getEndX() {
+    return (int)this.bottomRightCorner.x;
+  }
+  
+  public int getEndZ() {
+    return (int)this.bottomRightCorner.z;
+  }
+  
   public void build() {
     float minHeight = 0.0f;
     float maxHeight = 1.0f;

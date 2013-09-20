@@ -40,9 +40,7 @@ public class MovementSystem extends EntityProcessingSystem {
         Tile currentTile       = this.terrain.getTile(pc.getTileX(), pc.getTileZ());
         Tile futureTile        = this.terrain.getTile(Math.round(futureVector.x), Math.round(futureVector.z));
         
-        boolean passable       = currentTile.getY() == futureTile.getY();
-        
-        if (passable) {
+        if (futureTile.isPassable()) {
           position.set(futureVector);
         }
       } else {

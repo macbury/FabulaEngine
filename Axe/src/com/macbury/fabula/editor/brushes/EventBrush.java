@@ -8,10 +8,11 @@ import com.artemis.managers.TagManager;
 import com.badlogic.gdx.Gdx;
 import com.macbury.fabula.db.PlayerStartPosition;
 import com.macbury.fabula.game_objects.Tags;
+import com.macbury.fabula.game_objects.system.EditorEntityManagmentSystem.EditorEntityManagmentSystemListener;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.terrain.Terrain;
 
-public class EventBrush extends Brush {
+public class EventBrush extends Brush implements EditorEntityManagmentSystemListener {
   private static final String TAG = "EventBrush";
 
   public EventBrush(Terrain terrain) {
@@ -26,17 +27,9 @@ public class EventBrush extends Brush {
   
   @Override
   public void onApply() {
-    if (selectedPlayerPosition(Gdx.input.getX(), Gdx.input.getY())) {
-      
-    } else {
-      screen.getContainerFrame().eventPopupMenu.show(screen.getContainerFrame().canvas, Gdx.input.getX(), Gdx.input.getY());
-    }
+    screen.getScene().getEditorEntityManagmentSystem().onClick(this, this.getPosition());
   }
 
-  private boolean selectedPlayerPosition(int x, int y) {
-
-    return false;
-  }
 
   public void placeStartPosition() {
     PlayerStartPosition playerStartPosition = new PlayerStartPosition((int)this.getPosition().x, (int)this.getPosition().y, screen.getScene().getUID());
@@ -49,6 +42,16 @@ public class EventBrush extends Brush {
       entity = G.factory.buildStartPosition(playerStartPosition);
       entity.addToWorld();
     }
+  }
+
+  @Override
+  public void onEntitySelect(Entity entity) {
+    if (entity == null) {
+      screen.getContainerFrame().eventPopupMenu.show(screen.getContainerFrame().canvas, Gdx.input.getX(), Gdx.input.getY());
+    } else {
+      screen.getContainerFrame().editEventPopupMenu.show(screen.getContainerFrame().canvas, Gdx.input.getX(), Gdx.input.getY());
+    }
+    
   }
 
 }

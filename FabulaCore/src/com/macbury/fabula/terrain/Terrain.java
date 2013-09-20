@@ -343,4 +343,8 @@ public class Terrain implements Disposable {
     
     return true;
   }
+
+  public Stack<Sector> getVisibleSectors() {
+    return visibleSectors;
+  }
 }

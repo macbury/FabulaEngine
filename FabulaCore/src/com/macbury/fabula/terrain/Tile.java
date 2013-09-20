@@ -22,6 +22,7 @@ public class Tile implements Cloneable, Comparable<Tile> {
   
   private int gid = 0;
   private AutoTile autoTile;
+  private boolean passable = true;
   
   public Tile(float x, float y, float z) {
     gid      = GID_COUNTER++;
@@ -282,5 +283,13 @@ public class Tile implements Cloneable, Comparable<Tile> {
 
   public void setZ(int z) {
     this.position.z = z;
+  }
+
+  public void setPassable(boolean b) {
+    this.passable = b;
+  }
+  
+  public boolean isPassable() {
+    return this.passable;
   }
 }

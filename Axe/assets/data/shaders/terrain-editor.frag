@@ -41,10 +41,10 @@ void main() {
   //}
   //v_color.r = glFragCord.x;
   //v_color   = clamp(v_color, 0;, 1.0);
-  vec4 current_texture = v_color * texture2D(u_texture0, v_textCords);
+  vec4 current_texture = texture2D(u_texture0, v_textCords);
   
   if (isInRect()) {
-    gl_FragColor = vec4(1.5f, 1.5f, 1.5f, 0.5f) * current_texture;
+    gl_FragColor = vec4(1.5f, 1.5f, 1.5f, 1.5f) * current_texture;
   } else {
     gl_FragColor = current_texture;
   }
