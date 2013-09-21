@@ -18,7 +18,7 @@ public class TriangleGrid implements Disposable {
     Position, Normal, Color, TextureCord, TilePosition, Passable
   }
   
-  private static final int VERTEXT_PER_COL        = 4;
+  public static final int VERTEXT_PER_COL        = 4;
   private int rows;
   private int columns;
   private short vertexCursor;
@@ -36,8 +36,7 @@ public class TriangleGrid implements Disposable {
   public TriangleGrid(int width, int height, boolean isStatic) {
     this.rows           = height;
     this.columns        = width;
-    this.vertextCount   = rows*columns* VERTEXT_PER_COL;
-    this.indices        = new short[vertextCount * 3];
+    
     this.vertexsList    = new ArrayList<GridVertex>(rows*columns);
     this.attributeTypes = new ArrayList<AttributeType>();
   }
@@ -101,6 +100,10 @@ public class TriangleGrid implements Disposable {
     this.vertexCursor  = 0;
     this.indicesCursor = 0;
     this.vertexIndex   = 0;
+    
+    this.vertextCount   = rows*columns*getAttributesPerVertex();
+    this.indices        = new short[vertextCount * 3];
+    
     this.attributeTypes.clear();
     this.vertexsList.clear();
   }
@@ -115,6 +118,7 @@ public class TriangleGrid implements Disposable {
   
   public void addNormal() {
     this.addNormal(0.0f,0.0f,0.0f);
+    using(AttributeType.Normal);
   }
 
   public void addNormal(float x, float y, float z) {
@@ -161,23 +165,35 @@ public class TriangleGrid implements Disposable {
   public void end() {
     calculateNormals();
     this.verties       = new float[vertextCount * getAttributesPerVertex()];
-    boolean usingTilePos = isUsing(AttributeType.TilePosition);
-    boolean passable     = isUsing(AttributeType.Passable);
+    boolean usingTilePos  = isUsing(AttributeType.TilePosition);
+    boolean usingTextCord = isUsing(AttributeType.TextureCord);
+    boolean usingNormals  = isUsing(AttributeType.Normal);
+    
+    if (usingNormals) {
+      calculateNormals();
+    }
+    
     vertexCursor = 0;
     for (GridVertex vertex : this.vertexsList) {
       this.verties[vertexCursor++] = vertex.position.x;
       this.verties[vertexCursor++] = vertex.position.y;
       this.verties[vertexCursor++] = vertex.position.z;
       
-      //vertex.normal.nor();
-      //this.verties[vertexCursor++] = vertex.normal.x;
-      //this.verties[vertexCursor++] = vertex.normal.y;
-      //this.verties[vertexCursor++] = vertex.normal.z;
+      if (usingNormals) {
+        vertex.normal.nor();
+        this.verties[vertexCursor++] = vertex.normal.x;
+        this.verties[vertexCursor++] = vertex.normal.y;
+        this.verties[vertexCursor++] = vertex.normal.z;
+      }
+      
       
       //this.verties[vertexCursor++] = Color.toFloatBits(vertex.color.r, vertex.color.g, vertex.color.b, vertex.color.a);
       
-      this.verties[vertexCursor++] = vertex.textureCordinates.x;
-      this.verties[vertexCursor++] = vertex.textureCordinates.y;
+      if (usingTextCord) {
+        this.verties[vertexCursor++] = vertex.textureCordinates.x;
+        this.verties[vertexCursor++] = vertex.textureCordinates.y;
+      }
+      
       
       if (usingTilePos) {
         this.verties[vertexCursor++] = vertex.tilePosition.x;
@@ -246,6 +262,14 @@ public class TriangleGrid implements Disposable {
     }
     this.mesh   = null;
     vertexsList = null;
+  }
+
+  public int getColumns() {
+    return this.columns;
+  }
+
+  public int getRows() {
+    return this.rows;
   }
 
   

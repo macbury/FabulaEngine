@@ -94,7 +94,7 @@ public class EditorEntityManagmentSystem extends EntitySystem {
             if (showColliders) {
               if (!tile.isPassable()) {
                 shapeRenderer.setColor(TILE_DEBUG_BLOCK_COLOR);
-                shapeRenderer.box(x, tile.getMinY(), z+1, 1,tile.getHeight(),1);
+                shapeRenderer.box(x, tile.getMinY(), z+1, 1, Math.max(tile.getHeight(), 1.0f),1);
               }
             }
           }
