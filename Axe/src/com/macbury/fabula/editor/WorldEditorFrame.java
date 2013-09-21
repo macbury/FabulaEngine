@@ -574,6 +574,22 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
       
     }
     
+    mnAssets.addSeparator();
+    JMenuItem preprocessedItemFolder = new JMenuItem("preprocessed/");
+    preprocessedItemFolder.addActionListener(new ActionListener() {
+      
+      @Override
+      public void actionPerformed(ActionEvent arg0) {
+        try {
+          Desktop.getDesktop().open(new File("preprocessed/"));
+        } catch (IOException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+    });
+    mnAssets.add(preprocessedItemFolder);
+    
     try {
       String path = G.fs("shaders/").file().getAbsolutePath();
       Gdx.app.log(TAG, "Watching: " + path);

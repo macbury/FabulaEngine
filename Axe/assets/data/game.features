@@ -1,4 +1,4 @@
-<game-features game:build="1616" xmlns:game="http://macbury.pl/">
+<game-features game:build="1620" xmlns:game="http://macbury.pl/">
    <title>Brutal Crasher</title>
    <player-start-position x="21" y="13" map="cd8ca19d-7bfa-4e30-89b7-106b0f560753"/>
    <fonts length="1">
@@ -63,13 +63,13 @@
    <corner combination="C0FF000">PathHorizontal</corner>
    <corner combination="F0000">PathHorizontalRight</corner>
    <corner combination="EFDFFFFF">InnerReapeating</corner>
-   <corner combination="F0003FF">PathVerticalBottom</corner>
    <corner combination="800FF000">PathHorizontal</corner>
+   <corner combination="F0003FF">PathVerticalBottom</corner>
    <corner combination="CFC00000">PathVerticalBottom</corner>
    <corner combination="F00F0F0">PathCrossRightTopBottom</corner>
    <corner combination="F00003F">PathVertical</corner>
-   <corner combination="FFDFFFFF">InnerReapeating</corner>
    <corner combination="400200">Start</corner>
+   <corner combination="FFDFFFFF">InnerReapeating</corner>
    <corner combination="CF000000">PathVerticalBottom</corner>
    <corner combination="FF0F0000">CornerBottomRight</corner>
    <corner combination="F000333">PathVerticalBottom</corner>
