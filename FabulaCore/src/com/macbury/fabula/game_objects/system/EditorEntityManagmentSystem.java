@@ -86,6 +86,7 @@ public class EditorEntityManagmentSystem extends EntitySystem {
             
             if (showWireframe) {
               shapeRenderer.setColor(TILE_DEBUG_COLOR);
+              
               shapeRenderer.line(x, tile.getY1()+WIREFRAME_LINE_RENDER_OFFSET, z, x+1, tile.getY3()+WIREFRAME_LINE_RENDER_OFFSET, z); // top
               shapeRenderer.line(x+1, tile.getY3()+WIREFRAME_LINE_RENDER_OFFSET, z, x+1, tile.getY4()+WIREFRAME_LINE_RENDER_OFFSET, z+1); // right
               shapeRenderer.line(x, tile.getY1()+WIREFRAME_LINE_RENDER_OFFSET, z, x+1, tile.getY4()+WIREFRAME_LINE_RENDER_OFFSET, z+1);

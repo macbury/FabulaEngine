@@ -112,11 +112,11 @@ public class Sector implements Disposable {
     
     /* Top right Vertex */
     n1 = waterTriangleGrid.addVertex(tile.getX()+1f, tile.getLiquidHeight(), tile.getZ());
-    waterTriangleGrid.addUVMap(1, 0);
+    waterTriangleGrid.addUVMap(10, 0);
     waterTriangleGrid.addNormal();
     /* top left Vertex */
     n2 = waterTriangleGrid.addVertex(tile.getX(), tile.getLiquidHeight(), tile.getZ());
-    waterTriangleGrid.addUVMap(1, 1);
+    waterTriangleGrid.addUVMap(10, 10);
     waterTriangleGrid.addNormal();
     /* bottom Right Vertex */
     n3 = waterTriangleGrid.addVertex(tile.getX()+1f, tile.getLiquidHeight(), tile.getZ()+1f);
@@ -126,7 +126,7 @@ public class Sector implements Disposable {
     waterTriangleGrid.addIndices(n1,n2,n3);
     /* Bottom left Vertex */
     n1 = waterTriangleGrid.addVertex(tile.getX(), tile.getLiquidHeight(), tile.getZ()+1f);
-    waterTriangleGrid.addUVMap(1, 0);
+    waterTriangleGrid.addUVMap(10, 0);
     waterTriangleGrid.addNormal();
     
     waterTriangleGrid.addIndices(n3,n2,n1);

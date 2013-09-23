@@ -138,14 +138,14 @@ public class Scene implements Disposable {
       }
       
       getModelBatch().begin(perspectiveCamera);
-        this.terrain.render(perspectiveCamera, getModelBatch(), water);
+        this.terrain.renderTerrainGeometry(perspectiveCamera, getModelBatch());
+        this.decalRenderingSystem.process();
+        this.terrain.renderLiquidGeometry(getModelBatch(), water);
       getModelBatch().end();
       
       if (this.editorEntityManagmentSystem != null) {
         editorEntityManagmentSystem.process();
       }
-      
-      this.decalRenderingSystem.process();
     sm.endFB();
     
     sm.begin(finalShader); 

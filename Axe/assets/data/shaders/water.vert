@@ -39,7 +39,5 @@ void main() {
     v_texCoord.y = u_texture_cordinates.y;
   }
   
-  
-  
   gl_Position        = u_model_view * newPos;
 }

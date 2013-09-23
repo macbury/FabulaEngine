@@ -136,7 +136,7 @@ public class Terrain implements Disposable {
     setTile((int)x, (int)z, tile);
   }
   
-  public void render(Camera camera, ModelBatch batch, Water water) {
+  public void renderTerrainGeometry(Camera camera, ModelBatch batch) {
     visibleSectors.clear();
     terrainShader.setDebugListener(debugListener);
     visibleSectorCount  = 0;
@@ -147,15 +147,19 @@ public class Terrain implements Disposable {
         TerrainRenderable renderable = sector.getTerrainRenderable(terrainShader);
         if (sector.visibleInCamera(camera)) {
           batch.render(renderable);
-          
-          WaterRenderable wr = sector.getWaterRenderable(water);
-          if (wr != null) {
-            batch.render(wr);
-          }
-          
+
           visibleSectors.add(sector);
           visibleSectorCount++;
         }
+      }
+    }
+  }
+  
+  public void renderLiquidGeometry(ModelBatch batch, Water water) {
+    for (Sector sector : visibleSectors) {
+      WaterRenderable wr = sector.getWaterRenderable(water);
+      if (wr != null) {
+        batch.render(wr);
       }
     }
   }
