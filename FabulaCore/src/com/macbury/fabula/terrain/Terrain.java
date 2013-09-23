@@ -10,24 +10,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.GLCommon;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.Renderable;
-import com.badlogic.gdx.graphics.g3d.lights.Lights;
-import com.badlogic.gdx.graphics.g3d.materials.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.materials.Material;
 import com.badlogic.gdx.graphics.g3d.materials.TextureAttribute;
-import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Disposable;
 import com.macbury.fabula.manager.G;
-import com.thesecretpie.shader.ShaderManager;
+import com.macbury.fabula.terrain.tile.Tile;
+import com.macbury.fabula.terrain.tileset.Tileset;
+import com.macbury.fabula.terrain.water.Water;
+import com.macbury.fabula.terrain.water.WaterRenderable;
 
 public class Terrain implements Disposable {
   private Sector[][] sectors;
@@ -79,8 +76,7 @@ public class Terrain implements Disposable {
       for (int z = 0; z < veriticalSectorCount; z++) {
         Sector sector = this.sectors[x][z];
         if (sector != null) {
-          sector.shader = null;
-          sector.material = null;
+          sector.cleanRenderableData();
         }
       }
     }
@@ -139,21 +135,23 @@ public class Terrain implements Disposable {
     setTile((int)x, (int)z, tile);
   }
   
-  public void render(Camera camera, ModelBatch batch) {
+  public void render(Camera camera, ModelBatch batch, Water water) {
     visibleSectors.clear();
     terrainShader.setDebugListener(debugListener);
     visibleSectorCount  = 0;
     
     for (int x = 0; x < horizontalSectorCount; x++) {
       for (int z = 0; z < veriticalSectorCount; z++) {
-        Sector sector = this.sectors[x][z]; 
-        if (sector.material == null) {
-          sector.material = terrainMaterial;
-          sector.shader   = terrainShader;
-        }
+        Sector sector                = this.sectors[x][z]; 
+        TerrainRenderable renderable = sector.getTerrainRenderable(terrainShader);
         if (sector.visibleInCamera(camera)) {
-          sector.mesh = sector.getMesh();
-          batch.render(sector);
+          batch.render(renderable);
+          
+          WaterRenderable wr = sector.getWaterRenderable(water);
+          if (wr != null) {
+            batch.render(wr);
+          }
+          
           visibleSectors.add(sector);
           visibleSectorCount++;
         }

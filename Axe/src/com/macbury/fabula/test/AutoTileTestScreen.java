@@ -17,8 +17,8 @@ import com.badlogic.gdx.tools.imagepacker.TexturePacker2;
 import com.badlogic.gdx.utils.Array;
 import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.screens.BaseScreen;
-import com.macbury.fabula.terrain.AutoTile;
-import com.macbury.fabula.terrain.AutoTiles;
+import com.macbury.fabula.terrain.tile.AutoTile;
+import com.macbury.fabula.terrain.tileset.AutoTiles;
 
 public class AutoTileTestScreen extends BaseScreen {
 

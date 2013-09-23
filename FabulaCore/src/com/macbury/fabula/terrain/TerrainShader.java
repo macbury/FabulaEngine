@@ -1,20 +1,13 @@
 package com.macbury.fabula.terrain;
 
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Mesh;
-import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.Shader;
 import com.badlogic.gdx.graphics.g3d.lights.Lights;
-import com.badlogic.gdx.graphics.g3d.materials.BlendingAttribute;
 import com.badlogic.gdx.graphics.g3d.materials.Material;
 import com.badlogic.gdx.graphics.g3d.materials.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.utils.IntArray;
-import com.badlogic.gdx.utils.IntIntMap;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.terrain.Terrain.TerrainDebugListener;
 
@@ -75,7 +68,7 @@ public class TerrainShader implements Shader {
   
   @Override
   public boolean canRender(Renderable renderable) {
-    return Sector.class.isInstance(renderable);
+    return TerrainRenderable.class.isInstance(renderable);
   }
   
   @Override
@@ -93,6 +86,10 @@ public class TerrainShader implements Shader {
     this.terrainMaterial = terrainMaterial;
   }
 
+  public Material getMaterial() {
+    return this.terrainMaterial;
+  }
+  
   public Lights getLights() {
     return lights;
   }

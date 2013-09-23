@@ -38,6 +38,7 @@ import com.macbury.fabula.editor.WorldEditorFrame;
 import com.macbury.fabula.editor.brushes.AutoTileBrush;
 import com.macbury.fabula.editor.brushes.Brush;
 import com.macbury.fabula.editor.brushes.EventBrush;
+import com.macbury.fabula.editor.brushes.LiquidBrush;
 import com.macbury.fabula.editor.brushes.Brush.BrushType;
 import com.macbury.fabula.editor.brushes.PassableBrush;
 import com.macbury.fabula.editor.brushes.TerrainBrush;
@@ -49,7 +50,7 @@ import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.terrain.Terrain;
 import com.macbury.fabula.terrain.Terrain.TerrainDebugListener;
-import com.macbury.fabula.terrain.Tile;
+import com.macbury.fabula.terrain.tile.Tile;
 import com.macbury.fabula.utils.ActionTimer;
 import com.macbury.fabula.utils.ActionTimer.TimerListener;
 import com.macbury.fabula.utils.EditorCamController;
@@ -65,6 +66,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   private Brush         currentBrush;
   private TerrainBrush  terrainBrush;
   private AutoTileBrush autoTileBrush;
+  private LiquidBrush   liquidBrush;
   private Scene scene;
   private Terrain terrain;
   private boolean isPaused;
@@ -134,6 +136,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     autoTileBrush     = new AutoTileBrush(terrain);
     passableTileBrush = new PassableBrush(terrain);
     eventBrush        = new EventBrush(terrain);
+    liquidBrush       = new LiquidBrush(terrain);
   }
 
   public void openMap(File file) {
@@ -405,6 +408,10 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
 
   public PassableBrush getPassableBrush() {
     return this.passableTileBrush;
+  }
+
+  public LiquidBrush getLiquidBrush() {
+    return liquidBrush;
   }
 
 }

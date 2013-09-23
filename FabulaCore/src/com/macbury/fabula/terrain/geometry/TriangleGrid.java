@@ -1,4 +1,4 @@
-package com.macbury.fabula.terrain;
+package com.macbury.fabula.terrain.geometry;
 
 import java.util.ArrayList;
 
@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder.VertexInfo;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
 public class TriangleGrid implements Disposable {
   public static enum AttributeType {
@@ -32,6 +33,7 @@ public class TriangleGrid implements Disposable {
   private Mesh mesh;
   private int vertextCount;
   private GridVertex currentVertex;
+  private boolean started = false;
   
   public TriangleGrid(int width, int height, boolean isStatic) {
     this.rows           = height;
@@ -77,6 +79,9 @@ public class TriangleGrid implements Disposable {
   
   public void calculateNormals() {
     //Gdx.app.log("Debug", "Indices: " + indices.length + " Vertex: " + vertexsList.size());
+    if (indices.length <= 3) {
+      return;
+    }
     for (int i = 0; i < indices.length / 3; i++) {
       int index1 = indices[i * 3];
       int index2 = indices[i * 3 + 1];
@@ -97,6 +102,10 @@ public class TriangleGrid implements Disposable {
   }
   
   public void begin() {
+    if (this.started) {
+      throw new GdxRuntimeException("Already started building geometry! Call end() first!");
+    }
+    
     this.vertexCursor  = 0;
     this.indicesCursor = 0;
     this.vertexIndex   = 0;
@@ -113,6 +122,7 @@ public class TriangleGrid implements Disposable {
     currentVertex.position.set(x, y, z);
     using(AttributeType.Position);
     this.vertexsList.add(currentVertex);
+    this.started       = true;
     return vertexIndex++;
   }
   
@@ -162,9 +172,13 @@ public class TriangleGrid implements Disposable {
     this.indices[indicesCursor++] = n3;
   }
 
-  public void end() {
+  public boolean end() {
+    if (!started) {
+      return false;
+    }
+    started = false;
     calculateNormals();
-    this.verties       = new float[vertextCount * getAttributesPerVertex()];
+    this.verties          = new float[vertextCount * getAttributesPerVertex()];
     boolean usingTilePos  = isUsing(AttributeType.TilePosition);
     boolean usingTextCord = isUsing(AttributeType.TextureCord);
     boolean usingNormals  = isUsing(AttributeType.Normal);
@@ -206,6 +220,7 @@ public class TriangleGrid implements Disposable {
     }
     
     this.mesh = null;
+    return true;
   }
 
   public float[] getVerties() {
@@ -270,6 +285,10 @@ public class TriangleGrid implements Disposable {
 
   public int getRows() {
     return this.rows;
+  }
+
+  public boolean haveMeshData() {
+    return this.verties != null;
   }
 
   

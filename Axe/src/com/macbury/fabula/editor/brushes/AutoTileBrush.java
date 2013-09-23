@@ -21,12 +21,12 @@ import com.badlogic.gdx.utils.Array;
 import com.macbury.fabula.editor.undo_redo.Changeable;
 import com.macbury.fabula.editor.undo_redo.TileChanger;
 import com.macbury.fabula.manager.G;
-import com.macbury.fabula.terrain.AutoTile;
-import com.macbury.fabula.terrain.AutoTiles;
-import com.macbury.fabula.terrain.AutoTiles.Types;
+import com.macbury.fabula.terrain.tile.AutoTile;
+import com.macbury.fabula.terrain.tile.Tile;
+import com.macbury.fabula.terrain.tileset.AutoTiles;
+import com.macbury.fabula.terrain.tileset.Tileset;
+import com.macbury.fabula.terrain.tileset.AutoTiles.Types;
 import com.macbury.fabula.terrain.Terrain;
-import com.macbury.fabula.terrain.Tile;
-import com.macbury.fabula.terrain.Tileset;
 import com.macbury.fabula.utils.OffScreen2DRenderer;
 
 public class AutoTileBrush extends Brush {

@@ -26,8 +26,8 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.persister.ScenePersister;
-import com.macbury.fabula.terrain.AutoTiles;
-import com.macbury.fabula.terrain.Tileset;
+import com.macbury.fabula.terrain.tileset.AutoTiles;
+import com.macbury.fabula.terrain.tileset.Tileset;
 
 @Root(name="game-features")
 public class GameDatabase {
@@ -238,5 +238,9 @@ public class GameDatabase {
   
   public String[] getSkyBoxes() {
     return skyboxes;
+  }
+
+  public TextureAtlas getLiquidAtlas() {
+    return getAtlas("liquid");
   }
 }

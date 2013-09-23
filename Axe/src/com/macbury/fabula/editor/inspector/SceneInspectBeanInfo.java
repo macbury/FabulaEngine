@@ -13,14 +13,15 @@ import com.l2fprod.common.beans.editor.DimensionPropertyEditor;
 import com.l2fprod.common.beans.editor.FloatPropertyEditor;
 import com.macbury.fabula.editor.brushes.AutoTileBrush.PaintMode;
 import com.macbury.fabula.manager.G;
-import com.macbury.fabula.terrain.Tileset;
+import com.macbury.fabula.terrain.tileset.Tileset;
 
 import de.matthiasmann.twlthemeeditor.properties.EnumProperty;
 
 public class SceneInspectBeanInfo extends BaseBeanInfo {
-  private static final String CATEGORY_MAP = "Map";
-  private static final String CATEGORY_BRUSH = "Brush";
-  private static final String CATEGORY_VIEW = "View";
+  private static final String CATEGORY_MAP    = "Map";
+  private static final String CATEGORY_BRUSH  = "Brush";
+  private static final String CATEGORY_VIEW   = "View";
+  private static final String CATEGORY_LIQUID = "Liquids";
   
   public SceneInspectBeanInfo() {
     super(SceneInspect.class);
@@ -63,6 +64,25 @@ public class SceneInspectBeanInfo extends BaseBeanInfo {
     
     ExtendedPropertyDescriptor collidersProperty = addProperty("showColliders").setCategory(CATEGORY_VIEW);
     collidersProperty.setDisplayName("Show colliders");
+    
+    ExtendedPropertyDescriptor terrainLiquidHeightProperty = addProperty("liquidHeight").setCategory(CATEGORY_LIQUID);
+    terrainLiquidHeightProperty.setDisplayName("Liquid height");
+    terrainLiquidHeightProperty.setShortDescription("Set terrain liquid height");
+    terrainLiquidHeightProperty.setPropertyEditorClass(TerrainSpinnerEditor.class);
+    
+    ExtendedPropertyDescriptor applyLiquidProperty = addProperty("liquid").setCategory(CATEGORY_LIQUID);
+    applyLiquidProperty.setDisplayName("Apply liquid");
+    applyLiquidProperty.setShortDescription("Should apply or remove liquid from tiles");
+    
+    ExtendedPropertyDescriptor liquidAmplitudeProperty = addProperty("liquidAmplitude").setCategory(CATEGORY_LIQUID);
+    liquidAmplitudeProperty.setDisplayName("Liquid amplitude");
+    liquidAmplitudeProperty.setShortDescription("...");
+    liquidAmplitudeProperty.setPropertyEditorClass(TerrainSpinnerEditor.class);
+    
+    ExtendedPropertyDescriptor liquidSpeedProperty = addProperty("liquidSpeed").setCategory(CATEGORY_LIQUID);
+    liquidSpeedProperty.setDisplayName("Liquid speed");
+    liquidSpeedProperty.setShortDescription("...");
+    liquidSpeedProperty.setPropertyEditorClass(TerrainSpinnerEditor.class);
   }
   
   public static class AutoTileEditor extends ComboBoxPropertyEditor {

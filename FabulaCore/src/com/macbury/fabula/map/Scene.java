@@ -36,7 +36,8 @@ import com.macbury.fabula.graphics.SkyBox;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.persister.ScenePersister;
 import com.macbury.fabula.terrain.Terrain;
-import com.macbury.fabula.terrain.Tile;
+import com.macbury.fabula.terrain.tile.Tile;
+import com.macbury.fabula.terrain.water.Water;
 import com.macbury.fabula.utils.CameraGroupWithCustomShaderStrategy;
 import com.thesecretpie.shader.ShaderManager;
 
@@ -47,6 +48,7 @@ public class Scene implements Disposable {
   private String           name;
   private String           uid;
   private Terrain          terrain;
+  private Water            water;
   private String           finalShader;
 
   private Lights           lights;
@@ -101,6 +103,7 @@ public class Scene implements Disposable {
       this.skybox.initialize();
     }
     
+    this.water                = new Water(this);
     this.decalBatch           = new DecalBatch(new CameraGroupWithCustomShaderStrategy(perspectiveCamera));
     this.shapeRenderer        = new ShapeRenderer();
     
@@ -124,6 +127,7 @@ public class Scene implements Disposable {
   }
   
   public void render(float delta) {
+    this.water.update(delta);
     this.objectsWorld.setDelta(delta);
     this.objectsWorld.process();
     this.shapeRenderer.setProjectionMatrix(perspectiveCamera.combined);
@@ -134,7 +138,7 @@ public class Scene implements Disposable {
       }
       
       getModelBatch().begin(perspectiveCamera);
-        this.terrain.render(perspectiveCamera, getModelBatch());
+        this.terrain.render(perspectiveCamera, getModelBatch(), water);
       getModelBatch().end();
       
       if (this.editorEntityManagmentSystem != null) {
@@ -265,5 +269,9 @@ public class Scene implements Disposable {
 
   public EditorEntityManagmentSystem getEditorEntityManagmentSystem() {
     return editorEntityManagmentSystem;
+  }
+
+  public Water getWater() {
+    return water;
   }
 }

@@ -7,7 +7,7 @@ import com.badlogic.gdx.Input;
 import com.macbury.fabula.editor.undo_redo.Changeable;
 import com.macbury.fabula.editor.undo_redo.TileChanger;
 import com.macbury.fabula.terrain.Terrain;
-import com.macbury.fabula.terrain.Tile;
+import com.macbury.fabula.terrain.tile.Tile;
 
 public class TerrainBrush extends Brush {
   

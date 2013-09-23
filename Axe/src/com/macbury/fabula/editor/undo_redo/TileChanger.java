@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.macbury.fabula.terrain.Terrain;
-import com.macbury.fabula.terrain.Tile;
+import com.macbury.fabula.terrain.tile.Tile;
 
 public class TileChanger implements Changeable {
   private static final String TAG = "TerrainTileChanger";

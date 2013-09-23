@@ -1,9 +1,10 @@
-package com.macbury.fabula.terrain;
+package com.macbury.fabula.terrain.tile;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
-import com.macbury.fabula.terrain.AutoTiles.Types;
+import com.macbury.fabula.terrain.tileset.AutoTiles;
+import com.macbury.fabula.terrain.tileset.AutoTiles.Types;
 
 public class Tile implements Cloneable, Comparable<Tile> {
 
@@ -23,6 +24,8 @@ public class Tile implements Cloneable, Comparable<Tile> {
   private int gid = 0;
   private AutoTile autoTile;
   private boolean passable = true;
+  private boolean liquid   = false;
+  private float   liquidHeight   = 0.0f;
   
   public Tile(float x, float y, float z) {
     gid      = GID_COUNTER++;
@@ -302,6 +305,22 @@ public class Tile implements Cloneable, Comparable<Tile> {
   
   public float getHeight() {
     return Math.abs(getMaxY() - getMinY());
+  }
+
+  public boolean isLiquid() {
+    return liquid;
+  }
+
+  public float getLiquidHeight() {
+    return liquidHeight;
+  }
+
+  public void setLiquid(boolean liquid) {
+    this.liquid = liquid;
+  }
+
+  public void setLiquidHeight(float liquidHeight) {
+    this.liquidHeight = liquidHeight;
   }
   
 }

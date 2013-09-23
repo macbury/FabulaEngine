@@ -1,6 +1,7 @@
-package com.macbury.fabula.terrain;
+package com.macbury.fabula.terrain.tile;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.macbury.fabula.terrain.tileset.AutoTiles;
 
 public class AutoTile extends SimpleTile {
   private AutoTiles.Types type;

@@ -1,6 +1,7 @@
-package com.macbury.fabula.terrain;
+package com.macbury.fabula.terrain.tile;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.macbury.fabula.terrain.tileset.Tileset;
 
 public abstract class SimpleTile {
   protected TextureRegion textureRegion;

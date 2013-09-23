@@ -12,8 +12,8 @@ import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.macbury.fabula.graphics.CubeMap;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.manager.GameManager;
-import com.macbury.fabula.terrain.TriangleGrid;
-import com.macbury.fabula.terrain.TriangleGrid.AttributeType;
+import com.macbury.fabula.terrain.geometry.TriangleGrid;
+import com.macbury.fabula.terrain.geometry.TriangleGrid.AttributeType;
 import com.macbury.fabula.test.Shapes;
 
 public class CubeMapScreen extends BaseScreen {
@@ -31,9 +31,9 @@ public class CubeMapScreen extends BaseScreen {
     
     this.cubemap   = new CubeMap("textures/skybox/day");
     this.cube      = Shapes.genCube();
-    this.animation = new Animation(0.25f, G.db.getAtlas("liquid").findRegions("water"));
+    this.animation = new Animation(0.05f, G.db.getAtlas("liquid").findRegions("water"));
     this.animation.setPlayMode(Animation.LOOP);
-    TriangleGrid triangleGrid = new TriangleGrid(20, 20, true);
+    TriangleGrid triangleGrid = new TriangleGrid(5, 5, true);
     triangleGrid.using(AttributeType.Position);
     triangleGrid.using(AttributeType.Normal);
     triangleGrid.begin();
@@ -47,7 +47,7 @@ public class CubeMapScreen extends BaseScreen {
         triangleGrid.addUVMap(1, 0);
         triangleGrid.addNormal();
         /* top left Vertex */
-        n2 = triangleGrid.addVertex(x, 0, z);
+        n2 = triangleGrid.addVertex(x , 0, z);
         triangleGrid.addUVMap(1, 1);
         triangleGrid.addNormal();
         /* bottom Right Vertex */
@@ -118,8 +118,6 @@ public class CubeMapScreen extends BaseScreen {
     
     region.getTexture().bind(1);
     this.camera.update();
-    
-    
     
     G.shaders.begin("water");
       G.shaders.setUniformMatrix("u_model_view", this.camera.combined);

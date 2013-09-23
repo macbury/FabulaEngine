@@ -4,11 +4,13 @@ import com.macbury.fabula.editor.undo_redo.TileChanger;
 import com.macbury.fabula.terrain.Terrain;
 import com.macbury.fabula.terrain.tile.Tile;
 
-public class PassableBrush extends Brush {
-  private boolean passable = false;
+public class LiquidBrush extends Brush {
+  private boolean liquid = true;
+  private float   height = 0.5f;
   
-  public PassableBrush(Terrain terrain) {
+  public LiquidBrush(Terrain terrain) {
     super(terrain);
+    
     setSize(0);
     setBrushType(BrushType.Rectangle);
   }
@@ -23,7 +25,8 @@ public class PassableBrush extends Brush {
     TileChanger changer = new TileChanger(terrain);
     
     for (Tile tile : brushTiles) {
-      tile.setPassable(passable);
+      tile.setLiquid(liquid);
+      tile.setLiquidHeight(height);
       this.terrain.addSectorToRebuildFromTile(tile);
       changer.add(tile);
     }
@@ -32,12 +35,21 @@ public class PassableBrush extends Brush {
       changeManager.addChangeable(changer);
     }
   }
-  
-  public boolean getMode() {
-    return passable;
+
+  public void setHeight(float h) {
+    height = h;
+  }
+
+  public boolean isLiquid() {
+    return liquid;
+  }
+
+  public float getHeight() {
+    return height;
+  }
+
+  public void setLiquid(boolean liquid) {
+    this.liquid = liquid;
   }
   
-  public void setMode(boolean p) {
-    this.passable = p;
-  }
 }

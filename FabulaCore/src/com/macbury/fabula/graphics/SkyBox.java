@@ -91,4 +91,8 @@ public class SkyBox implements Disposable {
     invView = new Matrix4();
     mvp     = new Matrix4();
   }
+
+  public CubeMap getCubeMap() {
+    return this.cubeMap;
+  }
 }

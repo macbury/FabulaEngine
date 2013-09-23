@@ -8,7 +8,7 @@ import com.artemis.systems.EntityProcessingSystem;
 import com.macbury.fabula.game_objects.components.PositionComponent;
 import com.macbury.fabula.game_objects.components.TileMovementComponent;
 import com.macbury.fabula.terrain.Terrain;
-import com.macbury.fabula.terrain.Tile;
+import com.macbury.fabula.terrain.tile.Tile;
 
 public class TileMovementSystem extends EntityProcessingSystem {
   @Mapper ComponentMapper<PositionComponent> pm;

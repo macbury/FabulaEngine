@@ -8,7 +8,7 @@ import com.macbury.fabula.editor.undo_redo.ChangeManager;
 import com.macbury.fabula.editor.undo_redo.Changeable;
 import com.macbury.fabula.screens.WorldEditScreen;
 import com.macbury.fabula.terrain.Terrain;
-import com.macbury.fabula.terrain.Tile;
+import com.macbury.fabula.terrain.tile.Tile;
 
 public abstract class Brush {
   public enum BrushType {

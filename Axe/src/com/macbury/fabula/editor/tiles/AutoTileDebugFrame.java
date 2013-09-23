@@ -13,7 +13,8 @@ import javax.swing.JButton;
 
 import com.macbury.fabula.editor.brushes.AutoTileBrush;
 import com.macbury.fabula.manager.G;
-import com.macbury.fabula.terrain.AutoTiles;
+import com.macbury.fabula.terrain.tileset.AutoTiles;
+
 import javax.swing.JScrollPane;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;

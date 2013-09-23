@@ -3,7 +3,7 @@ package com.macbury.fabula.game_objects.components;
 import com.artemis.Component;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
-import com.macbury.fabula.terrain.Tile;
+import com.macbury.fabula.terrain.tile.Tile;
 
 public class DecalComponent extends Component {
   private Decal decal;

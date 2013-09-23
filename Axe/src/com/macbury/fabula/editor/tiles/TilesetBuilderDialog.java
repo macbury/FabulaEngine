@@ -1,31 +1,22 @@
 package com.macbury.fabula.editor.tiles;
 
-import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.JDialog;
-import java.awt.Window.Type;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
-import java.awt.BorderLayout;
-
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-import java.awt.Font;
-import javax.swing.JTextField;
-import javax.swing.JButton;
 import javax.swing.JProgressBar;
-import java.awt.Dialog.ModalityType;
-import javax.swing.DefaultComboBoxModel;
+import javax.swing.JSeparator;
+import javax.swing.JTextField;
 
 import com.badlogic.gdx.Gdx;
 import com.macbury.fabula.editor.tiles.TilesetGenerator.TileGeneratorListener;
 import com.macbury.fabula.manager.G;
-import com.macbury.fabula.terrain.Tileset;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JSeparator;
-import javax.swing.text.JTextComponent;
+import com.macbury.fabula.terrain.tileset.Tileset;
 
 public class TilesetBuilderDialog extends JDialog implements ActionListener, TileGeneratorListener {
   private static final String TAG = "TilesetBuilderDialog";

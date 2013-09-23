@@ -109,9 +109,10 @@ import com.macbury.fabula.manager.G;
 import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.screens.WorldEditScreen;
-import com.macbury.fabula.terrain.AutoTile;
-import com.macbury.fabula.terrain.AutoTiles;
-import com.macbury.fabula.terrain.Tileset;
+import com.macbury.fabula.terrain.tile.AutoTile;
+import com.macbury.fabula.terrain.tileset.AutoTiles;
+import com.macbury.fabula.terrain.tileset.Tileset;
+
 import javax.swing.JToolBar;
 import javax.swing.JToggleButton;
 import javax.swing.Box;
@@ -791,8 +792,6 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
 
   private void updateSelectedBrush() {
     WorldEditScreen screen = this.gameManager.getWorldEditScreen();
-    Scene scene            = screen.getScene();
-    AutoTileBrush brush    = screen.getAutoTileBrush();
     
     if (tglbtnPassablebrush.isSelected()) {
       screen.setCurrentBrush(screen.getPassableBrush());
@@ -801,6 +800,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     if (tglbtnTerrainEdit.isSelected()) {
       screen.setCurrentBrush(screen.getTerrainBrush());
     } 
+    
+    if (tglbtnLiquidbrushbutton.isSelected()) {
+      screen.setCurrentBrush(screen.getLiquidBrush());
+    }
     
     if (tglbtnAutoTileEdit.isSelected()) {
       screen.setCurrentBrush(screen.getAutoTileBrush());

@@ -97,4 +97,36 @@ public class SceneInspect {
       screen.getScene().getSkybox().initialize();
     }
   }
+  
+  public void setLiquidHeight(float height) {
+    this.screen.getLiquidBrush().setHeight(height);
+  }
+  
+  public float getLiquidHeight() {
+    return this.screen.getLiquidBrush().getHeight();
+  }
+  
+  public void setLiquid(boolean liq) {
+    this.screen.getLiquidBrush().setLiquid(liq);
+  }
+  
+  public boolean getLiquid() {
+    return this.screen.getLiquidBrush().isLiquid();
+  }
+  
+  public void setLiquidAmplitude(float amp) {
+    this.screen.getScene().getWater().setAmplitudeWave(amp);
+  }
+  
+  public float getLiquidAmplitude() {
+    return this.screen.getScene().getWater().getAmplitudeWave();
+  }
+  
+  public void setLiquidSpeed(float speed) {
+    this.screen.getScene().getWater().setAngleWaveSpeed(speed);
+  }
+  
+  public float getLiquidSpeed() {
+    return this.screen.getScene().getWater().getAngleWaveSpeed();
+  }
 }

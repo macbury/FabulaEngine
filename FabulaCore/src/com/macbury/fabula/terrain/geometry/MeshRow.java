@@ -1,4 +1,4 @@
-package com.macbury.fabula.terrain;
+package com.macbury.fabula.terrain.geometry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,10 +6,9 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttribute;
-import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
+import com.macbury.fabula.terrain.Sector;
 
 public class MeshRow {
   private Mesh mesh;

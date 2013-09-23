@@ -1,4 +1,4 @@
-package com.macbury.fabula.terrain;
+package com.macbury.fabula.terrain.geometry;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;

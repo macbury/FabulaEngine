@@ -23,7 +23,7 @@ import com.macbury.fabula.game_objects.components.StartPositionComponent;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.terrain.Sector;
 import com.macbury.fabula.terrain.Terrain;
-import com.macbury.fabula.terrain.Tile;
+import com.macbury.fabula.terrain.tile.Tile;
 
 public class EditorEntityManagmentSystem extends EntitySystem {
   private static final Color TILE_DEBUG_COLOR             = new Color(0f, 0f, 0f, 0.2f);

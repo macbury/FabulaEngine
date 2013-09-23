@@ -15,8 +15,8 @@ import org.im4java.core.IMOperation;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.tools.imagepacker.TexturePacker2;
-import com.macbury.fabula.terrain.AutoTiles;
-import com.macbury.fabula.terrain.Tileset;
+import com.macbury.fabula.terrain.tileset.AutoTiles;
+import com.macbury.fabula.terrain.tileset.Tileset;
 
 public class TilesetGenerator {
   private static final String TAG = "TilesetGenerator";

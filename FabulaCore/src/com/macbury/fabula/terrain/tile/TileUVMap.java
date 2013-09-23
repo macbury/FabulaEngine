@@ -1,8 +1,8 @@
-package com.macbury.fabula.terrain;
+package com.macbury.fabula.terrain.tile;
 
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.macbury.fabula.terrain.Tile.TypeSlope;
+import com.macbury.fabula.terrain.tile.Tile.TypeSlope;
 
 public class TileUVMap {
   private float u;

@@ -1,4 +1,4 @@
-package com.macbury.fabula.terrain;
+package com.macbury.fabula.terrain.tileset;
 
 import java.util.Arrays;
 
@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import com.macbury.fabula.terrain.tile.AutoTile;
 
 public class AutoTiles {
   public static final int CORNER_TOP_LEFT     = 0;

@@ -21,13 +21,13 @@ import org.simpleframework.xml.core.Persist;
 import com.badlogic.gdx.utils.Base64Coder;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.macbury.fabula.map.Scene;
-import com.macbury.fabula.terrain.AutoTiles;
 import com.macbury.fabula.terrain.Terrain;
-import com.macbury.fabula.terrain.Tile;
+import com.macbury.fabula.terrain.tile.Tile;
+import com.macbury.fabula.terrain.tileset.AutoTiles;
 
 @Root(name="scene")
 public class ScenePersister {
-  public static final int VERSION = 1;  
+  public static final int VERSION = 2;  
   @Element(required=false)
   private int version;
   @Element
@@ -137,6 +137,8 @@ public class ScenePersister {
           int ord = dis.readInt();
           
           tile.setPassable(dis.readBoolean());
+          tile.setLiquid(dis.readBoolean());
+          tile.setLiquidHeight(dis.readFloat());
           
           AutoTiles autoTiles  = terrain.getTileset().getAutoTiles(aid);
           AutoTiles.Types type = AutoTiles.Types.values()[ord];
@@ -175,6 +177,8 @@ public class ScenePersister {
           dos.writeUTF(tile.getAutoTile().getAutoTiles().getName());
           dos.writeInt(tile.getAutoType().ordinal());
           dos.writeBoolean(tile.isPassable());
+          dos.writeBoolean(tile.isLiquid());
+          dos.writeFloat(tile.getLiquidHeight());
         }
       }
       

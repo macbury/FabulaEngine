@@ -1,4 +1,4 @@
-package com.macbury.fabula.terrain;
+package com.macbury.fabula.terrain.tileset;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,6 +13,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
 import com.macbury.fabula.manager.G;
+import com.macbury.fabula.terrain.tile.AutoTile;
+import com.macbury.fabula.terrain.tileset.AutoTiles.Types;
 
 @Root
 public class Tileset {

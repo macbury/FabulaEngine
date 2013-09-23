@@ -1,0 +1,95 @@
+package com.macbury.fabula.terrain.water;
+
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.materials.Material;
+import com.badlogic.gdx.graphics.g3d.materials.TextureAttribute;
+import com.badlogic.gdx.graphics.g3d.utils.TextureDescriptor;
+import com.badlogic.gdx.utils.Disposable;
+import com.macbury.fabula.graphics.CubeMap;
+import com.macbury.fabula.manager.G;
+import com.macbury.fabula.map.Scene;
+
+public class Water implements Disposable {
+  private Scene scene;
+  private WaterShader shader;
+  
+  private float         amplitudeWave   = 0.1f;
+  private float         angleWave       = 0.0f;
+  private float         angleWaveSpeed  = 2.0f;
+  private Animation     animation;
+  private Material      waterMaterial;
+  
+  public Water(Scene scene) {
+    this.scene  = scene;
+    this.shader = new WaterShader(this);
+
+    setWaterTexture("water");
+  }
+  
+  public void setWaterTexture(String name) {
+    this.animation = new Animation(0.05f, G.db.getLiquidAtlas().findRegions(name));
+    this.animation.setPlayMode(Animation.LOOP);
+    
+    this.waterMaterial = new Material(TextureAttribute.createDiffuse(getTexture()));
+  }
+
+  public void update(float delta) {
+    this.angleWave += delta;
+  }
+  
+  public TextureDescriptor getWaterTextureId() {
+    TextureAttribute textureAttr = (TextureAttribute) waterMaterial.get(TextureAttribute.Diffuse);
+    return textureAttr.textureDescription;
+  }
+  
+  public Material getMaterial() {
+    return waterMaterial;
+  }
+  
+  public Texture getTexture() {
+    return this.animation.getKeyFrame(0).getTexture();
+  }
+  
+  public float getAmplitudeWave() {
+    return amplitudeWave;
+  }
+
+  public float getAngleWaveSpeed() {
+    return angleWaveSpeed;
+  }
+
+  public void setAmplitudeWave(float amplitudeWave) {
+    this.amplitudeWave = amplitudeWave;
+  }
+  
+  public CubeMap getCubeMap() {
+    if (this.scene.getSkybox() != null) {
+      return this.scene.getSkybox().getCubeMap();
+    }
+    return null;
+  }
+  
+  public void setAngleWaveSpeed(float angleWaveSpeed) {
+    this.angleWaveSpeed = angleWaveSpeed;
+  }
+
+  @Override
+  public void dispose() {
+    this.scene = null;
+  }
+
+  public TextureRegion getCurrentRegion() {
+    return this.animation.getKeyFrame(angleWave);
+  }
+
+  public float getAngleWave() {
+    return this.angleWave;
+  }
+
+  public WaterShader getShader() {
+    return this.shader;
+  }
+  
+}
