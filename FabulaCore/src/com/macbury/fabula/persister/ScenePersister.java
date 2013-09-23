@@ -24,6 +24,7 @@ import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.terrain.Terrain;
 import com.macbury.fabula.terrain.tile.Tile;
 import com.macbury.fabula.terrain.tileset.AutoTiles;
+import com.macbury.fabula.terrain.water.Water;
 
 @Root(name="scene")
 public class ScenePersister {
@@ -51,6 +52,9 @@ public class ScenePersister {
   private String           tilesetName;
   @Element
   private String           terrainData;
+  
+  @Element(required=false)
+  private WaterPersister waterData;
   
   private Scene scene;
   private Terrain terrain;
@@ -98,8 +102,20 @@ public class ScenePersister {
     this.scene = new Scene(this.name, this.uid, this.columns, this.rows);
     this.scene.setFinalShader(finalShader);
     this.scene.setSkyboxName(skybox);
+    
+    Water water = scene.getWater();
+    if (waterData != null) {
+      water.setAlpha(waterData.alpha);
+      water.setMix(waterData.mix);
+      water.setAmplitudeWave(waterData.amplitude);
+      water.setWaterAnimationSpeed(waterData.animationSpeed);
+      water.setAngleWaveSpeed(waterData.speed);
+      water.setWaterTexture(waterData.material);
+    }
+    
     this.terrain = this.scene.getTerrain();
     this.terrain.setTileset(tilesetName);
+    
     
     byte[] bytes                        = Base64Coder.decode(terrainData);
     inflater.setInput(bytes);
@@ -157,6 +173,17 @@ public class ScenePersister {
   
   @Persist
   public void prepare() {
+    Water water     = scene.getWater();
+    this.waterData  = new WaterPersister();
+    
+    waterData.alpha          = water.getAlpha();
+    waterData.mix            = water.getMix();
+    waterData.amplitude      = water.getAmplitudeWave();
+    waterData.animationSpeed = water.getWaterAnimationSpeed();
+    waterData.speed          = water.getAngleWaveSpeed();
+    waterData.material       = water.getWaterMaterial();
+    
+    
     Deflater deflater = new Deflater();
     deflater.setLevel(9);
     deflater.setStrategy(Deflater.BEST_SPEED);

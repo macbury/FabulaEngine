@@ -19,10 +19,11 @@ public class Water implements Disposable {
   private float         amplitudeWave   = 0.1f;
   private float         angleWave       = 0.0f;
   private float         angleWaveSpeed  = 2.0f;
+  private float         alpha           = 0.7f;
+  private float         mix             = 0.6f;
   private Animation     animation;
   private Material      waterMaterial;
   private String        regionsName;
-  
   
   public Water(Scene scene) {
     this.scene  = scene;
@@ -107,6 +108,22 @@ public class Water implements Disposable {
   public void setWaterAnimationSpeed(float waterAnimationSpeed) {
     this.waterAnimationSpeed = waterAnimationSpeed;
     setWaterTexture(regionsName);
+  }
+
+  public float getAlpha() {
+    return alpha;
+  }
+
+  public void setAlpha(float alpha) {
+    this.alpha = alpha;
+  }
+
+  public float getMix() {
+    return this.mix ;
+  }
+
+  public void setMix(float mix) {
+    this.mix = mix;
   }
   
 }

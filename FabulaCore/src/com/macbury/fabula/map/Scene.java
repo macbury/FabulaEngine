@@ -89,7 +89,8 @@ public class Scene implements Disposable {
     sunLight  = new DirectionalLight();
     sunLight.set(Color.WHITE, new Vector3(-0.008f, -0.716f, -0.108f));
     lights.add(sunLight);
-
+    
+    this.water        = new Water(this);
     this.terrain      = new Terrain(width, height);
     this.terrain.setTileset("outside");
     this.finalShader  = "default";
@@ -103,7 +104,6 @@ public class Scene implements Disposable {
       this.skybox.initialize();
     }
     
-    this.water                = new Water(this);
     this.decalBatch           = new DecalBatch(new CameraGroupWithCustomShaderStrategy(perspectiveCamera));
     this.shapeRenderer        = new ShapeRenderer();
     

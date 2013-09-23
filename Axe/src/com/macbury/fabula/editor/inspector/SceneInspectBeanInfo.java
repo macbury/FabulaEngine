@@ -67,16 +67,16 @@ public class SceneInspectBeanInfo extends BaseBeanInfo {
     collidersProperty.setDisplayName("Show colliders");
     
     ExtendedPropertyDescriptor terrainLiquidHeightProperty = addProperty("liquidHeight").setCategory(CATEGORY_LIQUID);
-    terrainLiquidHeightProperty.setDisplayName("Liquid height");
+    terrainLiquidHeightProperty.setDisplayName("Height");
     terrainLiquidHeightProperty.setShortDescription("Set terrain liquid height");
     terrainLiquidHeightProperty.setPropertyEditorClass(TerrainSpinnerEditor.class);
     
     ExtendedPropertyDescriptor applyLiquidProperty = addProperty("liquid").setCategory(CATEGORY_LIQUID);
-    applyLiquidProperty.setDisplayName("Apply liquid");
+    applyLiquidProperty.setDisplayName("Apply");
     applyLiquidProperty.setShortDescription("Should apply or remove liquid from tiles");
     
     ExtendedPropertyDescriptor liquidAmplitudeProperty = addProperty("liquidAmplitude").setCategory(CATEGORY_LIQUID);
-    liquidAmplitudeProperty.setDisplayName("Liquid amplitude");
+    liquidAmplitudeProperty.setDisplayName("Amplitude");
     liquidAmplitudeProperty.setShortDescription("...");
     
     ExtendedPropertyDescriptor liquidSpeedProperty = addProperty("liquidSpeed").setCategory(CATEGORY_LIQUID);
@@ -84,13 +84,21 @@ public class SceneInspectBeanInfo extends BaseBeanInfo {
     liquidSpeedProperty.setShortDescription("...");
     
     ExtendedPropertyDescriptor liquidMaterialProperty = addProperty("liquidMaterial").setCategory(CATEGORY_LIQUID);
-    liquidMaterialProperty.setDisplayName("Liquid material");
+    liquidMaterialProperty.setDisplayName("Material");
     liquidMaterialProperty.setShortDescription("Graphics for liquid");
     liquidMaterialProperty.setPropertyEditorClass(LiquidMaterialEditor.class);
     
     ExtendedPropertyDescriptor liquidAnimationSpeed = addProperty("liquidAnimationSpeed").setCategory(CATEGORY_LIQUID);
     liquidAnimationSpeed.setDisplayName("Animation speed");
     liquidAnimationSpeed.setShortDescription("Tile animation speed");
+    
+    ExtendedPropertyDescriptor liquidAlpha = addProperty("liquidAlpha").setCategory(CATEGORY_LIQUID);
+    liquidAlpha.setDisplayName("Alpha");
+    liquidAlpha.setShortDescription("Liquid transparency");
+    
+    ExtendedPropertyDescriptor liquidMix = addProperty("liquidMix").setCategory(CATEGORY_LIQUID);
+    liquidMix.setDisplayName("Mix");
+    liquidMix.setShortDescription("Diffrence between water texture and skybox cubemap");
   }
   
   public static class AutoTileEditor extends ComboBoxPropertyEditor {

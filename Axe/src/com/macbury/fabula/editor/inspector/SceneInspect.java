@@ -1,7 +1,6 @@
 package com.macbury.fabula.editor.inspector;
 
 import java.awt.Dimension;
-import java.awt.Point;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 
@@ -144,5 +143,21 @@ public class SceneInspect {
   
   public float getLiquidAnimationSpeed() {
     return this.screen.getScene().getWater().getWaterAnimationSpeed();
+  }
+  
+  public float getLiquidAlpha() {
+    return this.screen.getScene().getWater().getAlpha();
+  }
+  
+  public void setLiquidAlpha(float a) {
+    this.screen.getScene().getWater().setAlpha(a);
+  }
+  
+  public float getLiquidMix() {
+    return this.screen.getScene().getWater().getMix();
+  }
+  
+  public void setLiquidMix(float a) {
+    this.screen.getScene().getWater().setMix(a);
   }
 }

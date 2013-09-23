@@ -17,6 +17,8 @@ public class WaterShader implements Shader {
   private static final String UNIFORM_TEXTURE_ID         = "u_texture";
   private static final String UNIFORM_TEXTURE_CORDINATES = "u_texture_cordinates";
   private static final String UNIFORM_CAMERA_POSITION    = "u_camera_position";
+  private static final String UNIFORM_WATER_ALPHA        = "u_water_alpha";
+  private static final String UNIFORM_WATER_MIX          = "u_water_mix";
   private Water water;
 
   public WaterShader(Water water) {
@@ -46,6 +48,8 @@ public class WaterShader implements Shader {
     G.shaders.setUniformi(UNIFORM_TEXTURE_ID, context.textureBinder.bind(water.getWaterTextureId()));
     G.shaders.setUniformf(UNIFORM_TEXTURE_CORDINATES, region.getU(), region.getV(), region.getU2(), region.getV2());
     G.shaders.setUniformf(UNIFORM_CAMERA_POSITION, camera.position.x, camera.position.y, camera.position.z);
+    G.shaders.setUniformf(UNIFORM_WATER_ALPHA, water.getAlpha());
+    G.shaders.setUniformf(UNIFORM_WATER_MIX, water.getMix());
   }
   
   @Override
