@@ -183,7 +183,7 @@ public class TriangleGrid implements Disposable {
     boolean usingTilePos  = isUsing(AttributeType.TilePosition);
     boolean usingTextCord = isUsing(AttributeType.TextureCord);
     boolean usingNormals  = isUsing(AttributeType.Normal);
-    
+    boolean usingColor    = isUsing(AttributeType.Color);
     if (usingNormals) {
       calculateNormals();
     }
@@ -201,8 +201,9 @@ public class TriangleGrid implements Disposable {
         this.verties[vertexCursor++] = vertex.normal.z;
       }
       
-      
-      //this.verties[vertexCursor++] = Color.toFloatBits(vertex.color.r, vertex.color.g, vertex.color.b, vertex.color.a);
+      if (usingColor) {
+        this.verties[vertexCursor++] = Color.toFloatBits(vertex.color.r, vertex.color.g, vertex.color.b, vertex.color.a);
+      }
       
       if (usingTextCord) {
         this.verties[vertexCursor++] = vertex.textureCordinates.x;

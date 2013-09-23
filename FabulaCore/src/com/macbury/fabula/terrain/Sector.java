@@ -73,7 +73,7 @@ public class Sector implements Disposable {
     terrainTriangleGrid.using(AttributeType.TextureCord);
     
     waterTriangleGrid.using(AttributeType.Position);
-    waterTriangleGrid.using(AttributeType.TextureCord);
+    waterTriangleGrid.using(AttributeType.Color);
     waterTriangleGrid.using(AttributeType.Normal);
     
     if (terrain.isDebuging()) {
@@ -112,21 +112,21 @@ public class Sector implements Disposable {
     
     /* Top right Vertex */
     n1 = waterTriangleGrid.addVertex(tile.getX()+1f, tile.getLiquidHeight(), tile.getZ());
-    waterTriangleGrid.addUVMap(10, 0);
+    waterTriangleGrid.addColorToVertex(1, 0, 0, 1);
     waterTriangleGrid.addNormal();
     /* top left Vertex */
     n2 = waterTriangleGrid.addVertex(tile.getX(), tile.getLiquidHeight(), tile.getZ());
-    waterTriangleGrid.addUVMap(10, 10);
+    waterTriangleGrid.addColorToVertex(0, 1, 0, 1);
     waterTriangleGrid.addNormal();
     /* bottom Right Vertex */
     n3 = waterTriangleGrid.addVertex(tile.getX()+1f, tile.getLiquidHeight(), tile.getZ()+1f);
-    waterTriangleGrid.addUVMap(0, 0);
+    waterTriangleGrid.addColorToVertex(0, 0, 1, 1);
     waterTriangleGrid.addNormal();
     
     waterTriangleGrid.addIndices(n1,n2,n3);
     /* Bottom left Vertex */
     n1 = waterTriangleGrid.addVertex(tile.getX(), tile.getLiquidHeight(), tile.getZ()+1f);
-    waterTriangleGrid.addUVMap(10, 0);
+    waterTriangleGrid.addColorToVertex(0, 0, 0, 0);
     waterTriangleGrid.addNormal();
     
     waterTriangleGrid.addIndices(n3,n2,n1);

@@ -1,0 +1,61 @@
+
+foliage.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+rose
+  rotate: false
+  xy: 1, 19
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+sapling
+  rotate: false
+  xy: 35, 19
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+sapling_birch
+  rotate: false
+  xy: 69, 19
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+carrots
+  rotate: false
+  xy: 1, 1
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+deadbush
+  rotate: false
+  xy: 103, 35
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+potatoes
+  rotate: false
+  xy: 19, 1
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+stem_straight
+  rotate: false
+  xy: 37, 1
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+tallgrass
+  rotate: false
+  xy: 55, 1
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1

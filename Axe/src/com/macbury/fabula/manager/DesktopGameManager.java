@@ -3,6 +3,7 @@ package com.macbury.fabula.manager;
 import com.badlogic.gdx.Screen;
 import com.macbury.fabula.screens.CubeMapScreen;
 import com.macbury.fabula.screens.GamePlayScreen;
+import com.macbury.fabula.screens.GrassTestScreen;
 import com.macbury.fabula.screens.SkyboxTestScreen;
 
 public class DesktopGameManager extends GameManager {
@@ -15,7 +16,7 @@ public class DesktopGameManager extends GameManager {
 
   @Override
   public Screen getInitialScreen() {
-    return new GamePlayScreen(this);
+    return new GrassTestScreen(this);
   }
   
   @Override
