@@ -110,6 +110,7 @@ public class TriangleGrid implements Disposable {
     this.indicesCursor = 0;
     this.vertexIndex   = 0;
     
+    this.verties        = null;
     this.vertextCount   = rows*columns*getAttributesPerVertex();
     this.indices        = new short[vertextCount * 3];
     

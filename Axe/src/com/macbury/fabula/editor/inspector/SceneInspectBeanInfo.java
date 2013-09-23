@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.utils.Array;
 import com.l2fprod.common.beans.BaseBeanInfo;
 import com.l2fprod.common.beans.ExtendedPropertyDescriptor;
@@ -77,12 +78,19 @@ public class SceneInspectBeanInfo extends BaseBeanInfo {
     ExtendedPropertyDescriptor liquidAmplitudeProperty = addProperty("liquidAmplitude").setCategory(CATEGORY_LIQUID);
     liquidAmplitudeProperty.setDisplayName("Liquid amplitude");
     liquidAmplitudeProperty.setShortDescription("...");
-    liquidAmplitudeProperty.setPropertyEditorClass(TerrainSpinnerEditor.class);
     
     ExtendedPropertyDescriptor liquidSpeedProperty = addProperty("liquidSpeed").setCategory(CATEGORY_LIQUID);
     liquidSpeedProperty.setDisplayName("Liquid speed");
     liquidSpeedProperty.setShortDescription("...");
-    liquidSpeedProperty.setPropertyEditorClass(TerrainSpinnerEditor.class);
+    
+    ExtendedPropertyDescriptor liquidMaterialProperty = addProperty("liquidMaterial").setCategory(CATEGORY_LIQUID);
+    liquidMaterialProperty.setDisplayName("Liquid material");
+    liquidMaterialProperty.setShortDescription("Graphics for liquid");
+    liquidMaterialProperty.setPropertyEditorClass(LiquidMaterialEditor.class);
+    
+    ExtendedPropertyDescriptor liquidAnimationSpeed = addProperty("liquidAnimationSpeed").setCategory(CATEGORY_LIQUID);
+    liquidAnimationSpeed.setDisplayName("Animation speed");
+    liquidAnimationSpeed.setShortDescription("Tile animation speed");
   }
   
   public static class AutoTileEditor extends ComboBoxPropertyEditor {
@@ -121,6 +129,27 @@ public class SceneInspectBeanInfo extends BaseBeanInfo {
       
       for (int i = 0; i < tilesets.size(); i++) {
         values[i] = tilesets.get(i).getName();
+      }
+      
+      setAvailableValues(values);
+    }
+  }
+  
+  public static class LiquidMaterialEditor extends ComboBoxPropertyEditor {
+    public LiquidMaterialEditor() {
+      super();
+      Array<String> uniqueName   = new Array<String>();
+      
+      for (AtlasRegion region: G.db.getLiquidAtlas().getRegions()) {
+        if (uniqueName.indexOf(region.name, false) == -1) {
+          uniqueName.add(region.name);
+        }
+      }
+      
+      String[] values = new String[uniqueName.size];
+      
+      for (int i = 0; i < uniqueName.size; i++) {
+        values[i] = uniqueName.get(i);
       }
       
       setAvailableValues(values);

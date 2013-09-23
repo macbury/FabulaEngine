@@ -25,10 +25,11 @@ public class LiquidBrush extends Brush {
     TileChanger changer = new TileChanger(terrain);
     
     for (Tile tile : brushTiles) {
+      changer.add(tile);
+      
       tile.setLiquid(liquid);
       tile.setLiquidHeight(height);
       this.terrain.addSectorToRebuildFromTile(tile);
-      changer.add(tile);
     }
     
     if (changer.haveTiles()) {

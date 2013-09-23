@@ -148,8 +148,8 @@ public class CameraGroupWithCustomShaderStrategy implements GroupStrategy, Dispo
         + "void main()\n"//
         + "{\n" //
         + "vec4 texel = v_color * texture2D(u_texture, v_texCoords);"
-        + "if(texel.a < 0.5)"
-          +"discard;"
+       // + "if(texel.a < 0.1)"
+       //   +"discard;"
         + "  gl_FragColor = texel;\n" //
         + "}";
 

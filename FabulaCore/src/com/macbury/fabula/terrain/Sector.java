@@ -98,9 +98,9 @@ public class Sector implements Disposable {
       }
     
     
-      Vector3 firstCorner = this.topLeftCorner.cpy();
-      firstCorner.y       = maxHeight;
-      this.boundingBox    = new BoundingBox(firstCorner, this.bottomRightCorner.cpy().add(0, minHeight, 0));
+    Vector3 firstCorner = this.topLeftCorner.cpy();
+    firstCorner.y       = maxHeight;
+    this.boundingBox    = new BoundingBox(firstCorner, this.bottomRightCorner.cpy().add(0, minHeight, 0));
     
     terrainTriangleGrid.end();
     waterTriangleGrid.end();

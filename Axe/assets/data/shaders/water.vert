@@ -1,5 +1,5 @@
 #ifdef GL_ES
-precision highp float; 
+precision highp float;
 #endif
 
 attribute vec4 a_position;
@@ -19,7 +19,7 @@ void main() {
   vec4 newPos       = vec4(
     a_position.x + u_wave_data.y * sin(u_wave_data.x+a_position.x+a_position.y), 
     a_position.y + u_wave_data.y * cos(u_wave_data.x+a_position.x+a_position.y), 
-    a_position.z, 
+    a_position.z + u_wave_data.y * cos(u_wave_data.x+a_position.y+a_position.z), 
   a_position.w);
   
   vec3 eye_direction = normalize(newPos.xyz - u_camera_position);
@@ -27,17 +27,19 @@ void main() {
   
   v_texCoord = vec2(0,0);
   
-  if (round(a_textCords.x) == 1.0) {
+  if (round(a_textCords.x) >= 0.5) {
     v_texCoord.x = u_texture_cordinates.z;
   } else {
     v_texCoord.x = u_texture_cordinates.x;
   }
   
-  if (round(a_textCords.y) == 1.0) {
+  if (round(a_textCords.y) >= 0.5) {
     v_texCoord.y = u_texture_cordinates.w;
   } else {
     v_texCoord.y = u_texture_cordinates.y;
   }
+  
+  
   
   gl_Position        = u_model_view * newPos;
 }

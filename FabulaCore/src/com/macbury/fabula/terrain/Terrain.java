@@ -27,6 +27,7 @@ import com.macbury.fabula.terrain.water.Water;
 import com.macbury.fabula.terrain.water.WaterRenderable;
 
 public class Terrain implements Disposable {
+  private static final String TAG = "Terrain";
   private Sector[][] sectors;
   private Tile[][] tiles;
   
@@ -225,6 +226,7 @@ public class Terrain implements Disposable {
   }
   
   public void rebuildUsedSectors() {
+    Gdx.app.log(TAG, "Sectors to rebuild: " + rebuildSectorsArray.size());
     for (Sector sector : rebuildSectorsArray) {
       sector.build();
     }

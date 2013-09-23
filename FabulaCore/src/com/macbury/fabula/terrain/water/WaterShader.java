@@ -32,8 +32,7 @@ public class WaterShader implements Shader {
   public void begin(Camera camera, RenderContext context) {
     context.setBlending(true, GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
     context.setDepthTest(GL20.GL_LEQUAL);
-    context.setCullFace(GL20.GL_BACK);
-    
+    //context.setCullFace(GL20.GL_BACK);
     if (water.getCubeMap() != null) {
       Gdx.gl20.glActiveTexture(GL20.GL_TEXTURE0);
       Gdx.gl20.glBindTexture(GL20.GL_TEXTURE_CUBE_MAP, water.getCubeMap().getTextureId());

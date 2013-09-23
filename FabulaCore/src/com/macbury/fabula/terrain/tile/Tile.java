@@ -259,6 +259,9 @@ public class Tile implements Cloneable, Comparable<Tile> {
     tile.setAutoTile(this.getAutoTile());
     tile.setSlope(this.getSlope());
     
+    tile.setPassable(new Boolean(this.isPassable()));
+    tile.setLiquid(new Boolean(this.isLiquid()));
+    tile.setLiquidHeight(new Float(this.getLiquidHeight()));
     tile.setGid(this.getGid());
     return tile;
   }
@@ -315,8 +318,8 @@ public class Tile implements Cloneable, Comparable<Tile> {
     return liquidHeight;
   }
 
-  public void setLiquid(boolean liquid) {
-    this.liquid = liquid;
+  public void setLiquid(boolean l) {
+    this.liquid = l;
   }
 
   public void setLiquidHeight(float liquidHeight) {

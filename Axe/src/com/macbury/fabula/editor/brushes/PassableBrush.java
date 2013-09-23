@@ -23,9 +23,10 @@ public class PassableBrush extends Brush {
     TileChanger changer = new TileChanger(terrain);
     
     for (Tile tile : brushTiles) {
+      changer.add(tile);
+      
       tile.setPassable(passable);
       this.terrain.addSectorToRebuildFromTile(tile);
-      changer.add(tile);
     }
     
     if (changer.haveTiles()) {

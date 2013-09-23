@@ -15,11 +15,14 @@ public class Water implements Disposable {
   private Scene scene;
   private WaterShader shader;
   
+  private float         waterAnimationSpeed     = 0.05f;
   private float         amplitudeWave   = 0.1f;
   private float         angleWave       = 0.0f;
   private float         angleWaveSpeed  = 2.0f;
   private Animation     animation;
   private Material      waterMaterial;
+  private String        regionsName;
+  
   
   public Water(Scene scene) {
     this.scene  = scene;
@@ -29,7 +32,8 @@ public class Water implements Disposable {
   }
   
   public void setWaterTexture(String name) {
-    this.animation = new Animation(0.05f, G.db.getLiquidAtlas().findRegions(name));
+    this.regionsName = name;
+    this.animation   = new Animation(waterAnimationSpeed, G.db.getLiquidAtlas().findRegions(name));
     this.animation.setPlayMode(Animation.LOOP);
     
     this.waterMaterial = new Material(TextureAttribute.createDiffuse(getTexture()));
@@ -90,6 +94,19 @@ public class Water implements Disposable {
 
   public WaterShader getShader() {
     return this.shader;
+  }
+
+  public String getWaterMaterial() {
+    return regionsName;
+  }
+
+  public float getWaterAnimationSpeed() {
+    return waterAnimationSpeed;
+  }
+
+  public void setWaterAnimationSpeed(float waterAnimationSpeed) {
+    this.waterAnimationSpeed = waterAnimationSpeed;
+    setWaterTexture(regionsName);
   }
   
 }

@@ -129,4 +129,20 @@ public class SceneInspect {
   public float getLiquidSpeed() {
     return this.screen.getScene().getWater().getAngleWaveSpeed();
   }
+  
+  public void setLiquidMaterial(String name) {
+    this.screen.getScene().getWater().setWaterTexture(name);
+  }
+  
+  public String getLiquidMaterial() {
+    return this.screen.getScene().getWater().getWaterMaterial();
+  }
+  
+  public void setLiquidAnimationSpeed(float speed) {
+    this.screen.getScene().getWater().setWaterAnimationSpeed(speed);
+  }
+  
+  public float getLiquidAnimationSpeed() {
+    return this.screen.getScene().getWater().getWaterAnimationSpeed();
+  }
 }
