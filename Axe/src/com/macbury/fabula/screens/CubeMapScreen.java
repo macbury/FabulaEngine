@@ -105,7 +105,7 @@ public class CubeMapScreen extends BaseScreen {
     Gdx.gl.glClearColor(0, 0, 0, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
     Gdx.gl.glEnable(GL10.GL_BLEND);
-    Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+    Gdx.gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
     
     Gdx.gl20.glActiveTexture(GL20.GL_TEXTURE0);
     Gdx.gl20.glBindTexture(GL20.GL_TEXTURE_CUBE_MAP, cubemap.getTextureId());

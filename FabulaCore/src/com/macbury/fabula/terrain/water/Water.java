@@ -41,7 +41,7 @@ public class Water implements Disposable {
   }
 
   public void update(float delta) {
-    this.angleWave += delta;
+    this.angleWave += delta * angleWaveSpeed;
   }
   
   public TextureDescriptor getWaterTextureId() {
@@ -76,8 +76,8 @@ public class Water implements Disposable {
     return null;
   }
   
-  public void setAngleWaveSpeed(float angleWaveSpeed) {
-    this.angleWaveSpeed = angleWaveSpeed;
+  public void setAngleWaveSpeed(float speed) {
+    this.angleWaveSpeed = speed;
   }
 
   @Override

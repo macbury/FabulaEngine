@@ -3,58 +3,58 @@ foliage.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+carrots
+  rotate: false
+  xy: 1, 1
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+potatoes
+  rotate: false
+  xy: 35, 1
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 rose
   rotate: false
-  xy: 1, 19
+  xy: 69, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 sapling
   rotate: false
-  xy: 35, 19
+  xy: 103, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 sapling_birch
   rotate: false
-  xy: 69, 19
+  xy: 137, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-carrots
-  rotate: false
-  xy: 1, 1
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-deadbush
-  rotate: false
-  xy: 103, 35
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-potatoes
-  rotate: false
-  xy: 19, 1
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
 stem_straight
   rotate: false
-  xy: 37, 1
-  size: 16, 16
-  orig: 16, 16
+  xy: 171, 1
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1
 tallgrass
   rotate: false
-  xy: 55, 1
+  xy: 205, 1
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+deadbush
+  rotate: false
+  xy: 239, 17
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

@@ -142,7 +142,7 @@ public class TriangleGrid implements Disposable {
     currentVertex.tilePosition.set(x, z);
   }
   
-  public void addColorToVertex(int r, int g, int b, int a) {
+  public void addColorToVertex(float r, float g, float b, float a) {
     using(AttributeType.Color);
     currentVertex.color.set(r, g, b, a);
   }

@@ -13,45 +13,57 @@ import com.macbury.fabula.manager.G;
 import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.terrain.geometry.TriangleGrid;
 import com.macbury.fabula.terrain.geometry.TriangleGrid.AttributeType;
+import com.macbury.fabula.terrain.tile.Tile;
 
-public class GrassTestScreen extends BaseScreen {
+public class GrassTestScreen extends BaseScreenWithAutoReloadShaders {
   
   private PerspectiveCamera camera;
   private AtlasRegion uvMap;
-  private float time;
+  
   private Mesh mesh;
-
+  
+  private float time      = 0.0f;
+  private float amplitude = 0.04f;
+  private float speed     = 6f;
+  
   public GrassTestScreen(GameManager manager) {
     super(manager);
     TextureAtlas atlas = G.db.getAtlas("foliage");
-    this.uvMap = atlas.findRegion("carrots");
+    this.uvMap = atlas.findRegion("tallgrass");
     TriangleGrid triangleGrid = new TriangleGrid(5, 5, true);
     triangleGrid.using(AttributeType.Position);
     triangleGrid.using(AttributeType.TextureCord);
     
     short n1, n2, n3 = 0;
-    
+    float y = 0.0f;
     triangleGrid.begin();
       for (int x = 0; x < triangleGrid.getColumns(); x++) {
         for (int z = 0; z < triangleGrid.getRows(); z++) {
-          /* Top Right Vertex */
-          n1 = triangleGrid.addVertex(x+1f, 0, z);
-          triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV());
-
+          
+          float w  = uvMap.getRegionWidth() / Tile.TILE_SIZE_IN_PIXELS;
+          float lx = x + 0.5f - w/2;
+          float rx = x + 0.5f + w/2;
+          float h  = uvMap.getRegionHeight() / Tile.TILE_SIZE_IN_PIXELS;
+          float sy = y;
+          float ey = y + h;
+          /* Bottom Left Vertex */
+          n1 = triangleGrid.addVertex(lx, sy, z+0.5f);
+          triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
+          triangleGrid.addColorToVertex(0, 0, 0, 0);
           /* Top left Vertex */
-          n2 = triangleGrid.addVertex(x, 0, z);
+          n2 = triangleGrid.addVertex(lx, ey, z+0.5f);
           triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
-
+          triangleGrid.addColorToVertex(1, 0, 0, 0);
           /* Bottom right Vertex */
-          n3 = triangleGrid.addVertex(x+1f, 0, z+1f);
+          n3 = triangleGrid.addVertex(rx, sy, z+0.5f);
           triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV2());
-
+          triangleGrid.addColorToVertex(0, 0, 0, 0);
           triangleGrid.addIndices(n1,n2,n3);
 
-          /* Bottom left Vertex */
-          n1 = triangleGrid.addVertex(x, 0, z+1f);
-          triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
-
+          /* Top Right Vertex */
+          n1 = triangleGrid.addVertex(rx, ey, z+0.5f);
+          triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV());
+          triangleGrid.addColorToVertex(1, 0, 0, 0);
           triangleGrid.addIndices(n3,n2,n1);
         }
       }
@@ -73,12 +85,6 @@ public class GrassTestScreen extends BaseScreen {
   }
 
   @Override
-  public void dispose() {
-    // TODO Auto-generated method stub
-    
-  }
-  
-  @Override
   public void hide() {
     // TODO Auto-generated method stub
     
@@ -95,17 +101,18 @@ public class GrassTestScreen extends BaseScreen {
     Gdx.gl.glClearColor(0, 0, 0, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
     Gdx.gl.glEnable(GL10.GL_BLEND);
-    Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+    Gdx.gl.glBlendFunc(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
     
     Gdx.gl20.glActiveTexture(GL20.GL_TEXTURE0);
     uvMap.getTexture().bind();
     
-    time += delta;
+    time += delta * speed;
     camera.update();
     
     G.shaders.begin("grass");
       G.shaders.setUniformMatrix("u_model_view", this.camera.combined);
       G.shaders.setUniformi("u_texture", 0);
+      G.shaders.setUniformf("u_wave_data", time, amplitude);
       mesh.render(G.shaders.getCurrent(), GL10.GL_TRIANGLES);
     G.shaders.end();
   }
