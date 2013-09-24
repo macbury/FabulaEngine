@@ -28,7 +28,7 @@ import com.macbury.fabula.terrain.water.Water;
 
 @Root(name="scene")
 public class ScenePersister {
-  public static final int VERSION = 2;  
+  public static final int VERSION = 3;  
   @Element(required=false)
   private int version;
   @Element
@@ -50,6 +50,8 @@ public class ScenePersister {
   private int              rows;
   @Element
   private String           tilesetName;
+  @Element
+  private String           foliageName;
   @Element
   private String           terrainData;
   
@@ -80,6 +82,7 @@ public class ScenePersister {
     }
     
     tilesetName     = terrain.getTileset().getName();
+    foliageName     = terrain.getFoliageSet().getName();
     ambientColor    = scene.getLights().ambientLight.toIntBits();
     sunLightColor   = scene.getSunLight().color.toIntBits();
     this.version    = VERSION;
@@ -116,6 +119,7 @@ public class ScenePersister {
     this.terrain = this.scene.getTerrain();
     this.terrain.setTileset(tilesetName);
     
+    this.terrain.setFoliageSet(foliageName);
     
     byte[] bytes                        = Base64Coder.decode(terrainData);
     inflater.setInput(bytes);
@@ -155,11 +159,15 @@ public class ScenePersister {
           tile.setPassable(dis.readBoolean());
           tile.setLiquid(dis.readBoolean());
           tile.setLiquidHeight(dis.readFloat());
+          String foliageRegionName = dis.readUTF();
           
           AutoTiles autoTiles  = terrain.getTileset().getAutoTiles(aid);
           AutoTiles.Types type = AutoTiles.Types.values()[ord];
           
           tile.setAutoTile(autoTiles.getAutoTile(type));
+          if (foliageRegionName.length() > 0) {
+            tile.setFoliage(this.terrain.getFoliageSet().findDescriptor(foliageRegionName));
+          }
           terrain.setTile(x, z, tile);
         }
       }
@@ -206,6 +214,11 @@ public class ScenePersister {
           dos.writeBoolean(tile.isPassable());
           dos.writeBoolean(tile.isLiquid());
           dos.writeFloat(tile.getLiquidHeight());
+          if (tile.haveFoliage()) {
+            dos.writeUTF(tile.getFoliage().getRegionName());
+          } else {
+            dos.writeUTF("");
+          }
         }
       }
       

@@ -16,7 +16,7 @@ public class DesktopGameManager extends GameManager {
 
   @Override
   public Screen getInitialScreen() {
-    return new GrassTestScreen(this);
+    return new GamePlayScreen(this);
   }
   
   @Override

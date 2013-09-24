@@ -1,6 +1,6 @@
-<game-features game:build="1918" xmlns:game="http://macbury.pl/">
+<game-features game:build="1931" xmlns:game="http://macbury.pl/">
    <title>Brutal Crasher</title>
-   <player-start-position x="37" y="38" map="42560da4-d026-4bb1-acf5-2dd0a48beb38"/>
+   <player-start-position x="22" y="27" map="9c73fa8a-7f55-4191-8ee7-028503f6871c"/>
    <fonts length="1">
       <font>base</font>
    </fonts>
@@ -44,6 +44,17 @@
    <foliages>
       <foliage name="outside" atlas="foliage">
          <leaves>
+            <leaf region="carrots" animated="true"/>
+            <leaf region="deadbush" animated="false"/>
+            <leaf region="fern" animated="false"/>
+            <leaf region="potatoes" animated="false"/>
+            <leaf region="rose" animated="true"/>
+            <leaf region="tallgrass" animated="true"/>
+            <leaf region="stem_straight" animated="false"/>
+            <leaf region="sapling_spruce" animated="false"/>
+            <leaf region="sapling_jungle" animated="false"/>
+            <leaf region="sapling_birch" animated="true"/>
+            <leaf region="sapling" animated="true"/>
             <leaf region="crops7" animated="true"/>
             <leaf region="crops6" animated="true"/>
             <leaf region="crops5" animated="true"/>
@@ -66,9 +77,11 @@
    <map uuid="59be3da9-7e3c-4aa4-ba0b-76527b542d43">test</map>
    <map uuid="28cb6912-395b-4dc3-a543-8e92c67ba05a">test</map>
    <map uuid="93db41e9-155d-4f2b-89fe-bd5120802570">testing_events</map>
+   <map uuid="a9c3c8ef-596f-4723-b507-d65188384567">test</map>
    <map uuid="493e5026-6c42-4f18-a606-14a27a72aeda">testing_entities</map>
    <map uuid="42560da4-d026-4bb1-acf5-2dd0a48beb38">water-park</map>
    <map uuid="cd8ca19d-7bfa-4e30-89b7-106b0f560753">water_testing</map>
+   <map uuid="9c73fa8a-7f55-4191-8ee7-028503f6871c">test</map>
    <map uuid="fc3f3dc5-32ae-434a-b21f-5a4f22342ce3">test</map>
    <corner combination="FF0FF00">InnerReapeating</corner>
    <corner combination="FF000">PathHorizontal</corner>
