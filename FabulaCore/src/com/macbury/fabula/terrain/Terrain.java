@@ -21,6 +21,8 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Disposable;
 import com.macbury.fabula.manager.G;
+import com.macbury.fabula.terrain.foliage.Foliage;
+import com.macbury.fabula.terrain.foliage.FoliageRenderable;
 import com.macbury.fabula.terrain.foliage.FoliageSet;
 import com.macbury.fabula.terrain.tile.Tile;
 import com.macbury.fabula.terrain.tileset.Tileset;
@@ -162,6 +164,15 @@ public class Terrain implements Disposable {
       WaterRenderable wr = sector.getWaterRenderable(water);
       if (wr != null) {
         batch.render(wr);
+      }
+    }
+  }
+  
+  public void renderFoliageGeometry(ModelBatch modelBatch, Foliage foliage) {
+    for (Sector sector : visibleSectors) {
+      FoliageRenderable renderable = sector.getFoliageRenderable(foliage);
+      if (renderable != null) {
+        modelBatch.render(renderable);
       }
     }
   }
@@ -371,4 +382,6 @@ public class Terrain implements Disposable {
   public void setFoliageSet(String name) {
     this.foliageSet = G.db.getFoliageSet(name);
   }
+
+  
 }

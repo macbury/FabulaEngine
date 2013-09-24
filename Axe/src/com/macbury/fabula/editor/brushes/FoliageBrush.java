@@ -23,7 +23,10 @@ public class FoliageBrush extends Brush {
   @Override
   public void onApply() {
     TileChanger changer  = new TileChanger(terrain);
-    FoliageDescriptor fs = this.terrain.getFoliageSet().findDescriptor(foliageDescriptorName);
+    FoliageDescriptor fs = null;
+    if (foliageDescriptorName != null) {
+      fs = this.terrain.getFoliageSet().findDescriptor(foliageDescriptorName);
+    }
     for (Tile tile : brushTiles) {
       changer.add(tile);
       tile.setFoliage(fs);
@@ -39,8 +42,13 @@ public class FoliageBrush extends Brush {
     return foliageDescriptorName;
   }
 
-  public void setFoliageDescriptorName(String foliageDescriptorName) {
-    this.foliageDescriptorName = foliageDescriptorName;
+  public void setFoliageDescriptorName(String fs) {
+    if (fs == null || fs.length() <= 1) {
+      this.foliageDescriptorName = null;
+    } else {
+      this.foliageDescriptorName = fs;
+    }
+    
   }
   
 }

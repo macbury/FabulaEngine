@@ -13,8 +13,9 @@ import com.macbury.fabula.manager.G;
 public class WaterShader implements Shader {
   private static final String SHADER_NAME                = "water";
   private static final String UNIFORM_MODEL_VIEW         = "u_model_view";
-  private static final String UNIFORM_WAVE_DATA          = "u_wave_data";
   private static final String UNIFORM_TEXTURE_ID         = "u_texture";
+  private static final String UNIFORM_WAVE_DATA          = "u_wave_data";
+  
   private static final String UNIFORM_TEXTURE_CORDINATES = "u_texture_cordinates";
   private static final String UNIFORM_CAMERA_POSITION    = "u_camera_position";
   private static final String UNIFORM_WATER_ALPHA        = "u_water_alpha";

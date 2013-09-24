@@ -36,6 +36,7 @@ import com.macbury.fabula.graphics.SkyBox;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.persister.ScenePersister;
 import com.macbury.fabula.terrain.Terrain;
+import com.macbury.fabula.terrain.foliage.Foliage;
 import com.macbury.fabula.terrain.tile.Tile;
 import com.macbury.fabula.terrain.water.Water;
 import com.macbury.fabula.utils.CameraGroupWithCustomShaderStrategy;
@@ -69,6 +70,7 @@ public class Scene implements Disposable {
   private TileMovementSystem tileMovementSystem;
   private SkyBox skybox;
   private EditorEntityManagmentSystem editorEntityManagmentSystem;
+  private Foliage foliage;
 
   public SkyBox getSkybox() {
     return skybox;
@@ -89,8 +91,7 @@ public class Scene implements Disposable {
     sunLight  = new DirectionalLight();
     sunLight.set(Color.WHITE, new Vector3(-0.008f, -0.716f, -0.108f));
     lights.add(sunLight);
-    
-    this.water        = new Water(this);
+
     this.terrain      = new Terrain(width, height);
     this.terrain.setTileset("outside");
     this.terrain.setFoliageSet("outside");
@@ -98,6 +99,9 @@ public class Scene implements Disposable {
     this.sm           = G.shaders;
     
     this.objectsWorld         = new World();
+    
+    this.water        = new Water(this);
+    this.foliage      = new Foliage(this);
   }
   
   public void initialize() {
@@ -129,6 +133,7 @@ public class Scene implements Disposable {
   
   public void render(float delta) {
     this.water.update(delta);
+    this.foliage.update(delta);
     this.objectsWorld.setDelta(delta);
     this.objectsWorld.process();
     this.shapeRenderer.setProjectionMatrix(perspectiveCamera.combined);
@@ -141,7 +146,9 @@ public class Scene implements Disposable {
       getModelBatch().begin(perspectiveCamera);
         this.terrain.renderTerrainGeometry(perspectiveCamera, getModelBatch());
         this.decalRenderingSystem.process();
+        this.terrain.renderFoliageGeometry(getModelBatch(), foliage);
         this.terrain.renderLiquidGeometry(getModelBatch(), water);
+        
       getModelBatch().end();
       
       if (this.editorEntityManagmentSystem != null) {

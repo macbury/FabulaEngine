@@ -335,5 +335,9 @@ public class Tile implements Cloneable, Comparable<Tile> {
   public void setFoliage(FoliageDescriptor foliage) {
     this.foliage = foliage;
   }
+
+  public boolean haveFoliage() {
+    return this.foliage != null;
+  }
   
 }

@@ -108,6 +108,7 @@ public class TriangleGrid implements Disposable {
     
     clear();
     this.indices = new short[vertextCount * 3];
+    this.verties = null;
   }
   
   public void clear() {

@@ -8,13 +8,15 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Disposable;
+import com.macbury.fabula.terrain.foliage.Foliage;
+import com.macbury.fabula.terrain.foliage.FoliageDescriptor;
+import com.macbury.fabula.terrain.foliage.FoliageRenderable;
 import com.macbury.fabula.terrain.geometry.TriangleGrid;
 import com.macbury.fabula.terrain.geometry.TriangleGrid.AttributeType;
 import com.macbury.fabula.terrain.tile.Tile;
 import com.macbury.fabula.terrain.tile.TileTransformer;
 import com.macbury.fabula.terrain.water.Water;
 import com.macbury.fabula.terrain.water.WaterRenderable;
-import com.macbury.fabula.terrain.water.WaterShader;
 
 public class Sector implements Disposable {
   public final static int ROW_COUNT               = 5;
@@ -33,6 +35,8 @@ public class Sector implements Disposable {
   private TerrainRenderable terrainRenderable;
   private TriangleGrid waterTriangleGrid;
   private WaterRenderable waterRenderable;
+  private FoliageRenderable foliageRenderable;
+  private TriangleGrid foliageTriangleGrid;
   
   public Sector(Vector3 pos, Terrain terrain) {
     this.terrain                  = terrain;
@@ -40,6 +44,7 @@ public class Sector implements Disposable {
     this.bottomRightCorner        = pos.cpy().add(COLUMN_COUNT, 0, ROW_COUNT);
     this.terrainTriangleGrid      = new TriangleGrid(COLUMN_COUNT, ROW_COUNT, false); //TODO: change to static for non world edit
     this.waterTriangleGrid        = new TriangleGrid(COLUMN_COUNT, ROW_COUNT, false);
+    this.foliageTriangleGrid      = new TriangleGrid(COLUMN_COUNT*2, ROW_COUNT*2, false);
   }
 
   public int getStartX() {
@@ -68,6 +73,7 @@ public class Sector implements Disposable {
     TileTransformer transformer = new TileTransformer();
     this.terrainRenderable      = null;
     this.waterRenderable        = null;
+    this.foliageRenderable      = null;
     
     terrainTriangleGrid.using(AttributeType.Position);
     terrainTriangleGrid.using(AttributeType.TextureCord);
@@ -76,12 +82,17 @@ public class Sector implements Disposable {
     waterTriangleGrid.using(AttributeType.Color);
     waterTriangleGrid.using(AttributeType.Normal);
     
+    foliageTriangleGrid.using(AttributeType.Position);
+    foliageTriangleGrid.using(AttributeType.TextureCord);
+    foliageTriangleGrid.using(AttributeType.Color);
+    
     if (terrain.isDebuging()) {
       terrainTriangleGrid.using(AttributeType.TilePosition);
     }
     
     waterTriangleGrid.begin();
     terrainTriangleGrid.begin();
+    foliageTriangleGrid.begin();
       for (int z = (int) topLeftCorner.z; z < rowEnd; z++) {
         for (int x = (int) topLeftCorner.x; x < columnEnd; x++) {
           Tile tile = terrain.getTile(x, z);
@@ -94,6 +105,10 @@ public class Sector implements Disposable {
           if (tile.isLiquid()) {
             createLiquidTileGeometry(tile);
           }
+          
+          if (tile.haveFoliage()) {
+            createFoliageGeometry(tile);
+          }
         }
       }
     
@@ -101,10 +116,73 @@ public class Sector implements Disposable {
     Vector3 firstCorner = this.topLeftCorner.cpy();
     firstCorner.y       = maxHeight;
     this.boundingBox    = new BoundingBox(firstCorner, this.bottomRightCorner.cpy().add(0, minHeight, 0));
-    
+    foliageTriangleGrid.end();
     terrainTriangleGrid.end();
     waterTriangleGrid.end();
 
+  }
+
+  private void createFoliageGeometry(Tile tile) {
+    FoliageDescriptor descriptor   = tile.getFoliage();
+    short n1, n2, n3 = 0;
+    float y = tile.getY();
+    float z = tile.getZ();
+    float x = tile.getX();
+    float animated = descriptor.isAnimated() ? 1.0f : 0.0f;
+    
+    TextureRegion uvMap = descriptor.getRegion();
+    
+    float w  = uvMap.getRegionWidth() / Tile.TILE_SIZE_IN_PIXELS;
+    float sz = z + 0.5f - w/2;
+    float ez = z + 0.5f + w/2;
+    
+    float lx = x + 0.5f - w/2;
+    float rx = x + 0.5f + w/2;
+    float h  = uvMap.getRegionHeight() / Tile.TILE_SIZE_IN_PIXELS;
+    float sy = y;
+    float ey = y + h;
+    
+    /* Bottom Left Vertex */
+    n1 = foliageTriangleGrid.addVertex(lx, sy, sz);
+    foliageTriangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
+    foliageTriangleGrid.addColorToVertex(0, 0, 0, 0);
+    /* Top left Vertex */
+    n2 = foliageTriangleGrid.addVertex(lx, ey, sz);
+    foliageTriangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
+    foliageTriangleGrid.addColorToVertex(animated, 0, 0, 0);
+    /* Bottom right Vertex */
+    n3 = foliageTriangleGrid.addVertex(rx, sy, ez);
+    foliageTriangleGrid.addUVMap(uvMap.getU2(), uvMap.getV2());
+    foliageTriangleGrid.addColorToVertex(0, 0, 0, 0);
+    foliageTriangleGrid.addIndices(n1,n2,n3);
+
+    /* Top Right Vertex */
+    n1 = foliageTriangleGrid.addVertex(rx, ey, ez);
+    foliageTriangleGrid.addUVMap(uvMap.getU2(), uvMap.getV());
+    foliageTriangleGrid.addColorToVertex(animated, 0, 0, 0);
+    foliageTriangleGrid.addIndices(n3,n2,n1);
+    
+    // next gex
+    
+    /* Bottom Left Vertex */
+    n1 = foliageTriangleGrid.addVertex(lx, sy, ez);
+    foliageTriangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
+    foliageTriangleGrid.addColorToVertex(0, 0, 0, 0);
+    /* Top left Vertex */
+    n2 = foliageTriangleGrid.addVertex(lx, ey, ez);
+    foliageTriangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
+    foliageTriangleGrid.addColorToVertex(animated, 0, 0, 0);
+    /* Bottom right Vertex */
+    n3 = foliageTriangleGrid.addVertex(rx, sy, sz);
+    foliageTriangleGrid.addUVMap(uvMap.getU2(), uvMap.getV2());
+    foliageTriangleGrid.addColorToVertex(0, 0, 0, 0);
+    foliageTriangleGrid.addIndices(n1,n2,n3);
+
+    /* Top Right Vertex */
+    n1 = foliageTriangleGrid.addVertex(rx, ey, sz);
+    foliageTriangleGrid.addUVMap(uvMap.getU2(), uvMap.getV());
+    foliageTriangleGrid.addColorToVertex(animated, 0, 0, 0);
+    foliageTriangleGrid.addIndices(n3,n2,n1);
   }
 
   private void createLiquidTileGeometry(Tile tile) {
@@ -924,17 +1002,39 @@ public class Sector implements Disposable {
     
     return waterRenderable;
   }
+  
+  public FoliageRenderable getFoliageRenderable(Foliage foliage) {
+    if (foliageRenderable == null && foliageTriangleGrid.haveMeshData()) {
+      this.foliageRenderable                = new FoliageRenderable();
+      this.foliageRenderable.mesh           = foliageTriangleGrid.getMesh();
+      this.foliageRenderable.meshPartOffset = 0;
+      this.foliageRenderable.meshPartSize   = this.foliageRenderable.mesh.getNumIndices();
+      this.foliageRenderable.primitiveType  = GL20.GL_TRIANGLES;
+    }
+    
+    if (foliageRenderable != null) {
+      this.foliageRenderable.shader   = foliage.getShader();
+      this.foliageRenderable.material = foliage.getMaterial();
+    }
+    
+    return foliageRenderable;
+  }
 
   @Override
   public void dispose() {
     this.terrainTriangleGrid.dispose();
     this.waterTriangleGrid.dispose();
+    this.foliageTriangleGrid.dispose();
     if (terrainRenderable != null) {
       terrainRenderable.mesh.dispose();
     }
     
     if (this.waterRenderable != null) {
       waterRenderable.mesh.dispose();
+    }
+    
+    if (this.foliageRenderable != null) {
+      foliageRenderable.mesh.dispose();
     }
   }
   
