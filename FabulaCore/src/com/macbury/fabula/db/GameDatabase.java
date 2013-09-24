@@ -26,6 +26,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.persister.ScenePersister;
+import com.macbury.fabula.terrain.foliage.FoliageSet;
 import com.macbury.fabula.terrain.tileset.AutoTiles;
 import com.macbury.fabula.terrain.tileset.Tileset;
 
@@ -54,6 +55,9 @@ public class GameDatabase {
   
   @ElementList(required=false)
   private ArrayList<Tileset> tilesets;
+  
+  @ElementList(required=false, name="foliages")
+  private ArrayList<FoliageSet> foliages;
   
   @ElementList(required=false, name="atlases", entry="atlas")
   private ArrayList<TextureAtlasLoader> atlases;
@@ -131,6 +135,10 @@ public class GameDatabase {
     
     if (skyboxes == null) {
       skyboxes = new String[0];
+    }
+    
+    if (foliages == null) {
+      foliages = new ArrayList<FoliageSet>();
     }
     
     if (fontsName == null) {
@@ -223,6 +231,15 @@ public class GameDatabase {
     return null;
   }
   
+  public FoliageSet getFoliageSet(String name) {
+    for (FoliageSet set : foliages) {
+      if (set.getName().equalsIgnoreCase(name)) {
+        return set;
+      }
+    }
+    return null;
+  }
+  
   public TextureAtlas getAtlas(String name) {
     for (TextureAtlasLoader atlas : atlases) {
       if (atlas.getName().equalsIgnoreCase(name)) {
@@ -242,5 +259,9 @@ public class GameDatabase {
 
   public TextureAtlas getLiquidAtlas() {
     return getAtlas("liquid");
+  }
+
+  public ArrayList<FoliageSet> getFoliages() {
+    return this.foliages;
   }
 }

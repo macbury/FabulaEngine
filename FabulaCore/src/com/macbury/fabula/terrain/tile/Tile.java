@@ -3,6 +3,7 @@ package com.macbury.fabula.terrain.tile;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
+import com.macbury.fabula.terrain.foliage.FoliageDescriptor;
 import com.macbury.fabula.terrain.tileset.AutoTiles;
 import com.macbury.fabula.terrain.tileset.AutoTiles.Types;
 
@@ -26,6 +27,7 @@ public class Tile implements Cloneable, Comparable<Tile> {
   private boolean passable = true;
   private boolean liquid   = false;
   private float   liquidHeight   = 0.0f;
+  private FoliageDescriptor  foliage;
   
   public Tile(float x, float y, float z) {
     gid      = GID_COUNTER++;
@@ -258,7 +260,7 @@ public class Tile implements Cloneable, Comparable<Tile> {
     
     tile.setAutoTile(this.getAutoTile());
     tile.setSlope(this.getSlope());
-    
+    tile.setFoliage(this.getFoliage());
     tile.setPassable(new Boolean(this.isPassable()));
     tile.setLiquid(new Boolean(this.isLiquid()));
     tile.setLiquidHeight(new Float(this.getLiquidHeight()));
@@ -324,6 +326,14 @@ public class Tile implements Cloneable, Comparable<Tile> {
 
   public void setLiquidHeight(float liquidHeight) {
     this.liquidHeight = liquidHeight;
+  }
+
+  public FoliageDescriptor getFoliage() {
+    return foliage;
+  }
+
+  public void setFoliage(FoliageDescriptor foliage) {
+    this.foliage = foliage;
   }
   
 }

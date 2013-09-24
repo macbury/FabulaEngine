@@ -106,14 +106,16 @@ public class TriangleGrid implements Disposable {
       throw new GdxRuntimeException("Already started building geometry! Call end() first!");
     }
     
+    clear();
+    this.indices = new short[vertextCount * 3];
+  }
+  
+  public void clear() {
     this.vertexCursor  = 0;
     this.indicesCursor = 0;
     this.vertexIndex   = 0;
-    
-    this.verties        = null;
+
     this.vertextCount   = rows*columns*getAttributesPerVertex();
-    this.indices        = new short[vertextCount * 3];
-    
     this.attributeTypes.clear();
     this.vertexsList.clear();
   }
@@ -238,6 +240,7 @@ public class TriangleGrid implements Disposable {
       this.mesh = new Mesh(true, this.verties.length, this.indices.length, this.getVertexAttributes());
       mesh.setVertices(this.verties);
       mesh.setIndices(this.indices);
+      this.vertexsList.clear();
     }
     return mesh;
   }

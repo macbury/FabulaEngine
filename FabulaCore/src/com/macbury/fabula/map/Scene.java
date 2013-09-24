@@ -93,6 +93,7 @@ public class Scene implements Disposable {
     this.water        = new Water(this);
     this.terrain      = new Terrain(width, height);
     this.terrain.setTileset("outside");
+    this.terrain.setFoliageSet("outside");
     this.finalShader  = "default";
     this.sm           = G.shaders;
     

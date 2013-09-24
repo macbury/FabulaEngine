@@ -160,4 +160,20 @@ public class SceneInspect {
   public void setLiquidMix(float a) {
     this.screen.getScene().getWater().setMix(a);
   }
+  
+  public String getFoliageSet() {
+    return this.screen.getScene().getTerrain().getFoliageSet().getName();
+  }
+  
+  public void setFoliageSet(String name) {
+    this.screen.getScene().getTerrain().setFoliageSet(name);
+  }
+  
+  public String getFoliageDescriptor() {
+    return this.screen.getFoliageBrush().getFoliageDescriptorName();
+  }
+  
+  public void setFoliageDescriptor(String name) {
+    this.screen.getFoliageBrush().setFoliageDescriptorName(name);
+  }
 }

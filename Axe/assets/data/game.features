@@ -1,4 +1,4 @@
-<game-features game:build="1871" xmlns:game="http://macbury.pl/">
+<game-features game:build="1895" xmlns:game="http://macbury.pl/">
    <title>Brutal Crasher</title>
    <player-start-position x="25" y="24" map="42560da4-d026-4bb1-acf5-2dd0a48beb38"/>
    <fonts length="1">
@@ -41,19 +41,33 @@
          </auto-tiles>
       </tileset>
    </tilesets>
+   <foliages>
+      <foliage name="outside" atlas="foliage">
+         <leaves>
+            <leaf region="crops7" animated="true"/>
+            <leaf region="crops6" animated="true"/>
+            <leaf region="crops5" animated="true"/>
+            <leaf region="crops4" animated="true"/>
+            <leaf region="crops3" animated="true"/>
+            <leaf region="crops2" animated="false"/>
+            <leaf region="crops1" animated="false"/>
+            <leaf region="crops0" animated="false"/>
+         </leaves>
+      </foliage>
+   </foliages>
    <atlases>
       <atlas name="robot"/>
       <atlas name="gui"/>
       <atlas name="liquid"/>
       <atlas name="foliage"/>
    </atlases>
-   <map>water_testing</map>
    <map uuid="72d5ae3e-eade-48ad-83ab-0c06751c42bb">sss</map>
-   <map uuid="28cb6912-395b-4dc3-a543-8e92c67ba05a">test</map>
+   <map>water_testing</map>
    <map uuid="59be3da9-7e3c-4aa4-ba0b-76527b542d43">test</map>
+   <map uuid="28cb6912-395b-4dc3-a543-8e92c67ba05a">test</map>
    <map uuid="93db41e9-155d-4f2b-89fe-bd5120802570">testing_events</map>
-   <map uuid="42560da4-d026-4bb1-acf5-2dd0a48beb38">water-park</map>
    <map uuid="493e5026-6c42-4f18-a606-14a27a72aeda">testing_entities</map>
+   <map uuid="42560da4-d026-4bb1-acf5-2dd0a48beb38">water-park</map>
    <map uuid="cd8ca19d-7bfa-4e30-89b7-106b0f560753">water_testing</map>
    <map uuid="fc3f3dc5-32ae-434a-b21f-5a4f22342ce3">test</map>
    <corner combination="FF0FF00">InnerReapeating</corner>
@@ -69,13 +83,13 @@
    <corner combination="C0FF000">PathHorizontal</corner>
    <corner combination="F0000">PathHorizontalRight</corner>
    <corner combination="EFDFFFFF">InnerReapeating</corner>
-   <corner combination="800FF000">PathHorizontal</corner>
    <corner combination="F0003FF">PathVerticalBottom</corner>
+   <corner combination="800FF000">PathHorizontal</corner>
    <corner combination="CFC00000">PathVerticalBottom</corner>
    <corner combination="F00F0F0">PathCrossRightTopBottom</corner>
    <corner combination="F00003F">PathVertical</corner>
-   <corner combination="400200">Start</corner>
    <corner combination="FFDFFFFF">InnerReapeating</corner>
+   <corner combination="400200">Start</corner>
    <corner combination="CF000000">PathVerticalBottom</corner>
    <corner combination="FF0F0000">CornerBottomRight</corner>
    <corner combination="F000333">PathVerticalBottom</corner>

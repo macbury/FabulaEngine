@@ -38,6 +38,7 @@ import com.macbury.fabula.editor.WorldEditorFrame;
 import com.macbury.fabula.editor.brushes.AutoTileBrush;
 import com.macbury.fabula.editor.brushes.Brush;
 import com.macbury.fabula.editor.brushes.EventBrush;
+import com.macbury.fabula.editor.brushes.FoliageBrush;
 import com.macbury.fabula.editor.brushes.LiquidBrush;
 import com.macbury.fabula.editor.brushes.Brush.BrushType;
 import com.macbury.fabula.editor.brushes.PassableBrush;
@@ -50,6 +51,7 @@ import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.terrain.Terrain;
 import com.macbury.fabula.terrain.Terrain.TerrainDebugListener;
+import com.macbury.fabula.terrain.foliage.FoliageSet;
 import com.macbury.fabula.terrain.tile.Tile;
 import com.macbury.fabula.utils.ActionTimer;
 import com.macbury.fabula.utils.ActionTimer.TimerListener;
@@ -57,6 +59,7 @@ import com.macbury.fabula.utils.EditorCamController;
 import com.macbury.fabula.utils.TopDownCamera;
 
 public class WorldEditScreen extends BaseScreen implements InputProcessor, TimerListener, TerrainDebugListener {
+  private static WorldEditScreen _shared;
   public String debugInfo = "";
   private static final String TAG = "WorldScreen";
   private static final float APPLY_BRUSH_EVERY = 0.02f;
@@ -66,6 +69,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   private Brush         currentBrush;
   private TerrainBrush  terrainBrush;
   private AutoTileBrush autoTileBrush;
+  private FoliageBrush  foliageBrush;
   private LiquidBrush   liquidBrush;
   private Scene scene;
   private Terrain terrain;
@@ -80,6 +84,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
   
   public WorldEditScreen(GameManager manager) {
     super(manager);
+    _shared = this;
   }
 
   @Override
@@ -109,7 +114,6 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     }
     
     
-    //setCurrentBrush(terrainBrush);
     this.infoTimer.start();
     this.camController = new EditorCamController(camera);
     InputMultiplexer inputMultiplexer = new InputMultiplexer(this, camController);
@@ -137,6 +141,7 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
     passableTileBrush = new PassableBrush(terrain);
     eventBrush        = new EventBrush(terrain);
     liquidBrush       = new LiquidBrush(terrain);
+    foliageBrush      = new FoliageBrush(terrain);
   }
 
   public void openMap(File file) {
@@ -412,6 +417,18 @@ public class WorldEditScreen extends BaseScreen implements InputProcessor, Timer
 
   public LiquidBrush getLiquidBrush() {
     return liquidBrush;
+  }
+
+  public FoliageBrush getFoliageBrush() {
+    return foliageBrush;
+  }
+
+  public void setFoliageBrush(FoliageBrush foliageBrush) {
+    this.foliageBrush = foliageBrush;
+  }
+
+  public static WorldEditScreen shared() {
+    return _shared;
   }
 
 }

@@ -14,20 +14,25 @@ import com.l2fprod.common.beans.editor.DimensionPropertyEditor;
 import com.l2fprod.common.beans.editor.FloatPropertyEditor;
 import com.macbury.fabula.editor.brushes.AutoTileBrush.PaintMode;
 import com.macbury.fabula.manager.G;
+import com.macbury.fabula.screens.WorldEditScreen;
+import com.macbury.fabula.terrain.foliage.FoliageDescriptor;
+import com.macbury.fabula.terrain.foliage.FoliageSet;
 import com.macbury.fabula.terrain.tileset.Tileset;
 
 import de.matthiasmann.twlthemeeditor.properties.EnumProperty;
 
 public class SceneInspectBeanInfo extends BaseBeanInfo {
-  private static final String CATEGORY_MAP    = "Map";
-  private static final String CATEGORY_BRUSH  = "Brush";
-  private static final String CATEGORY_VIEW   = "View";
-  private static final String CATEGORY_LIQUID = "Liquids";
-  
+  private static final String CATEGORY_MAP       = "Map";
+  private static final String CATEGORY_GEOMETRY  = "Geometry";
+  private static final String CATEGORY_COLLISION = "Collision";
+  private static final String CATEGORY_TEXTURE   = "Auto Tile";
+  private static final String CATEGORY_VIEW      = "View";
+  private static final String CATEGORY_LIQUID    = "Liquids";
+  private static final String CATEGORY_FOLIAGES  = "Foliages";
   public SceneInspectBeanInfo() {
     super(SceneInspect.class);
     
-    ExtendedPropertyDescriptor tilesetProperty = addProperty("tileset").setCategory(CATEGORY_MAP);
+    ExtendedPropertyDescriptor tilesetProperty = addProperty("tileset").setCategory(CATEGORY_TEXTURE);
     tilesetProperty.setDisplayName("Tileset");
     tilesetProperty.setShortDescription("Change map autotiles texture");
     tilesetProperty.setPropertyEditorClass(TilesetEditor.class);
@@ -47,16 +52,16 @@ public class SceneInspectBeanInfo extends BaseBeanInfo {
     shaderProperty.setShortDescription("Final shader effect");
     shaderProperty.setPropertyEditorClass(ShaderEditor.class);
     
-    ExtendedPropertyDescriptor terrainHeightProperty = addProperty("terrainHeight").setCategory(CATEGORY_BRUSH);
-    terrainHeightProperty.setDisplayName("Terrain height");
+    ExtendedPropertyDescriptor terrainHeightProperty = addProperty("terrainHeight").setCategory(CATEGORY_GEOMETRY);
+    terrainHeightProperty.setDisplayName("Set height");
     terrainHeightProperty.setShortDescription("Set terrain height");
     terrainHeightProperty.setPropertyEditorClass(TerrainSpinnerEditor.class);
     
-    ExtendedPropertyDescriptor terrainPassableHeightProperty = addProperty("terrainPassable").setCategory(CATEGORY_BRUSH);
+    ExtendedPropertyDescriptor terrainPassableHeightProperty = addProperty("terrainPassable").setCategory(CATEGORY_COLLISION);
     terrainPassableHeightProperty.setDisplayName("Passable");
     
-    ExtendedPropertyDescriptor terrainAutoTileTypeProperty = addProperty("paintMode").setCategory(CATEGORY_BRUSH);
-    terrainAutoTileTypeProperty.setDisplayName("Paint mode");
+    ExtendedPropertyDescriptor terrainAutoTileTypeProperty = addProperty("paintMode").setCategory(CATEGORY_TEXTURE);
+    terrainAutoTileTypeProperty.setDisplayName("Mode");
     terrainAutoTileTypeProperty.setShortDescription("How you place blocks");
     terrainAutoTileTypeProperty.setPropertyEditorClass(AutoTileEditor.class);
     
@@ -99,6 +104,16 @@ public class SceneInspectBeanInfo extends BaseBeanInfo {
     ExtendedPropertyDescriptor liquidMix = addProperty("liquidMix").setCategory(CATEGORY_LIQUID);
     liquidMix.setDisplayName("Mix");
     liquidMix.setShortDescription("Diffrence between water texture and skybox cubemap");
+    
+    ExtendedPropertyDescriptor foliagesNameProperty = addProperty("foliageSet").setCategory(CATEGORY_FOLIAGES);
+    foliagesNameProperty.setDisplayName("Texture");
+    foliagesNameProperty.setShortDescription("Foliage textures");
+    foliagesNameProperty.setPropertyEditorClass(FoliagesEditor.class);
+    
+    ExtendedPropertyDescriptor foliageDescriptorNameProperty = addProperty("foliageDescriptor").setCategory(CATEGORY_FOLIAGES);
+    foliageDescriptorNameProperty.setDisplayName("Type");
+    foliageDescriptorNameProperty.setShortDescription("Foliage type");
+    foliageDescriptorNameProperty.setPropertyEditorClass(FoliageDescriptorEditor.class);
   }
   
   public static class AutoTileEditor extends ComboBoxPropertyEditor {
@@ -123,6 +138,35 @@ public class SceneInspectBeanInfo extends BaseBeanInfo {
       
       for (int i = 0; i < shadersName.size; i++) {
         values[i] = shadersName.get(i);
+      }
+      
+      setAvailableValues(values);
+    }
+  }
+  
+  public static class FoliagesEditor extends ComboBoxPropertyEditor {
+    public FoliagesEditor() {
+      super();
+      ArrayList<FoliageSet> foliages = G.db.getFoliages();
+      String[] values = new String[foliages.size()];
+      
+      for (int i = 0; i < foliages.size(); i++) {
+        values[i] = foliages.get(i).getName();
+      }
+      
+      setAvailableValues(values);
+    }
+  }
+  
+  public static class FoliageDescriptorEditor extends ComboBoxPropertyEditor {
+    public FoliageDescriptorEditor() {
+      super();
+      ArrayList<FoliageDescriptor> leaves  = WorldEditScreen.shared().getScene().getTerrain().getFoliageSet().getLeaves();
+      String[] values = new String[leaves.size()+1];
+      values[0] = " ";
+      
+      for (int i = 0; i < leaves.size(); i++) {
+        values[i+1] = leaves.get(i).getRegionName();
       }
       
       setAvailableValues(values);

@@ -21,6 +21,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Disposable;
 import com.macbury.fabula.manager.G;
+import com.macbury.fabula.terrain.foliage.FoliageSet;
 import com.macbury.fabula.terrain.tile.Tile;
 import com.macbury.fabula.terrain.tileset.Tileset;
 import com.macbury.fabula.terrain.water.Water;
@@ -45,6 +46,7 @@ public class Terrain implements Disposable {
   private Vector3 intersection = new Vector3();
   private boolean debug = false;
   
+  private FoliageSet foliageSet;
   private Tileset tileset;
   private TerrainDebugListener debugListener;
   private Material terrainMaterial;
@@ -360,5 +362,13 @@ public class Terrain implements Disposable {
 
   public Stack<Sector> getVisibleSectors() {
     return visibleSectors;
+  }
+
+  public FoliageSet getFoliageSet() {
+    return foliageSet;
+  }
+
+  public void setFoliageSet(String name) {
+    this.foliageSet = G.db.getFoliageSet(name);
   }
 }

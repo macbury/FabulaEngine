@@ -805,6 +805,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
       screen.setCurrentBrush(screen.getLiquidBrush());
     }
     
+    if (tglbtnFoliagebrushbutton.isSelected()) {
+      screen.setCurrentBrush(screen.getFoliageBrush());
+    }
+    
     if (tglbtnAutoTileEdit.isSelected()) {
       screen.setCurrentBrush(screen.getAutoTileBrush());
       autoTileList.setEnabled(true);

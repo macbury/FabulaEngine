@@ -5,57 +5,134 @@ filter: Nearest,Nearest
 repeat: none
 carrots
   rotate: false
-  xy: 1, 1
+  xy: 1, 205
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-potatoes
+crops0
   rotate: false
-  xy: 35, 1
+  xy: 1, 171
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-rose
+crops1
   rotate: false
-  xy: 69, 1
+  xy: 35, 205
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-sapling
+crops2
   rotate: false
-  xy: 103, 1
+  xy: 1, 137
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-sapling_birch
+crops3
   rotate: false
-  xy: 137, 1
+  xy: 35, 171
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-stem_straight
+crops4
   rotate: false
-  xy: 171, 1
+  xy: 69, 205
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-tallgrass
+crops5
   rotate: false
-  xy: 205, 1
+  xy: 1, 103
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+crops6
+  rotate: false
+  xy: 35, 137
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+crops7
+  rotate: false
+  xy: 69, 171
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 deadbush
   rotate: false
-  xy: 239, 17
-  size: 16, 16
-  orig: 16, 16
+  xy: 1, 69
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+fern
+  rotate: false
+  xy: 35, 103
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+potatoes
+  rotate: false
+  xy: 69, 137
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+rose
+  rotate: false
+  xy: 1, 35
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+sapling
+  rotate: false
+  xy: 35, 69
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+sapling_birch
+  rotate: false
+  xy: 69, 103
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+sapling_jungle
+  rotate: false
+  xy: 1, 1
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+sapling_spruce
+  rotate: false
+  xy: 35, 35
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+stem_straight
+  rotate: false
+  xy: 69, 69
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+tallgrass
+  rotate: false
+  xy: 35, 1
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1
