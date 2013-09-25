@@ -176,4 +176,20 @@ public class SceneInspect {
   public void setFoliageDescriptor(String name) {
     this.screen.getFoliageBrush().setFoliageDescriptorName(name);
   }
+  
+  public void setFoliageSpeed(float speed) {
+    this.screen.getScene().getFoliage().setSpeed(speed);
+  }
+  
+  public float getFoliageSpeed() {
+    return this.screen.getScene().getFoliage().getSpeed();
+  }
+  
+  public void setFoliageAmplitude(float amp) {
+    this.screen.getScene().getFoliage().setAmplitude(amp);
+  }
+  
+  public float getFoliageAmplitude() {
+    return this.screen.getScene().getFoliage().getAmplitude();
+  }
 }

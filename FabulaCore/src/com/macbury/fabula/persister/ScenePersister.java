@@ -5,13 +5,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
-import java.util.zip.DeflaterInputStream;
-import java.util.zip.DeflaterOutputStream;
 import java.util.zip.Inflater;
 
-import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.core.Commit;
@@ -22,6 +18,7 @@ import com.badlogic.gdx.utils.Base64Coder;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.macbury.fabula.map.Scene;
 import com.macbury.fabula.terrain.Terrain;
+import com.macbury.fabula.terrain.foliage.Foliage;
 import com.macbury.fabula.terrain.tile.Tile;
 import com.macbury.fabula.terrain.tileset.AutoTiles;
 import com.macbury.fabula.terrain.water.Water;
@@ -57,7 +54,8 @@ public class ScenePersister {
   
   @Element(required=false)
   private WaterPersister waterData;
-  
+  @Element(required=false)
+  private FoliagePersister foliageData;
   private Scene scene;
   private Terrain terrain;
   
@@ -114,6 +112,12 @@ public class ScenePersister {
       water.setWaterAnimationSpeed(waterData.animationSpeed);
       water.setAngleWaveSpeed(waterData.speed);
       water.setWaterTexture(waterData.material);
+    }
+    
+    Foliage foliage = scene.getFoliage();
+    if (foliageData != null) {
+      foliage.setAmplitude(foliageData.amplitude);
+      foliage.setSpeed(foliageData.speed);
     }
     
     this.terrain = this.scene.getTerrain();
@@ -181,8 +185,14 @@ public class ScenePersister {
   
   @Persist
   public void prepare() {
-    Water water     = scene.getWater();
-    this.waterData  = new WaterPersister();
+    Water water      = scene.getWater();
+    Foliage foliage  = scene.getFoliage();
+    this.foliageData = new FoliagePersister();
+    
+    foliageData.amplitude = foliage.getAmplitude();
+    foliageData.speed     = foliage.getSpeed();
+    
+    this.waterData   = new WaterPersister();
     
     waterData.alpha          = water.getAlpha();
     waterData.mix            = water.getMix();

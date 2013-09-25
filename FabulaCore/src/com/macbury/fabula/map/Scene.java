@@ -282,4 +282,8 @@ public class Scene implements Disposable {
   public Water getWater() {
     return water;
   }
+
+  public Foliage getFoliage() {
+    return this.foliage;
+  }
 }

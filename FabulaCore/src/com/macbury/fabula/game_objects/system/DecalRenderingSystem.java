@@ -93,8 +93,11 @@ public class DecalRenderingSystem extends EntitySystem {
     }
     
     Decal decal = decalComponent.getDecal();
-    decal.setPosition(position.getX()+decal.getWidth()/2, position.getY()+decal.getHeight()/2, position.getZ()+decal.getHeight()/2);
-    decal.lookAt(camera.position, this.normalizedCameraVector);
+    float w = decal.getWidth()/2;
+    float h = decal.getHeight()/2;
+    decal.setPosition(position.getX()+w, position.getY()+h, position.getZ()+h );
+    decal.setRotationX(-25.0f);
+    //decal.lookAt(camera.position, this.normalizedCameraVector);
     decalBatch.add(decal);
   }
 

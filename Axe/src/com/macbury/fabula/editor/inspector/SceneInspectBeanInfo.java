@@ -114,6 +114,14 @@ public class SceneInspectBeanInfo extends BaseBeanInfo {
     foliageDescriptorNameProperty.setDisplayName("Type");
     foliageDescriptorNameProperty.setShortDescription("Foliage type");
     foliageDescriptorNameProperty.setPropertyEditorClass(FoliageDescriptorEditor.class);
+    
+    ExtendedPropertyDescriptor foliageAmplitude = addProperty("foliageAmplitude").setCategory(CATEGORY_FOLIAGES);
+    foliageAmplitude.setDisplayName("Amplitude");
+    foliageAmplitude.setShortDescription("Foliage amplitude");
+    
+    ExtendedPropertyDescriptor foliageSpeed = addProperty("foliageSpeed").setCategory(CATEGORY_FOLIAGES);
+    foliageSpeed.setDisplayName("Speed");
+    foliageSpeed.setShortDescription("Foliage speed");
   }
   
   public static class AutoTileEditor extends ComboBoxPropertyEditor {

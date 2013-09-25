@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.math.Vector3;
 import com.macbury.fabula.manager.G;
 import com.macbury.fabula.manager.GameManager;
 import com.macbury.fabula.terrain.foliage.FoliageDescriptor;
@@ -28,6 +29,8 @@ public class GrassTestScreen extends BaseScreenWithAutoReloadShaders {
   private float speed     = 6f;
   private FoliageSet foliageSet;
   private FoliageDescriptor foliageDescriptor;
+
+  private Vector3 position;
   
   public GrassTestScreen(GameManager manager) {
     super(manager);
@@ -40,6 +43,8 @@ public class GrassTestScreen extends BaseScreenWithAutoReloadShaders {
     triangleGrid.using(AttributeType.Position);
     triangleGrid.using(AttributeType.TextureCord);
     triangleGrid.using(AttributeType.Color);
+    
+    this.position = new Vector3();
     short n1, n2, n3 = 0;
     float y = 0.0f;
     float animated = foliageDescriptor.isAnimated() ? 1.0f : 0.0f;
@@ -65,28 +70,6 @@ public class GrassTestScreen extends BaseScreenWithAutoReloadShaders {
           triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
           triangleGrid.addColorToVertex(animated, 0, 0, 0);
           /* Bottom right Vertex */
-          n3 = triangleGrid.addVertex(rx, sy, ez);
-          triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV2());
-          triangleGrid.addColorToVertex(0, 0, 0, 0);
-          triangleGrid.addIndices(n1,n2,n3);
-
-          /* Top Right Vertex */
-          n1 = triangleGrid.addVertex(rx, ey, ez);
-          triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV());
-          triangleGrid.addColorToVertex(animated, 0, 0, 0);
-          triangleGrid.addIndices(n3,n2,n1);
-          
-          // next gex
-          
-          /* Bottom Left Vertex */
-          n1 = triangleGrid.addVertex(lx, sy, ez);
-          triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
-          triangleGrid.addColorToVertex(0, 0, 0, 0);
-          /* Top left Vertex */
-          n2 = triangleGrid.addVertex(lx, ey, ez);
-          triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
-          triangleGrid.addColorToVertex(animated, 0, 0, 0);
-          /* Bottom right Vertex */
           n3 = triangleGrid.addVertex(rx, sy, sz);
           triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV2());
           triangleGrid.addColorToVertex(0, 0, 0, 0);
@@ -97,6 +80,28 @@ public class GrassTestScreen extends BaseScreenWithAutoReloadShaders {
           triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV());
           triangleGrid.addColorToVertex(animated, 0, 0, 0);
           triangleGrid.addIndices(n3,n2,n1);
+          
+          // next gex
+          
+          /* Bottom Left Vertex */
+          //n1 = triangleGrid.addVertex(lx, sy, ez);
+          //triangleGrid.addUVMap(uvMap.getU(), uvMap.getV2());
+          //triangleGrid.addColorToVertex(0, 0, 0, 0);
+          /* Top left Vertex */
+          //n2 = triangleGrid.addVertex(lx, ey, ez);
+          //triangleGrid.addUVMap(uvMap.getU(), uvMap.getV());
+          //triangleGrid.addColorToVertex(animated, 0, 0, 0);
+          /* Bottom right Vertex */
+          //n3 = triangleGrid.addVertex(rx, sy, sz);
+          //triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV2());
+          //triangleGrid.addColorToVertex(0, 0, 0, 0);
+          //triangleGrid.addIndices(n1,n2,n3);
+
+          /* Top Right Vertex */
+          //n1 = triangleGrid.addVertex(rx, ey, sz);
+          //triangleGrid.addUVMap(uvMap.getU2(), uvMap.getV());
+          //triangleGrid.addColorToVertex(animated, 0, 0, 0);
+          //triangleGrid.addIndices(n3,n2,n1);
         }
       }
     triangleGrid.end();
@@ -141,10 +146,13 @@ public class GrassTestScreen extends BaseScreenWithAutoReloadShaders {
     time += delta * speed;
     camera.update();
     
+    position.set(this.camera.up).nor();
     G.shaders.begin("grass");
       G.shaders.setUniformMatrix("u_model_view", this.camera.combined);
       G.shaders.setUniformi("u_texture", 0);
       G.shaders.setUniformf("u_wave_data", time, amplitude);
+      G.shaders.setUniformf("u_camera_up", position.x, position.y, position.z);
+      G.shaders.setUniformf("u_camera_pos", this.camera.position.x, this.camera.position.y, this.camera.position.z);
       mesh.render(G.shaders.getCurrent(), GL10.GL_TRIANGLES);
     G.shaders.end();
   }

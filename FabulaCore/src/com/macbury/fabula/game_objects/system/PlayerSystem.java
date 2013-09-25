@@ -14,8 +14,8 @@ import com.macbury.fabula.terrain.Terrain;
 public class PlayerSystem extends VoidEntitySystem {
   private static final float PLAYER_SPEED = 2.2f;
   public static final String TAG_PLAYER   = "PLAYER";
-  private static final float CAMERA_HEIGHT = 8.4f;
-  private static final float CAMERA_OFFSET = 4;
+  private static final float CAMERA_HEIGHT = 5.4f;
+  private static final float CAMERA_OFFSET = 6;
   @Mapper ComponentMapper<TileMovementComponent> tmm;
   @Mapper ComponentMapper<PositionComponent> pm;
   private PerspectiveCamera camera;
