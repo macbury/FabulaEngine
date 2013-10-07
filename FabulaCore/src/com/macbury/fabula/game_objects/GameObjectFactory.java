@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import com.macbury.fabula.db.PlayerStartPosition;
 import com.macbury.fabula.game_objects.components.BoundingBoxComponent;
 import com.macbury.fabula.game_objects.components.DecalComponent;
+import com.macbury.fabula.game_objects.components.EventComponent;
 import com.macbury.fabula.game_objects.components.PlayerComponent;
 import com.macbury.fabula.game_objects.components.PositionComponent;
 import com.macbury.fabula.game_objects.components.SolidColliderComponent;
@@ -36,12 +37,22 @@ public class GameObjectFactory {
     this.world = world;
   }
   
+  public Entity buildEvent(Vector2 position) {
+    Entity e = world.createEntity();
+    e.addComponent(new PositionComponent(position));
+    e.addComponent(new DecalComponent());
+    e.addComponent(new SolidColliderComponent());
+    e.addComponent(new VelocityComponent(TileMovementComponent.DIRECTION_DOWN));
+    e.addComponent(new EventComponent());
+    return e;
+  }
+  
   public Entity buildPlayer(Vector2 position) {
     Entity e = world.createEntity();
     
     TextureAtlas ta               = G.db.getAtlas("robot");
     TextureRegion region          = ta.findRegion("franklin");
-    DecalComponent decalComponent = new DecalComponent(region);
+    //DecalComponent decalComponent = new DecalComponent(region);
     
     e.addComponent(new PositionComponent(position));
     e.addComponent(new VelocityComponent(TileMovementComponent.DIRECTION_DOWN));

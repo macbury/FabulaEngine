@@ -78,6 +78,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 
+import com.artemis.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import com.badlogic.gdx.files.FileHandle;
@@ -92,6 +93,7 @@ import com.l2fprod.common.propertysheet.PropertySheetPanel;
 import com.macbury.fabula.editor.adb.AdbManager;
 import com.macbury.fabula.editor.brushes.AutoTileBrush;
 import com.macbury.fabula.editor.brushes.AutoTileBrush.PaintMode;
+import com.macbury.fabula.editor.events.EventEditorFrame;
 import com.macbury.fabula.editor.gamerunner.RunningGameConsoleFrame;
 import com.macbury.fabula.editor.inspector.DefaultBeanBinder;
 import com.macbury.fabula.editor.inspector.SceneInspect;
@@ -395,6 +397,7 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     addPopup(openGLContainerPane, eventPopupMenu);
     
     this.mntmNewEvent = new JMenuItem("New event");
+    mntmNewEvent.addActionListener(this);
     mntmNewEvent.setIcon(new ImageIcon(WorldEditorFrame.class.getResource("/com/macbury/fabula/editor/icons/event.png")));
     eventPopupMenu.add(mntmNewEvent);
     
@@ -649,8 +652,14 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
 
   private void updateInfoForAutotileBrush() {
     if (!WorldEditorFrame.this.gameManager.loading()) {
-      AutoTileBrush atBrush     = this.gameManager.getWorldEditScreen().getAutoTileBrush();
-      atBrush.buildAllPreviewsUnlessBuilded();
+      final AutoTileBrush atBrush     = this.gameManager.getWorldEditScreen().getAutoTileBrush();
+      Gdx.app.postRunnable(new Runnable() {
+        
+        @Override
+        public void run() {
+          atBrush.buildAllPreviewsUnlessBuilded();
+        }
+      });
       this.autoTileListRenderer = new IconListRenderer(atBrush.getAutoTileIcons());
       autoTileList.setCellRenderer(autoTileListRenderer);
 
@@ -768,6 +777,10 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
       screen.getEventBrush().placeStartPosition();
     }
     
+    if (e.getSource() == mntmNewEvent) {
+      showNewEventWindow();
+    }
+    
     if (e.getSource() == mntmReloadMap) {
       
     }
@@ -777,6 +790,14 @@ public class WorldEditorFrame extends JFrame implements ChangeListener, ItemList
     }
     
     updateSelectedBrush();
+  }
+
+  private void showNewEventWindow() {
+    WorldEditScreen screen = this.gameManager.getWorldEditScreen();
+    EventEditorFrame frame = new EventEditorFrame(screen);
+    Entity event           = G.factory.buildEvent(screen.getEventBrush().getPosition());
+    frame.setEvent(event);
+    frame.setVisible(true);
   }
 
   private void resetCamera() {

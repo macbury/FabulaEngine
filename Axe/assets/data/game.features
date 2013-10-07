@@ -1,6 +1,6 @@
-<game-features game:build="1946" xmlns:game="http://macbury.pl/">
+<game-features game:build="1987" xmlns:game="http://macbury.pl/">
    <title>Brutal Crasher</title>
-   <player-start-position x="22" y="27" map="9c73fa8a-7f55-4191-8ee7-028503f6871c"/>
+   <player-start-position x="8" y="26" map="2daae390-b739-4c28-a8bb-37bb2a02c87d"/>
    <fonts length="1">
       <font>base</font>
    </fonts>
@@ -17,7 +17,7 @@
    </skyboxes>
    <tilesets>
       <tileset name="outside" atlas="outside">
-         <auto-tiles length="20">
+         <auto-tiles length="21">
             <auto-tile name="grass_simple" slope="false"/>
             <auto-tile name="grass_sand_road" slope="false"/>
             <auto-tile name="desert_rock_road" slope="false"/>
@@ -38,6 +38,7 @@
             <auto-tile name="rock_hill_side" slope="true"/>
             <auto-tile name="grass_hill_side" slope="true"/>
             <auto-tile name="stairs_side" slope="true"/>
+            <auto-tile name="grass_test" slope="false"/>
          </auto-tiles>
       </tileset>
    </tilesets>
@@ -63,6 +64,7 @@
             <leaf region="crops2" animated="false"/>
             <leaf region="crops1" animated="false"/>
             <leaf region="crops0" animated="false"/>
+            <leaf region="test_bush" animated="true"/>
          </leaves>
       </foliage>
    </foliages>
@@ -72,76 +74,17 @@
       <atlas name="liquid"/>
       <atlas name="foliage"/>
    </atlases>
-   <map>water_testing</map>
    <map uuid="72d5ae3e-eade-48ad-83ab-0c06751c42bb">sss</map>
-   <map uuid="28cb6912-395b-4dc3-a543-8e92c67ba05a">test</map>
+   <map>water_testing</map>
    <map uuid="59be3da9-7e3c-4aa4-ba0b-76527b542d43">test</map>
+   <map uuid="28cb6912-395b-4dc3-a543-8e92c67ba05a">test</map>
    <map uuid="93db41e9-155d-4f2b-89fe-bd5120802570">testing_events</map>
    <map uuid="a9c3c8ef-596f-4723-b507-d65188384567">test</map>
-   <map uuid="42560da4-d026-4bb1-acf5-2dd0a48beb38">water-park</map>
    <map uuid="493e5026-6c42-4f18-a606-14a27a72aeda">testing_entities</map>
-   <map uuid="9c73fa8a-7f55-4191-8ee7-028503f6871c">test</map>
+   <map uuid="42560da4-d026-4bb1-acf5-2dd0a48beb38">water-park</map>
    <map uuid="cd8ca19d-7bfa-4e30-89b7-106b0f560753">water_testing</map>
+   <map uuid="9c73fa8a-7f55-4191-8ee7-028503f6871c">test</map>
+   <map uuid="2daae390-b739-4c28-a8bb-37bb2a02c87d">testing_new_tileset</map>
    <map uuid="fc3f3dc5-32ae-434a-b21f-5a4f22342ce3">test</map>
-   <corner combination="FF0FF00">InnerReapeating</corner>
-   <corner combination="FF000">PathHorizontal</corner>
-   <corner combination="CFC000F0">PathVertical</corner>
-   <corner combination="F00F0">PathCornerTopLeft</corner>
-   <corner combination="F00F000">PathCornerBottomLeft</corner>
-   <corner combination="FF005">PathHorizontal</corner>
-   <corner combination="FF0F0FF0">EdgeRight</corner>
-   <corner combination="4F0000">PathHorizontalRight</corner>
-   <corner combination="F0000F0">PathVertical</corner>
-   <corner combination="F0000F3">PathVertical</corner>
-   <corner combination="C0FF000">PathHorizontal</corner>
-   <corner combination="F0000">PathHorizontalRight</corner>
-   <corner combination="EFDFFFFF">InnerReapeating</corner>
-   <corner combination="800FF000">PathHorizontal</corner>
-   <corner combination="F0003FF">PathVerticalBottom</corner>
-   <corner combination="CFC00000">PathVerticalBottom</corner>
-   <corner combination="F00F0F0">PathCrossRightTopBottom</corner>
-   <corner combination="F00003F">PathVertical</corner>
-   <corner combination="400200">Start</corner>
-   <corner combination="FFDFFFFF">InnerReapeating</corner>
-   <corner combination="CF000000">PathVerticalBottom</corner>
-   <corner combination="FF0F0000">CornerBottomRight</corner>
-   <corner combination="F000333">PathVerticalBottom</corner>
-   <corner combination="F0">PathVertical</corner>
    <corner combination="0">Start</corner>
-   <corner combination="A00FF000">PathHorizontal</corner>
-   <corner combination="F0FF">CornerTopLeft</corner>
-   <corner combination="F00033F">PathVerticalBottom</corner>
-   <corner combination="FFFFF">EdgeTop</corner>
-   <corner combination="A00FFA00">PathHorizontal</corner>
-   <corner combination="FF0F0FF">EdgeLeft</corner>
-   <corner combination="FF0F200">CornerBottomLeft</corner>
-   <corner combination="FC000F0">PathVertical</corner>
-   <corner combination="F000F0">PathVertical</corner>
-   <corner combination="5FF005">PathHorizontal</corner>
-   <corner combination="FF0000F0">PathVertical</corner>
-   <corner combination="50F005">PathHorizontalLeft</corner>
-   <corner combination="EFFFFFFF">InnerReapeating</corner>
-   <corner combination="F0F00F0">PathCrossLeftTopBottom</corner>
-   <corner combination="F0FF0">CornerTopRight</corner>
-   <corner combination="A04FFA00">PathHorizontal</corner>
-   <corner combination="EF0F0FF0">EdgeRight</corner>
-   <corner combination="A00FFF00">PathHorizontal</corner>
-   <corner combination="F0003F3">PathVertical</corner>
-   <corner combination="F0FF0F0">PathCross</corner>
-   <corner combination="5FF00F">PathHorizontal</corner>
-   <corner combination="FD0F0FF">EdgeLeft</corner>
-   <corner combination="F0003F0">PathVertical</corner>
-   <corner combination="F000">PathHorizontal</corner>
-   <corner combination="FFFFFFFF">InnerReapeating</corner>
-   <corner combination="F000000">PathVerticalBottom</corner>
-   <corner combination="FFFFF000">EdgeBottom</corner>
-   <corner combination="FF0000">PathHorizontalRight</corner>
-   <corner combination="F0000FF">PathVertical</corner>
-   <corner combination="CF0000F0">PathVertical</corner>
-   <corner combination="F00200">Start</corner>
-   <corner combination="5FF000">PathHorizontal</corner>
-   <corner combination="F000200">PathVerticalBottom</corner>
-   <corner combination="F0F0000">PathCornerBottomRight</corner>
-   <corner combination="FA00">InnerReapeating</corner>
-   <corner combination="A00AF000">InnerReapeating</corner>
 </game-features>

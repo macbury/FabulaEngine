@@ -136,3 +136,10 @@ tallgrass
   orig: 32, 32
   offset: 0, 0
   index: -1
+test_bush
+  rotate: false
+  xy: 69, 35
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
